@@ -12,7 +12,7 @@ namespace DTM\core\libraries;
 
 use SPT\Application\IApp;
 use SPT\Container\Client;
-use SPT\Web\Controller as Core;
+use SPT\Web\ControllerMVVM as Core;
 
 class Controller extends Core
 {
