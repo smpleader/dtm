@@ -5,6 +5,11 @@ use SPT\Application\IApp;
 
 class Installer
 {
+    public static function info()
+    {
+        return ['tags'=>['sdm']];
+    }
+    
     public static function name()
     {
         return 'Plugin tag';

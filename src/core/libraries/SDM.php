@@ -14,8 +14,23 @@ namespace DTM\core\libraries;
 use SPT\Router\ArrayEndpoint as Router;
 use SPT\Request\Base as Request;
 use SPT\Response; 
+use SPT\Query;
+use SPT\Support\Loader;
+use SPT\Extend\Pdo as PdoWrapper;
+use SPT\Session\Instance as Session;
+use SPT\Session\PhpSession;
+use SPT\Session\DatabaseSession;
+use SPT\Session\DatabaseSessionEntity;
+use SPT\User\Instance as UserInstance;
+use SPT\User\SPT\User as UserAdapter;
+use DTM\user\entities\UserEntity;
 
-class SDM extends SPT\Application\Web
+use SPT\Application\Web as Base;
+use SPT\Application\Configuration;
+use SPT\Application\Token;
+use SPT\Application\Plugin\Manager;
+
+class SDM extends Base
 {
     protected function envLoad()
     {   
@@ -32,7 +47,12 @@ class SDM extends SPT\Application\Web
         }
         
         $this->config = new Configuration(null);
-        $this->plgManager = new \DTM\core\libraries\PluginManager($this);
+        $this->plgManager = new Manager(
+            $this,
+            [   SPT_PLUGIN_PATH => $this->namespace. '\\plugins\\',
+                SPT_VENDOR_PATH.'smpleader/dtm/src/' => '\\DTM\\'
+            ]
+        );
         // setup container
         $this->container->set('app', $this);
         // create request
@@ -74,7 +94,7 @@ class SDM extends SPT\Application\Web
     {
         $this->container->set('session', new Session(
             $this->container->exists('query') ? 
-            new DatabaseSession( new DatabaseSessionEntity($this->container->query), $this->container->token->value() ) :
+            new DatabaseSession( new DatabaseSessionEntity($this->container->get('query')), $this->container->get('token')->value() ) :
             new PhpSession()
         ));
     }
@@ -83,8 +103,8 @@ class SDM extends SPT\Application\Web
     {   
         $user = new UserInstance( new UserAdapter() ); 
         $user->init([
-            'session' => $this->container->session,
-            'entity' => new  UserEntity($this->container->query)
+            'session' => $this->container->get('session'),
+            'entity' => new  UserEntity($this->container->get('query'))
         ]);
         $this->container->share('user', $user, true);
     }
@@ -106,52 +126,24 @@ class SDM extends SPT\Application\Web
     {
         // TODO: create cache list
         $container = $this->getContainer();
-        foreach(new \DirectoryIterator(SPT_PLUGIN_PATH) as $item) 
+        foreach($this->plgManager->getList() as $plg)
         {
-            if( !$item->isDot() && $item->isDir() )
-            {   
-                $name =  $item->getBasename();
-                // load entities
-                Loader::findClass( 
-                    SPT_PLUGIN_PATH. '/'. $name. '/entities',
-                    $app->getNamespace().'\\plugins\\'. $name. '\entities',
-                    function($class, $alias) use (&$container)
-                    {   
-                        $container->share( $alias, new $class($container->get('query')), true);
-                    });
-    
-    
-                // load models
-                Loader::findClass( 
-                    SPT_PLUGIN_PATH. '/'. $name. '/entities',
-                    $app->getNamespace().'\\plugins\\'. $name. '\entities',
-                    function($class, $alias) use (&$container)
-                    {   
-                        $container->share( $alias, new $class($container), true);
-                    });
-            }
-        }
-
-        $dtmPLugins = ['milestone', 'note2', 'tag', 'note', 'report', 'setting', 'user', 'version']; 
-        foreach($dtmPLugins as $plgName)
-        {
-            // load entities
             Loader::findClass( 
-                SPT_VENDOR_PATH. 'smpleader/dtm/src/'. $plgName. '/entities',
-                '\\DTM\\'. $plgName. '\entities',
-                function($class, $alias) use (&$container)
-                {   
-                    $container->share( $alias, new $class($container->get('query')), true);
+                $plg['path']. '/entities', 
+                $plg['namespace']. '\entities', 
+                function($classname, $fullname) use (&$container)
+                {
+                    $container->share( $classname, new $fullname($container->get('query')), true);
                 });
 
 
             // load models
             Loader::findClass( 
-                SPT_VENDOR_PATH. 'smpleader/dtm/src/'. $plgName. '/models',
-                '\\DTM\\'. $plgName. '\models',
-                function($class, $alias) use (&$container)
-                {   
-                    $container->share( $alias, new $class($container), true);
+                $plg['path']. '/models', 
+                $plg['namespace']. '\models', 
+                function($classname, $fullname) use (&$container)
+                {
+                    $container->share( $classname, new $fullname($container), true);
                 });
         }
     }

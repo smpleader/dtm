@@ -10,12 +10,13 @@ class Installer
         return 'Plugin core';
     }
 
-    public static function detail()
+    public static function info()
     {
         return [
             'author' => 'Pham Minh',
             'created_at' => '2023-01-03',
-            'description' => 'Plugin used to demo how the SPT works'
+            'description' => 'Plugin used to demo how the SPT works',
+            'tags' => ['sdm']
         ];
     }
 

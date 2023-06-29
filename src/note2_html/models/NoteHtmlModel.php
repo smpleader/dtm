@@ -12,7 +12,7 @@ namespace DTM\note2_html\models;
 
 use SPT\Container\Client as Base;
 
-class NoteModel extends Base
+class NoteHtmlModel extends Base
 { 
     // Write your code here
     public function replaceContent($content, $encode = true)

@@ -24,13 +24,18 @@ class NoteDispatch extends Base
         $cName = $this->app->get('controller');
         $fName = $this->app->get('function');
 
-
         $loadChildPlugin = $this->app->get('loadChildPlugin', false);
         $loadChildPlugin ? $this->childProcess($cName, $fName) : $this->process($cName, $fName);
     }
 
     private function process($cName, $fName)
     {
+        // set plugin info
+        $plugin = $this->app->plugin();
+        $this->app->set('currentPlugin', $plugin['name']);
+        $this->app->set('namespace', $plugin['namespace']);
+        $this->app->set('pluginPath', $plugin['path']);
+
         $controller = 'DTM\note2\controllers\\'. $cName;
         if(!class_exists($controller))
         {
@@ -41,6 +46,11 @@ class NoteDispatch extends Base
         $controller->{$fName}();
 
         $fName = 'to'. ucfirst($this->app->get('format', 'html'));
+
+        if(empty( $this->app->get('theme', '') ))
+        {
+            $this->app->set('theme', $this->app->cf('defaultTheme'));
+        }
 
         $this->app->finalize(
             $controller->{$fName}()
@@ -84,6 +94,14 @@ class NoteDispatch extends Base
 
         $this->app->set('noteType', $notetype);
 
+        // set plugin info
+        $plgName = $this->app->get('mainPlugin');
+        $plgName .= '_'.$notetype;
+        $plugin = $this->app->plugin($plgName);
+        $this->app->set('currentPlugin', $plugin['name']);
+        $this->app->set('namespace', $plugin['namespace']);
+        $this->app->set('pluginPath', $plugin['path']);
+
         $controller = $class. 'controllers\\'. $cName;
         if(!class_exists($controller))
         {
@@ -100,6 +118,11 @@ class NoteDispatch extends Base
         $controller->{$fName}();
 
         $fName = 'to'. ucfirst($this->app->get('format', 'html'));
+
+        if(empty( $this->app->get('theme', '') ))
+        {
+            $this->app->set('theme', $this->app->cf('defaultTheme'));
+        }
 
         $this->app->finalize(
             $controller->{$fName}()

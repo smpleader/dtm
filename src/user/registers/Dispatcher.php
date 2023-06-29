@@ -25,7 +25,12 @@ class Dispatcher
         $controller = new $controller($app->getContainer());
         $controller->{$fName}();
 
-        $fName = 'to'. ucfirst($app->get('format', 'html'));
+        $fName = 'to'. ucfirst($app->get('format', 'html')); 
+
+        if(empty( $app->get('theme', '') ))
+        {
+            $app->set('theme', $app->cf('defaultTheme'));
+        }
 
         $app->finalize(
             $controller->{$fName}()

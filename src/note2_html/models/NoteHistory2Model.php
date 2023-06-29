@@ -12,7 +12,7 @@ namespace DTM\note2_html\models;
 
 use SPT\Container\Client as Base;
 
-class NoteHistoryModel extends Base
+class NoteHistory2Model extends Base
 { 
     public function add($data)
     {

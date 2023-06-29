@@ -8,11 +8,11 @@
  * 
  */
 
-namespace DTM\note\entities;
+namespace DTM\note2_html\entities;
 
 use SPT\Storage\DB\Entity;
 
-class NoteEntity extends Entity
+class NoteHtmlEntity extends Entity
 {
     protected $table = '#__notes';
     protected $pk = 'id';

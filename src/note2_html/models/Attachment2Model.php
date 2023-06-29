@@ -13,7 +13,7 @@ namespace DTM\note2_html\models;
 
 use SPT\Container\Client as Base;
 
-class AttachmentModel extends Base
+class Attachment2Model extends Base
 {
     // Write your code here
     public function upload($file)

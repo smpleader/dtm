@@ -8,13 +8,13 @@
  * 
  */
 
-namespace DTM\note\entities;
+namespace DTM\note2_html\entities;
 
 use SPT\Storage\DB\Entity;
 
-class NoteHistoryEntity extends Entity
+class Attachment2Entity extends Entity
 {
-    protected $table = '#__note_history';
+    protected $table = '#__attachments';
     protected $pk = 'id';
 
     public function getFields()
@@ -29,14 +29,19 @@ class NoteHistoryEntity extends Entity
                 'note_id' => [
                     'type' => 'int',
                 ],
-                'meta_data'=> [
-                    'type' => 'text',
+                'name' => [
+                    'type' => 'varchar',
+                    'limit' => 255,
                 ],
-                'created_at' => [
+                'path' => [
+                    'type' => 'varchar',
+                    'limit' => 255,
+                ],
+                'uploaded_at' => [
                     'type' => 'datetime',
                     'null' => 'YES',
                 ],
-                'created_by' => [
+                'uploaded_by' => [
                     'type' => 'int',
                     'option' => 'unsigned',
                 ],

@@ -16,7 +16,7 @@ use SPT\Web\View as Core;
 
 class View extends Core
 {
-    private function preparePath(string $name)
+    protected function preparePath(string $name)
     {
         $fullname = str_replace('.', '/', $name);
 
