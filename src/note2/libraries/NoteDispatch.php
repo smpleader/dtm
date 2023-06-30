@@ -30,12 +30,6 @@ class NoteDispatch extends Base
 
     private function process($cName, $fName)
     {
-        // set plugin info
-        $plugin = $this->app->plugin();
-        $this->app->set('currentPlugin', $plugin['name']);
-        $this->app->set('namespace', $plugin['namespace']);
-        $this->app->set('pluginPath', $plugin['path']);
-
         $controller = 'DTM\note2\controllers\\'. $cName;
         if(!class_exists($controller))
         {
@@ -44,13 +38,10 @@ class NoteDispatch extends Base
 
         $controller = new $controller($this->getContainer());
         $controller->{$fName}();
+        $controller->setCurrentPlugin();
+        $controller->useDefaultTheme();
 
         $fName = 'to'. ucfirst($this->app->get('format', 'html'));
-
-        if(empty( $this->app->get('theme', '') ))
-        {
-            $this->app->set('theme', $this->app->cf('defaultTheme'));
-        }
 
         $this->app->finalize(
             $controller->{$fName}()
@@ -96,11 +87,7 @@ class NoteDispatch extends Base
 
         // set plugin info
         $plgName = $this->app->get('mainPlugin');
-        $plgName .= '_'.$notetype;
-        $plugin = $this->app->plugin($plgName);
-        $this->app->set('currentPlugin', $plugin['name']);
-        $this->app->set('namespace', $plugin['namespace']);
-        $this->app->set('pluginPath', $plugin['path']);
+        $plgName = $plgName['name'].'_'.$notetype;
 
         $controller = $class. 'controllers\\'. $cName;
         if(!class_exists($controller))
@@ -116,13 +103,10 @@ class NoteDispatch extends Base
         }
         
         $controller->{$fName}();
+        $controller->setCurrentPlugin($plgName);
+        $controller->useDefaultTheme();
 
         $fName = 'to'. ucfirst($this->app->get('format', 'html'));
-
-        if(empty( $this->app->get('theme', '') ))
-        {
-            $this->app->set('theme', $this->app->cf('defaultTheme'));
-        }
 
         $this->app->finalize(
             $controller->{$fName}()

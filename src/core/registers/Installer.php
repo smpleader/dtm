@@ -15,7 +15,7 @@ class Installer
         return [
             'author' => 'Pham Minh',
             'created_at' => '2023-01-03',
-            'description' => 'Plugin used to demo how the SPT works',
+            'description' => 'Plugin used to for core bootstrap',
             'tags' => ['sdm']
         ];
     }

@@ -24,6 +24,8 @@ class Dispatcher
 
         $controller = new $controller($app->getContainer());
         $controller->{$fName}();
+        $controller->setCurrentPlugin();
+        $controller->useDefaultTheme();
 
         $fName = 'to'. ucfirst($app->get('format', 'html')); 
 

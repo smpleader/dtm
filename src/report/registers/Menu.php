@@ -15,12 +15,12 @@ class Menu
         $path_current = $router->get('actualPath');
 
         $menu_report = [];
-        $app->plgLoad('menu', 'registerReportItem', function ($reports) use (&$menu_report){
+        /*$app->plgLoad('menu', 'registerReportItem', function ($reports) use (&$menu_report){
             if ($reports && is_array($reports))
             {
                 $menu_report = array_merge($menu_report, $reports);
             }
-        });
+        });*/
 
         $active = strpos($path_current, 'reports') !== false ? 'active' : '';
         $menu = [];
