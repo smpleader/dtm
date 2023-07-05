@@ -24,7 +24,7 @@ class Note2Model extends Base
         {
             $noteTypes = [];
             $this->app->childLoad('notetype', 'registerType', function($types) use (&$noteTypes) {
-                $noteTypes = array_merge($types);
+                $noteTypes += $types;
             });
     
             $this->app->set('noteTypes', $noteTypes);
