@@ -15,9 +15,10 @@
             success: function(resultData)
             {
                 var list = '';
+                var list_alias = '';
                 if (Array.isArray(resultData.result))
                 {
-                    resultData.result.forEach(function(item)
+                    resultData.result.forEach(function(item, index)
                     {
                         list += `
                         <tr>
@@ -32,9 +33,19 @@
                             <td>${item['tags']}</td>
                             <td><a type="button" class="fs-3 open-edit-relate" data-id="${item['id']}" data-title-note="${item['title']}" data-alias="${item['alias']}"><i class="fa-solid fa-pen-to-square"></i></a></td>
                         </tr>
-                        `
+                        `;
+                        list_alias += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>
+                                <a target="_blank" href="<?php echo $this->link_note .'/' ?>${item['note_id']}">${item['title']}</a>
+                            </td>
+                            <td>${item['alias'] ?? ''}</td>
+                        </tr>
+                        `;
                     });
                     $("#listRelateNote").html(list);
+                    $("#listAliasNote").html(list_alias);
                     modalEdit();
                 }
             }

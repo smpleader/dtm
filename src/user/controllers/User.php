@@ -145,7 +145,12 @@ class User extends ControllerMVVM
     public function add()
     {
         $save_close = $this->request->post->get('save_close', '', 'string');
-        $try = $this->UserModel->validate();
+        $groups = $this->request->post->get('groups', [], 'array');
+        $try = $this->UserModel->validate([
+            'name' => $this->request->post->get('name', '', 'string'),
+            'username' => $this->request->post->get('username', '' , 'string'),
+            'email' => $this->request->post->get('email', '', 'string'),
+        ]);
         if (!$try)
         {
             $msg = $this->session->get('validate', '');
@@ -183,7 +188,7 @@ class User extends ControllerMVVM
         }
         else
         {
-            $this->UserGroupModel->addUserMap($newId);
+            $this->UserGroupModel->addUserMap($newId, $groups);
             $this->session->set('flashMsg', 'Created Successfully');
             $link = $save_close ? 'users' : 'user/'. $newId;
             return $this->app->redirect(
@@ -196,7 +201,13 @@ class User extends ControllerMVVM
     {
         $ids = $this->validateID(); 
         $save_close = $this->request->post->get('save_close', '', 'string');
-        $try = $this->UserModel->validate($ids);
+
+        $try = $this->UserModel->validate([
+            'name' => $this->request->post->get('name', '', 'string'),
+            'username' => $this->request->post->get('username', '' , 'string'),
+            'email' => $this->request->post->get('email', '', 'string'),
+        ], $ids);
+
         if (!$try)
         {
             $msg = $this->session->get('validate', '');
@@ -252,7 +263,7 @@ class User extends ControllerMVVM
 
             if($try) 
             {
-                $this->UserGroupModel->updateUserMap($user);
+                $this->UserGroupModel->updateUserMap($ids, $groups);
                 $this->session->set('flashMsg', 'Updated Successfully');
                 $link = $save_close ? 'users' : 'user/'. $ids;
                 return $this->app->redirect(

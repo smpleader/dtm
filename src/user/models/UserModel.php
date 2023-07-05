@@ -14,32 +14,16 @@ use SPT\Container\Client as Base;
 
 class UserModel extends Base 
 { 
-    // Write your code here
-    public function getRightAccess()
+    public function validate($data, $id = null)
     {
-        $access = [];
-        foreach($this->plugin as $key => $plugin)
+        if (!$data || !is_array($data))
         {
-            $right_access = [];
-            if (method_exists($this->plugin->$key, 'getRightAccess'))
-            {
-                $right_access = $this->plugin->$key->getRightAccess();
-            }
-
-            if (is_array($right_access) && $right_access)
-            {
-                $access = array_merge($right_access, $access);
-            }
+            return false;
         }
-
-        return $access;
-    }
-
-    public function validate($id = null)
-    {
-        $password = $this->request->post->get('password', '', 'string');
-        $username = $this->request->post->get('username', '', 'string');
-        $email = $this->request->post->get('email', '', 'string');
+        
+        $password = $data['password'];
+        $username = $data['username'];
+        $email = $data['email'];
 
         if(!empty($password)) 
         {
@@ -92,6 +76,10 @@ class UserModel extends Base
 
     public function getAccessByGroup($groups)
     {
+        if (!is_array($groups))
+        {
+            return false;
+        }
         $access = [];
         foreach($groups as $group)
         {

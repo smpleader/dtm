@@ -2,7 +2,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-12">
-			<h4>Request Notes</h4>
+			<a class="relate-note-popup"><h4>Request Notes</h4></a>
 			<table id="datatables-buttons" class="table table-striped border-top border-1" style="width:100%">
 				<thead>
 					<tr>

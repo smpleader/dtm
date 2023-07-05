@@ -66,7 +66,7 @@ class TagModel extends Base
             return false;
         }
 
-        $where = ['name' => $name];
+        $where = ['name' => $data['name']];
         if (isset($data['id']) && $data['id'])
         {
             $where[] = 'id <> '. $data['id'];

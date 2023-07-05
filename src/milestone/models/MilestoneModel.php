@@ -42,7 +42,7 @@ class MilestoneModel extends Base
             return false;
         }
 
-        $where = ['title = "' . $title . '"'];
+        $where = ['title = "' . $data['title'] . '"'];
         if (isset($data['id']) && $data['id'])
         {
             $where[] = 'id <> '. $data['id'];
@@ -58,7 +58,7 @@ class MilestoneModel extends Base
         if ($data['end_date'] == '')
             $data['end_date'] = NULL;
 
-        return true;
+        return $data;
     }
 
     public function add($data)
