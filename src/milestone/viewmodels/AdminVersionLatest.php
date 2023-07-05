@@ -24,20 +24,12 @@ class AdminVersionLatest extends ViewModel
 
     public function list()
     {
-        $request = $this->container->get('request');
-        $router = $this->container->get('router');
-        $session = $this->container->get('session');
-        $VersionEntity = $this->container->get('VersionEntity');
-        $RequestEntity = $this->container->get('RequestEntity');
-        $VersionNoteEntity = $this->container->get('VersionNoteEntity');
-        $MilestoneEntity = $this->container->get('MilestoneEntity');
-
-        $version_latest = $VersionEntity->list(0, 1, [], 'created_at desc');
+        $version_latest = $this->VersionEntity->list(0, 1, [], 'created_at desc');
         $version_latest = $version_latest ? $version_latest[0] : [];
         // if(!$version_latest){
         //     $this->session->set('flashMsg', 'Not Found Version');
         // }
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
 
         if (!$version_latest)
@@ -45,12 +37,12 @@ class AdminVersionLatest extends ViewModel
             $version_latest['id'] = 0;
         }
 
-        $tmp_request = $RequestEntity->findOne(['id' => $request_id]);
+        $tmp_request = $this->RequestEntity->findOne(['id' => $request_id]);
 
-        $list = $VersionNoteEntity->list(0,0, ['version_id = '. $version_latest['id'], 'request_id = '. $request_id]);
+        $list = $this->VersionNoteEntity->list(0,0, ['version_id = '. $version_latest['id'], 'request_id = '. $request_id]);
         $list = $list ? $list : [];
-        $request = $RequestEntity->findByPK($request_id);
-        $milestone = $request ? $MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
+        $request = $this->RequestEntity->findByPK($request_id);
+        $milestone = $request ? $this->MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
         
         if($version_latest) {
             $title_page = 'Version changelog : '. $version_latest['version'];
@@ -58,9 +50,9 @@ class AdminVersionLatest extends ViewModel
             $title_page = 'Version changelog (Please create Version first)';
         }
 
-        $version_lastest = $VersionEntity->list(0, 1, [], 'created_at desc');
+        $version_lastest = $this->VersionEntity->list(0, 1, [], 'created_at desc');
         $version_lastest = $version_lastest ? $version_lastest[0]['version'] : '0.0.0';
-        $tmp_request = $RequestEntity->list(0, 0, ['id = '.$request_id], 0);
+        $tmp_request = $this->RequestEntity->list(0, 0, ['id = '.$request_id], 0);
         
         $status = false;
 
@@ -69,12 +61,12 @@ class AdminVersionLatest extends ViewModel
             'list' => $list,
             'version_latest' => $version_latest,
             'status' => $status,
-            'url' => $router->url(),
-            'link_list' => $router->url('request-version/'. $request_id),
-            'link_cancel' => $router->url('detail-request/'. $request_id),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('request-version/'. $request_id),
+            'link_cancel' => $this->router->url('detail-request/'. $request_id),
             'title_page_version' => $title_page,
-            'link_form' => $router->url('request-version/'. $request_id),
-            'token' => $this->container->get('token')->value(),
+            'link_form' => $this->router->url('request-version/'. $request_id),
+            'token' => $this->token->value(),
         ];
     }
 

@@ -25,26 +25,22 @@ class AdminRelateNote extends ViewModel
     
     public function form()
     {
-        $request = $this->container->get('request');
-        $router = $this->container->get('router');
-
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
 
         $form = new Form($this->getFormFields(), []);
 
         return [
             'form' => $form,
-            'url' => $router->url(),
-            'link_list' => $router->url('relate-notes/'. $request_id),
-            'link_form' => $router->url('relate-note/'. $request_id),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('relate-notes/'. $request_id),
+            'link_form' => $this->router->url('relate-note/'. $request_id),
         ];
     }
 
     public function getFormFields()
     {
-        $NoteEntity = $this->container->get('NoteEntity');
-        $notes = $NoteEntity->list(0, 0, [], 'title asc');
+        $notes = $this->NoteEntity->list(0, 0, [], 'title asc');
         
         $options = [];
         foreach ($notes as $note) {
@@ -75,7 +71,7 @@ class AdminRelateNote extends ViewModel
                 'formClass' => 'form-select',
             ],
             'token' => ['hidden',
-                'default' => $this->container->get('token')->value(),
+                'default' => $this->token->value(),
             ],
         ];
 

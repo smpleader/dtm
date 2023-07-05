@@ -26,32 +26,20 @@ class AdminRequests extends ViewModel
 
     public function list()
     {
-        $request = $this->container->get('request');
-        $session = $this->container->get('session');
-        $router = $this->container->get('router');
-        $RequestEntity = $this->container->get('RequestEntity');
-        $MilestoneEntity = $this->container->get('MilestoneEntity');
-        $TagEntity = $this->container->get('TagEntity');
-        $RequestModel = $this->container->get('RequestModel');
-        $UserEntity = $this->container->get('UserEntity');
-        $TagEntity = $this->container->get('TagEntity');
-        $VersionEntity = $this->container->get('VersionEntity');
-        $user = $this->container->get('user');
-
-        $clear_filter = $request->post->get('clear_filter', '', 'string');
+        $clear_filter = $this->request->post->get('clear_filter', '', 'string');
         if ($clear_filter)
         {
-            $session->set('request.filter_tags', []);
+            $this->session->set('request.filter_tags', []);
         }
         $filter = $this->filter()['form'];
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $milestone_id = (int) $urlVars['milestone_id'];
 
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
         $tags   = $filter->getField('filter_tags')->value;
         $search = trim($filter->getField('search')->value);
-        $page   = $request->get->get('page', 1);
+        $page   = $this->request->get->get('page', 1);
         if ($page <= 0) $page = 1;
         $where = [];
         $where[] = ['milestone_id = '. $milestone_id];
@@ -71,7 +59,7 @@ class AdminRequests extends ViewModel
             {
                 if ($tag)
                 {
-                    $tag_tmp = $TagEntity->findByPK($tag);
+                    $tag_tmp = $this->TagEntity->findByPK($tag);
                     if ($tag_tmp)
                     {
                         $filter_tags[] = [
@@ -98,18 +86,18 @@ class AdminRequests extends ViewModel
         $start  = ($page-1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
-        $result = $RequestEntity->list( $start, $limit, $where, $sort);
-        $total = $RequestEntity->getListTotal();
+        $result = $this->RequestEntity->list( $start, $limit, $where, $sort);
+        $total = $this->RequestEntity->getListTotal();
         if (!$result)
         {
             $result = [];
             $total = 0;
             if( !empty($search) )
             {
-                $session->set('flashMsg', 'Not Found Request');
+                $this->session->set('flashMsg', 'Not Found Request');
             }
         }
-        $milestone = $MilestoneEntity->findByPK($milestone_id);
+        $milestone = $this->MilestoneEntity->findByPK($milestone_id);
         $start_date = $milestone['start_date'] && $milestone['start_date'] != '0000-00-00 00:00:00' ? date('d/m/Y', strtotime($milestone['start_date'])) : '';
         $end_date = $milestone['end_date'] && $milestone['end_date'] != '0000-00-00 00:00:00' ? date('d/m/Y', strtotime($milestone['end_date'])) : '';
         $title = $start_date && $end_date ? $milestone['title'] . ' ('. $start_date . ' - '. $end_date .')' : $milestone['title'];
@@ -118,21 +106,21 @@ class AdminRequests extends ViewModel
 
         foreach($result as &$item)
         {
-            $user_tmp = $UserEntity->findByPK($item['created_by']);
+            $user_tmp = $this->UserEntity->findByPK($item['created_by']);
             $item['creator'] = $user_tmp ? $user_tmp['name'] : '';
             $tags = $item['tags'] ? explode(',', $item['tags']) : [];
             $tag_tmp = [];
             $item['tags'] = [];
             foreach($tags as $tag)
             {
-                $tmp = $TagEntity->findByPK($tag);
+                $tmp = $this->TagEntity->findByPK($tag);
                 if ($tmp)
                 {
                     $tag_tmp[] = $tmp['name'];
                     $item['tags'][] = $tmp;
                 }
             }
-            $item['excerpt_description'] = $RequestModel->excerpt($item['description']);
+            $item['excerpt_description'] = $this->RequestModel->excerpt($item['description']);
             $item['tag_tmp'] = implode(' , ', $tag_tmp);
 
             $assigns = $item['assignment'] ? json_decode($item['assignment']) : [];
@@ -140,7 +128,7 @@ class AdminRequests extends ViewModel
             $selected_tmp = [];
             foreach($assigns as $assign)
             {
-                $user_tmp = $UserEntity->findByPK($assign);
+                $user_tmp = $this->UserEntity->findByPK($assign);
                 if ($user_tmp)
                 {
                     $assign_tmp[] = $user_tmp['name'];
@@ -154,29 +142,34 @@ class AdminRequests extends ViewModel
             $item['assignment'] = json_encode($selected_tmp);
         }
 
-        $version_lastest = $VersionEntity->list(0, 1, [], 'created_at desc');
+        $version_lastest = $this->VersionEntity->list(0, 1, [], 'created_at desc');
         $version_lastest = $version_lastest ? $version_lastest[0]['version'] : '0.0.0';
 
         
         $limit = $limit == 0 ? $total : $limit;
         $list   = new Listing($result, $total, $limit, $this->getColumns());
+
+        $permission = $this->container->exists('PermissionModel') ? $this->PermissionModel : null;
+        $allow_tag = $permission ? $permission->checkPermission(['tag_manager', 'tag_create']) : true;
         
         return [
             'milestone_id' => $milestone_id,
             'list' => $list,
+            'allow_tag' => $allow_tag,
             'version_lastest' => $version_lastest,
             'page' => $page,
             'start' => $start,
             'filter_tags' => json_encode($filter_tags),
             'sort' => $sort,
-            'user_id' => $user->get('id'),
-            'url' => $router->url(),
-            'link_list' => $router->url('requests/'. $milestone_id),
-            'link_tag' => $router->url('tag/search'),
+            'user_id' => $this->user->get('id'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('requests/'. $milestone_id),
+            'link_tag' => $this->router->url('tag/search'),
+            'link_user_search' => $this->router->url('request/find-user'),
             'title_page' => $title_page,
-            'link_form' => $router->url('request/'. $milestone_id),
-            'link_detail' => $router->url('detail-request'),
-            'token' => $this->container->get('token')->value(),
+            'link_form' => $this->router->url('request/'. $milestone_id),
+            'link_detail' => $this->router->url('detail-request'),
+            'token' => $this->token->value(),
     
         ];
     }

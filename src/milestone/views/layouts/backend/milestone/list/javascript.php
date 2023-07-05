@@ -1,7 +1,3 @@
-<form class="hidden" method="POST" id="form_delete">
-    <input type="hidden" value="<?php echo $this->token ?>" name="token">
-    <input type="hidden" value="DELETE" name="_method">
-</form>
 <script>
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);

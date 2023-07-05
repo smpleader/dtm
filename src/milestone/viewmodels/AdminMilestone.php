@@ -24,14 +24,13 @@ class AdminMilestone extends ViewModel
     
     public function form()
     {
-        $router = $this->container->get('router');
         $form = new Form($this->getFormFields(), []);
 
         return [
             'form' => $form,
-            'url' => $router->url(),
-            'link_list' => $router->url('milestones'),
-            'link_form' => $router->url('milestone'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('milestones'),
+            'link_form' => $this->router->url('milestone'),
         ];
     }
 
@@ -70,7 +69,7 @@ class AdminMilestone extends ViewModel
                 ]
             ],
             'token' => ['hidden',
-                'default' => $this->container->get('token')->value(),
+                'default' => $this->token->value(),
             ],
         ];
 

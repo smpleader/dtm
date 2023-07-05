@@ -27,27 +27,14 @@ class AdminRelateNotes extends ViewModel
 
     public function list()
     {
-        $request =  $this->container->get('request');
-        $NoteEntity =  $this->container->get('NoteEntity');
-        $TagEntity =  $this->container->get('TagEntity');
-        $session =  $this->container->get('session');
-        $user =  $this->container->get('user');
-        $token =  $this->container->get('token');
-        $router =  $this->container->get('router');
-        $RequestEntity =  $this->container->get('RequestEntity');
-        $RequestModel =  $this->container->get('RequestModel');
-        $RelateNoteEntity =  $this->container->get('RelateNoteEntity');
-        $MilestoneEntity =  $this->container->get('MilestoneEntity');
-        $VersionEntity =  $this->container->get('VersionEntity');
-
         $filter = $this->filter()['form'];
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
 
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
         $search = trim($filter->getField('search')->value);
-        $page   = $request->get->get('page', 1);
+        $page   = $this->request->get->get('page', 1);
         if ($page <= 0) $page = 1;
 
         $where = [];
@@ -61,15 +48,15 @@ class AdminRelateNotes extends ViewModel
         $start  = ($page-1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
-        $result = $RelateNoteEntity->list( 0, 0, $where, 0);
-        $total = $RelateNoteEntity->getListTotal();
+        $result = $this->RelateNoteEntity->list( 0, 0, $where, 0);
+        $total = $this->RelateNoteEntity->getListTotal();
         if (!$result)
         {
             $result = [];
             $total = 0;
         }
-        $request = $RequestEntity->findByPK($request_id);
-        $milestone = $request ? $MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
+        $request = $this->RequestEntity->findByPK($request_id);
+        $milestone = $request ? $this->MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
         $title_page_relate_note = 'Related Notes';
 
         $note_exist = $this->container->exists('NoteEntity');
@@ -80,7 +67,7 @@ class AdminRelateNotes extends ViewModel
             $note_tmp = false;
             if ($note_exist)
             {
-                $note_tmp = $NoteEntity->findByPK($item['note_id']);
+                $note_tmp = $this->NoteEntity->findByPK($item['note_id']);
                 if ($note_tmp)
                 {
                     $item['title'] = $note_tmp['title'];
@@ -96,7 +83,7 @@ class AdminRelateNotes extends ViewModel
                 if (!empty($item['tags'])){
                     $t1 = $where = [];
                     $where[] = "(`id` IN (".$item['tags'].") )";
-                    $t2 = $TagEntity->list(0, 1000, $where,'','`name`');
+                    $t2 = $this->TagEntity->list(0, 1000, $where,'','`name`');
     
                     foreach ($t2 as $i) $t1[] = $i['name'];
     
@@ -109,7 +96,7 @@ class AdminRelateNotes extends ViewModel
                 $item['description'] = '';
             }
 
-            $item['description'] = $RequestModel->excerpt($item['description']);
+            $item['description'] = $this->RequestModel->excerpt($item['description']);
 
             if ($note_tmp)
             {
@@ -118,9 +105,9 @@ class AdminRelateNotes extends ViewModel
         }
 
         $result = $notes;
-        $version_lastest = $VersionEntity->list(0, 1, [], 'created_at desc');
+        $version_lastest = $this->VersionEntity->list(0, 1, [], 'created_at desc');
         $version_lastest = $version_lastest ? $version_lastest[0]['version'] : '0.0.0';
-        $tmp_request = $RequestEntity->list(0, 0, ['id = '.$request_id], 0);
+        $tmp_request = $this->RequestEntity->list(0, 0, ['id = '.$request_id], 0);
         foreach($tmp_request as $tmp_item) {
         }
 
@@ -135,35 +122,30 @@ class AdminRelateNotes extends ViewModel
             'result' => $result,
             'status' => $status,
             'sort' => $sort,
-            'user_id' => $user->get('id'),
-            'url' => $router->url(),
-            'link_update_relate_note' => $router->url('relate-note/update-alias'),
-            'link_list' => $router->url('relate-notes/' . $request_id),
-            'link_note' => $router->url('note/preview'),
-            'link_list_relate_note' => $router->url('relate-notes/' . $request_id),
+            'user_id' => $this->user->get('id'),
+            'url' => $this->router->url(),
+            'link_update_relate_note' => $this->router->url('relate-note/update-alias'),
+            'link_list' => $this->router->url('relate-notes/' . $request_id),
+            'link_note' => $this->router->url('note/preview'),
+            'link_list_relate_note' => $this->router->url('relate-notes/' . $request_id),
             'title_page_relate_note' => $title_page_relate_note,
-            'token' => $this->container->get('token')->value(),
+            'token' => $this->token->value(),
         ];
     }
 
     public function javascript()
     {
-        $request =  $this->container->get('request');
-        $user =  $this->container->get('user');
-        $token =  $this->container->get('token');
-        $router =  $this->container->get('router');
-
         $filter = $this->filter()['form'];
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
 
         return [
             'request_id' => $request_id,
-            'link_list' => $router->url('relate-notes/' . $request_id),
-            'link_form' => $router->url('relate-note/'. $request_id),
-            'link_note' => $router->url('note'),
-            'link_list_relate_note' => $router->url('relate-notes/' . $request_id),
-            'token' => $this->container->get('token')->value(),
+            'link_list' => $this->router->url('relate-notes/' . $request_id),
+            'link_form' => $this->router->url('relate-note/'. $request_id),
+            'link_note' => $this->router->url('note'),
+            'link_list_relate_note' => $this->router->url('relate-notes/' . $request_id),
+            'token' => $this->token->value(),
         ];
     }
 

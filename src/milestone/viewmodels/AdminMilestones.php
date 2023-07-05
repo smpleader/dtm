@@ -27,29 +27,21 @@ class AdminMilestones extends ViewModel
     
     public function home()
     {
-        $router = $this->container->get('router');
         return [
-            'url' => $router->url(),
+            'url' => $this->router->url(),
             'title_page' => 'Welcome SDM',
         ];
     }
 
     public function list()
     {
-        $request = $this->container->get('request');
-        $session = $this->container->get('session');
-        $user = $this->container->get('user');
-        $router = $this->container->get('router');
-        $RequestModel = $this->container->get('RequestModel');
-        $MilestoneEntity = $this->container->get('MilestoneEntity');
-
         $filter = $this->filter()['form'];
 
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
         $search = trim($filter->getField('search')->value);
         $status = $filter->getField('status')->value;
-        $page   = $request->get->get('page', 1);
+        $page   = $this->request->get->get('page', 1);
         if ($page <= 0) $page = 1;
 
         $where = [];
@@ -68,20 +60,20 @@ class AdminMilestones extends ViewModel
         $start  = ($page-1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
-        $result = $MilestoneEntity->list( $start, $limit, $where, $sort);
-        $total = $MilestoneEntity->getListTotal();
+        $result = $this->MilestoneEntity->list( $start, $limit, $where, $sort);
+        $total = $this->MilestoneEntity->getListTotal();
         if (!$result)
         {
             $result = [];
             $total = 0;
             if( !empty($search) )
             {
-                $session->set('flashMsg', 'Not Found Milestone');
+                $this->session->set('flashMsg', 'Not Found Milestone');
             }
         }
         foreach($result as &$item)
         {
-            $item['excerpt_description'] = $RequestModel->excerpt($item['description']);
+            $item['excerpt_description'] = $this->RequestModel->excerpt($item['description']);
         }
 
         $limit = $limit == 0 ? $total : $limit;
@@ -91,13 +83,13 @@ class AdminMilestones extends ViewModel
             'page' => $page,
             'start' => $start,
             'sort' => $sort,
-            'user_id' => $user->get('id'),
-            'url' => $router->url(),
-            'link_list' => $router->url('milestones'),
-            'link_request_list' => $router->url('requests'),
+            'user_id' => $this->user->get('id'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('milestones'),
+            'link_request_list' => $this->router->url('requests'),
             'title_page' => 'Milestone Manager',
-            'link_form' => $router->url('milestone'),
-            'token' => $this->container->get('token')->value(),
+            'link_form' => $this->router->url('milestone'),
+            'token' => $this->token->value(),
         ];
     }
 

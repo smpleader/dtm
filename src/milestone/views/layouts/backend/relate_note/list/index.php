@@ -1,4 +1,4 @@
-<?php echo $this->render('notification', []); ?>
+<?php echo $this->renderWidget('notification', []); ?>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-12">
@@ -70,28 +70,9 @@
 		</div>
 	</div>
 </div>
+<form class="hidden" method="POST" id="form_delete_relate_note">
+    <input type="hidden" value="<?php echo $this->token ?>" name="token">
+    <input type="hidden" value="DELETE" name="_method">
+</form>
 <?php echo $this->render('backend.relate_note.form', []); ?>
-<script>
-	 $(document).ready(function(){
-        $('.relate-note-popup').on('click', function(e){
-            e.preventDefault();
-            $('#relateNoteList').modal('show');
-        })
-	});
-
-	function modalEdit()
-    {
-        $('.open-edit-relate').off('click').on('click', function(e){
-            e.preventDefault();
-
-            var title = $(this).data('title-note');
-			var id = $(this).data('id');
-			var alias = $(this).data('alias');
-			$('#note_title').text(title);
-			$('#alias').val(alias);
-			$('#form_update_relate_note').attr('action', '<?php echo $this->link_update_relate_note; ?>/' + id);
-
-            $('#relateEdit').modal('show');
-        });
-    }
-</script>
+<?php echo $this->render('backend.relate_note.list.javascript', ['link_update_relate_note' => $this->link_update_relate_note]); ?>

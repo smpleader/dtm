@@ -1,8 +1,5 @@
-<form class="hidden" method="POST" id="form_delete">
-    <input type="hidden" value="<?php echo $this->token ?>" name="token">
-    <input type="hidden" value="DELETE" name="_method">
-</form>
 <script>
+    
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
     }
@@ -74,6 +71,20 @@
         })
     }
     $(document).ready(function() {
+        $("#form_task").on('submit', function(e){
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: $('#form_task').attr('action'),
+                data: $('#form_task').serialize(),
+                success: function (result) {
+                    modal = bootstrap.Modal.getInstance($('#Popup_form_task'))
+                    modal.hide();
+                    showMessage(result.result, result.message);
+                    listTask($('#filter_form_task').serialize());
+                }
+            });
+        });
         $("#select_all").click( function(){
             $('.checkbox-item').prop('checked', this.checked);
         });
