@@ -47,4 +47,3 @@
         </div>
     </div>
 </form>
-<?php echo $this->render('backend.diagram.list.javascript', []); ?>

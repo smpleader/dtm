@@ -1,12 +1,3 @@
-<form class="hidden" method="POST" id="form_delete">
-    <input type="hidden" value="<?php echo $this->token ?>" name="token">
-    <input type="hidden" value="DELETE" name="_method">
-</form>
-<form class="hidden" method="POST" id="form_update" action="<?php echo $this->link_list ?>">
-    <input type="hidden" value="<?php echo $this->token ?>" name="token">
-    <input type="hidden" value="" name="id" class="toogle_status_id">
-    <input type="hidden" value="PUT" name="_method">
-</form>
 <script>
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);
@@ -87,3 +78,83 @@
 
     });
 </script>
+<script>
+    var ignores = [];
+    $(document).ready(function(){
+        $('.show_data').on('click', function(){
+            var id = $(this).data('id') ?? 0;
+            var title = $(this).data('title') ?? '';
+            var assignment = $(this).data('assignment') ?? '';
+            
+            $('#form_report').attr('action', '<?php echo $this->link_form ?>/' + id);
+            $('#form_report #title').val(title);
+            
+            //clear all
+            $('#assignment').val(null).trigger('change');
+            if (assignment)
+            {
+                assignment.forEach(element => {
+                    var newOption = new Option(element.name, element.id, true, true);
+                    $('#assignment').append(newOption).trigger('change');
+                });
+            }
+        });
+    })
+</script>
+<?php
+$js = <<<Javascript
+$(document).ready(function() {
+    $("#assignment").select2({
+        matcher: matchCustom,
+        ajax: {
+            url: "{$this->link_search}",
+            dataType: 'json',
+            delay: 100,
+            data: function(params) {
+                return {
+                    search: params.term,
+                    ignores: ignores
+                };
+            },
+            processResults: function(data, params) {
+                let items = [];
+                if (data.data.length > 0) {
+                    data.data.forEach(function(item) {
+                        items.push({
+                            id: item.id,
+                            text: item.name
+                        })
+                    })
+                }
+
+                return {
+                    results: items,
+                    pagination: {
+                        more: false
+                    }
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Users',
+        dropdownParent: $("#formEdit"),
+        minimumInputLength: 1,
+    });
+    function matchCustom(params, data) {
+        // If there are no search terms, return all of the data
+        if ($.trim(params.term) === '') {
+            return data;
+        }
+
+        // Do not display the item if there is no 'text' property
+        if (typeof data.text === 'undefined') {
+            return null;
+        }
+
+        // Return `null` if the term should not be displayed
+        return null;
+    }
+  });
+Javascript;
+
+$this->theme->addInline('js', $js);
