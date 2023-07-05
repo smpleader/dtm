@@ -1,4 +1,4 @@
-<?php echo $this->render('notification', []); ?>
+<?php echo $this->renderWidget('notification', []); ?>
 <div class="main">
 	<main class="content p-0 ">
 		<div class="container-fluid p-0">
@@ -33,7 +33,7 @@
 								</table>
 							</form>
 							<div class="row g-3 align-items-center">
-								<?php echo $this->render('pagination', []); ?>
+								<?php echo $this->renderWidget('pagination', []); ?>
 							</div>
 						</div>
 					</div>
@@ -63,3 +63,8 @@
 		</div>
 	</div>
 </div>
+<form class="hidden" method="POST" id="form_delete">
+    <input type="hidden" value="<?php echo $this->token ?>" name="token">
+    <input type="hidden" value="DELETE" name="_method">
+</form>
+<?php echo $this->render('backend.note.list.javascript', []); ?>

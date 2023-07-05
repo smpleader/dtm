@@ -28,26 +28,17 @@ class AdminNotes extends ViewModel
 
     public function list()
     {
-        $request = $this->container->get('request');
-        $TagEntity = $this->container->get('TagEntity');
-        $NoteEntity = $this->container->get('NoteEntity');
-        $UserEntity = $this->container->get('UserEntity');
-        $session = $this->container->get('session');
-        $router = $this->container->get('router');
-        $token = $this->container->get('token');
-        $user = $this->container->get('user');
-
-        $clear_filter = $request->post->get('clear_filter', '', 'string');
+        $clear_filter = $this->request->post->get('clear_filter', '', 'string');
         if ($clear_filter)
         {
-            $session->set('note.tags', []);
+            $this->session->set('note.tags', []);
         }
         $filter = $this->filter()['form'];
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
         $tags   = $filter->getField('tags')->value;
         $search = trim($filter->getField('search')->value);
-        $page   = $request->get->get('page', 1);
+        $page   = $this->request->get->get('page', 1);
         if ($page <= 0) $page = 1;
 
         $where = [];
@@ -91,20 +82,20 @@ class AdminNotes extends ViewModel
             {
                 $where[] = '('. $where_tag . ')';
             }
-        }    
+        } 
 
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
-        $result = $NoteEntity->list($start, $limit, $where, $sort);
-        $total = $NoteEntity->getListTotal();
+        $result = $this->NoteEntity->list($start, $limit, $where, $sort);
+        $total = $this->NoteEntity->getListTotal();
         $data_tags = [];
         
         if (!$result) {
             $result = [];
             $total = 0;
             if (!empty($search)) {
-                $session->set('flashMsg', 'Notes not found');
+                $this->session->set('flashMsg', 'Notes not found');
             }
         }
 
@@ -112,7 +103,7 @@ class AdminNotes extends ViewModel
             if (!empty($item['tags'])) {
                 $t1 = $where = [];
                 $where[] = "(`id` IN (" . $item['tags'] . ") )";
-                $t2 = $TagEntity->list(0, 0, $where, '', '`name`');
+                $t2 = $this->TagEntity->list(0, 0, $where, '', '`name`');
                 if ($t2) {
                     foreach ($t2 as $i) {
                         $t1[] = $i['name'];
@@ -122,26 +113,22 @@ class AdminNotes extends ViewModel
             }
 
             $item['type'] = $item['type'] ? $item['type'] : 'html';
-            $user_tmp = $UserEntity->findByPK($item['created_by']);
+            $user_tmp = $this->UserEntity->findByPK($item['created_by']);
             $item['created_at'] = $item['created_at'] && $item['created_at'] != '0000-00-00 00:00:00' ? date('d/m/Y', strtotime($item['created_at'])) : '';
             $item['created_by'] = $user_tmp ? $user_tmp['name'] : '';
         }
         $limit = $limit == 0 ? $total : $limit;
 
-        $types = [
-            [
-                'link' => $router->url('note/0?type=html'),
-                'title' => 'Html',
-            ],
-            [
-                'link' => $router->url('note/0?type=sheetjs'),
-                'title' => 'Sheet',
-            ],
-            [
-                'link' => $router->url('note/0?type=presenter'),
-                'title' => 'Presenter',
-            ],
-        ];
+        $noteTypes = $this->Note2Model->getTypes();
+        $types = [];
+        foreach($noteTypes as $type => $t)
+        {
+            $types[] = [
+                    'link' => $this->router->url('new-note2/'. $type ),
+                    'title' => $t['title'] 
+                ];
+        }
+        
         $list   = new Listing($result, $total, $limit, $this->getColumns());
         return [
             'list' => $list,
@@ -151,14 +138,14 @@ class AdminNotes extends ViewModel
             'start' => $start,
             'filter_tags' => json_encode($filter_tags),
             'sort' => $sort,
-            'user_id' => $user->get('id'),
-            'url' => $router->url(),
-            'link_list' => $router->url('notes'),
-            'link_tag' => $router->url('tag/search'),
+            'user_id' => $this->user->get('id'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('note2'),
+            'link_tag' => $this->router->url('tag/search'),
             'title_page' => 'Note Manager',
-            'link_form' => $router->url('note'),
-            'link_preview' => $router->url('note/preview'),
-            'token' => $token->value(),
+            'link_form' => $this->router->url('note'),
+            'link_preview' => $this->router->url('note2/detail'),
+            'token' => $this->token->value(),
         ];
     }
 
