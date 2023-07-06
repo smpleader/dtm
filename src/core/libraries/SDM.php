@@ -134,7 +134,9 @@ class SDM extends Base
                 $plg['namespace']. '\entities', 
                 function($classname, $fullname) use (&$container)
                 {
-                    $container->share( $classname, new $fullname($container->get('query')), true);
+                    $x = new $fullname($container->get('query'));
+                    //$x->checkAvailability();
+                    $container->share( $classname, $x, true);
                 });
 
 
