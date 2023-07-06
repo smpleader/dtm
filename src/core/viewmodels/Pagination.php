@@ -16,7 +16,7 @@ class Pagination extends ViewModel
 {
     public static function register()
     {
-        return ['layouts.pagination'];
+        return ['widgets.pagination'];
     }
 
     public function pagination($layoutData, $viewData)
@@ -25,15 +25,13 @@ class Pagination extends ViewModel
         if( isset($viewData['list']) )
         {
             $list = $viewData['list'];
-            $request = $this->container->get('request');
-            $router = $this->container->get('router');
             $total = $list->getTotal();
             return [
                 'total' => $total,
-                'page' => $request->get->get('page', 1),
+                'page' => $this->request->get->get('page', 1),
                 'totalPage' => $list->getTotalPage(),
                 'limit' => $list->getLimit(),
-                'path_current' => $router->get('actualPath'),
+                'path_current' => $this->router->get('actualPath'),
             ];
         }
         return [

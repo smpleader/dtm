@@ -1,4 +1,4 @@
-<?php echo $this->render('notification', []); ?>
+<?php echo $this->renderWidget('notification', []); ?>
 <div class="main">
 	<main class="content p-0 ">
 		<div class="container-fluid p-0">
@@ -37,7 +37,7 @@
 								</table>
 							</form>
 							<div class="row g-3 align-items-center">
-								<?php echo $this->render('pagination', []); ?>
+								<?php echo $this->renderWidget('pagination', []); ?>
 							</div>
 						</div>
 					</div>
@@ -47,36 +47,8 @@
 		</div>
 	</main>
 </div>
-<div aria-live="polite" aria-atomic="true" class="position-relative">
-	<!-- Position it: -->
-	<!-- - `.toast-container` for spacing between toasts -->
-	<!-- - `.position-absolute`, `top-0` & `end-0` to position the toasts in the upper right corner -->
-	<!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
-	<div class="toast-container position-absolute top-0 end-0 p-3">
-
-		<!-- Then put toasts within -->
-		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-			<div class="toast-header">
-				<img src="..." class="rounded me-2" alt="...">
-				<strong class="me-auto">Bootstrap</strong>
-				<small class="text-muted">just now</small>
-				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-			</div>
-			<div class="toast-body">
-				See? Just like this.
-			</div>
-		</div>
-
-		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-			<div class="toast-header">
-				<img src="..." class="rounded me-2" alt="...">
-				<strong class="me-auto">Bootstrap</strong>
-				<small class="text-muted">2 seconds ago</small>
-				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-			</div>
-			<div class="toast-body">
-				Heads up, toasts will stack automatically
-			</div>
-		</div>
-	</div>
-</div>
+<form class="hidden" method="POST" id="form_delete">
+    <input type="hidden" value="<?php echo $this->token ?>" name="token">
+    <input type="hidden" value="DELETE" name="_method">
+</form>
+<?php echo $this->render('backend.milestone.list.javascript', []); ?>

@@ -38,11 +38,14 @@ class UserGroupModel extends Base
         return $try;
     }
 
-    public function updateUserMap($data)
+    public function updateUserMap($id, $groups_update)
     {
-        $groups_update = $this->request->post->get('groups', [], 'array');
+        if (!$id)
+        {
+            return false;
+        }
 
-        $groups = $this->UserEntity->getGroups($data['id']);
+        $groups = $this->UserEntity->getGroups($id);
         foreach($groups as $group)
         {
             if (!in_array($group['group_id'], $groups_update))
@@ -60,7 +63,7 @@ class UserGroupModel extends Base
         foreach($groups_update as $group)
         {
             $this->UserGroupEntity->add([
-                'user_id' => $data['id'],
+                'user_id' => $id,
                 'group_id' => $group,
             ]);
         }
@@ -68,9 +71,13 @@ class UserGroupModel extends Base
         return true;
     }
 
-    public function addUserMap($newid)
+    public function addUserMap($newid, $groups)
     {
-        $groups = $this->request->post->get('groups', [], 'array');
+        if (!$newid)
+        {
+            return false;
+        }
+        
         if ($groups)
         {
             foreach($groups as $group)
@@ -118,14 +125,17 @@ class UserGroupModel extends Base
         return true;
     }
 
-    public function validate($id = 0)
+    public function validate($data)
     {
-        $name = $this->request->post->get('name', '', 'string');
-
-        if(!empty($name)) 
+        if (!$data || !is_array($data))
         {
-            $find = $this->GroupEntity->findOne(['name' => $name]);
-            if ($find && $find['id'] != $id)
+            return false;
+        }
+
+        if(!empty($data['name'])) 
+        {
+            $find = $this->GroupEntity->findOne(['name' => $data['name']]);
+            if ($find && (isset($data['id']) && $find['id'] != $data['id']))
             {
                 $this->session->set('validate', "Error: Group Name already exists");
                 return false;

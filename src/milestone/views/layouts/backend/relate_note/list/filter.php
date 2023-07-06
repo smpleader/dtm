@@ -39,4 +39,3 @@
         </div>
     </div>
 </form>
-<?php echo $this->render('backend.relate_note.list.javascript', []); ?>

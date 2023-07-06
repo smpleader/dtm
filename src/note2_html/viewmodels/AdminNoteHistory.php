@@ -25,24 +25,16 @@ class AdminNoteHistory extends ViewModel
 
     public function form()
     {
-        $request = $this->container->get('request');
-        $NoteHistoryEntity = $this->container->get('NoteHistoryEntity');
-        $UserEntity = $this->container->get('UserEntity');
-        $TagEntity = $this->container->get('TagEntity');
-        $AttachmentEntity = $this->container->get('AttachmentEntity');
-        $router = $this->container->get('router');
-        $NoteModel = $this->container->get('NoteModel');
-
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $id = (int) $urlVars['id'];
 
-        $version = $id ? $NoteHistoryEntity->findByPK($id) : [];
+        $version = $id ? $this->NoteHistoryEntity->findByPK($id) : [];
 
         if ($version)
         {
             if ($version)
             {
-                $user_tmp = $UserEntity->findByPK($version['created_by']);
+                $user_tmp = $this->UserEntity->findByPK($version['created_by']);
                 $version['created_by'] = $user_tmp ? $user_tmp['name'] : '';
                 $data = json_decode($version['meta_data'], true);
                 $data['id'] = $id;
@@ -52,16 +44,16 @@ class AdminNoteHistory extends ViewModel
 
         if ($data)
         {
-            $data['description'] = $NoteModel->replaceContent($data['description'], false);
+            $data['description'] = $this->NoteModel->replaceContent($data['description'], false);
 
             $data['description_sheetjs'] = base64_encode(strip_tags($data['description']));
             $data['description_presenter'] = $data['description'];
-            $versions = $NoteHistoryEntity->list(0, 0, ['note_id' => $data['id']], 'id desc');
+            $versions = $this->NoteHistoryEntity->list(0, 0, ['note_id' => $data['id']], 'id desc');
             $versions = $versions ? $versions : [];
 
             foreach($versions as &$item)
             {
-                $user_tmp = $UserEntity->findByPK($item['created_by']);
+                $user_tmp = $this->UserEntity->findByPK($item['created_by']);
                 $item['created_by'] = $user_tmp ? $user_tmp['name'] : '';
             }
 
@@ -71,9 +63,9 @@ class AdminNoteHistory extends ViewModel
         $data_tags = [];
         if (!empty($data['tags'])){
             $where[] = "(`id` IN (".$data['tags'].") )";
-            $data_tags = $TagEntity->list(0, 1000, $where);
+            $data_tags = $this->TagEntity->list(0, 1000, $where);
         }
-        $attachments = $AttachmentEntity->list(0, 0, ['note_id = '. $id]);
+        $attachments = $this->AttachmentEntity->list(0, 0, ['note_id = '. $id]);
         $form = new Form($this->getFormFields(), $data);
         $view_mode = true;
 
@@ -86,11 +78,11 @@ class AdminNoteHistory extends ViewModel
             'version' => $version,
             'attachments' => $attachments,
             'title_page' => $data && $data['title'] ? $data['title'] : 'New Note',
-            'url' => $router->url(),
-            'link_list' => $router->url('note/'. $version['note_id']),
-            'link_form' => $router->url('note/version'),
-            'link_form_attachment' => $router->url('attachment'),
-            'link_tag' => $router->url('tag'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('note/'. $version['note_id']),
+            'link_form' => $this->router->url('note/version'),
+            'link_form_attachment' => $this->router->url('attachment'),
+            'link_tag' => $this->router->url('tag'),
         ];
     }
 
@@ -138,7 +130,7 @@ class AdminNoteHistory extends ViewModel
                 'formClass' => 'form-control',
             ],
             'token' => ['hidden',
-                'default' => $this->container->get('token')->value(),
+                'default' => $this->token->value(),
             ],
         ];
 

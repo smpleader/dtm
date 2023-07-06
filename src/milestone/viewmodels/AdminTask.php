@@ -24,23 +24,18 @@ class AdminTask extends ViewModel
 
     public function form()
     {
-        $request = $this->container->get('request');
-        $RequestEntity = $this->container->get('RequestEntity');
-        $MilestoneEntity = $this->container->get('MilestoneEntity');
-        $router = $this->container->get('router');
-
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
 
         $form = new Form($this->getFormFields(), []);
-        $request = $RequestEntity->findByPK($request_id);
-        $milestone = $request ? $MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
+        $request = $this->RequestEntity->findByPK($request_id);
+        $milestone = $request ? $this->MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
 
         return [
             'form' => $form,
-            'url' => $router->url(),
-            'link_list' => $router->url('tasks/'. $request_id),
-            'link_form' => $router->url('task/'. $request_id),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('tasks/'. $request_id),
+            'link_form' => $this->router->url('task/'. $request_id),
         ];
     }
 
@@ -61,7 +56,7 @@ class AdminTask extends ViewModel
                 'formClass' => 'form-control rounded-0 border border-1 py-1 fs-4-5',
             ],
             'token' => ['hidden',
-                'default' => $this->container->get('token')->value(),
+                'default' => $this->token->value(),
             ],
         ];
 

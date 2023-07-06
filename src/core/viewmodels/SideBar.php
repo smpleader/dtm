@@ -23,11 +23,8 @@ class SideBar extends ViewModel
 
     public function sidebar()
     {
-        $app = $this->container->get('app');
-        $router = $this->container->get('router');
-
         $menu_register = [];
-        $app->plgLoad('menu', 'registerItem', function($menu) use (&$menu_register){
+        $this->app->plgLoad('menu', 'registerItem', function($menu) use (&$menu_register){
             if (is_array($menu) && $menu)
             {
                 $order = 1;
@@ -44,7 +41,7 @@ class SideBar extends ViewModel
             }
         });
         
-        $menu_type = $app->get('menu_type', 'menu');
+        $menu_type = $this->app->get('menu_type', 'menu');
         $menu = isset($menu_register[$menu_type]) ? $menu_register[$menu_type] : [];
         ksort($menu);
 
@@ -54,8 +51,8 @@ class SideBar extends ViewModel
             $menu_sidebar = array_merge($menu_sidebar, $menu_items);
         }
         return [
-            'logout_link' => $router->url('logout'),
-            'link_admin' => $router->url(''),
+            'logout_link' => $this->router->url('logout'),
+            'link_admin' => $this->router->url(''),
             'menu' => $menu_sidebar,
         ];
     }

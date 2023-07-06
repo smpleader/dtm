@@ -25,11 +25,9 @@ class AdminRequest extends ViewModel
 
     public function form()
     {
-        $request = $this->container->get('request');
-        $router = $this->container->get('router');
-        $permission = $this->container->exists('PermissionModel') ? $this->container->get('PermissionModel') : null;
+        $permission = $this->container->exists('PermissionModel') ? $this->PermissionModel : null;
 
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         
         $milestone_id = (int) $urlVars['milestone_id'];
         
@@ -40,11 +38,11 @@ class AdminRequest extends ViewModel
         return [
             'form' => $form,
             'allow_tag' => $allow_tag ? 'true' : 'false',
-            'url' => $router->url(),
-            'link_user_search' => $router->url('request/find-user'),
-            'link_list' => $router->url('requests/'. $milestone_id),
-            'link_tag' => $router->url('tag/search'),
-            'link_form' => $router->url('request/'. $milestone_id),
+            'url' => $this->router->url(),
+            'link_user_search' => $this->router->url('request/find-user'),
+            'link_list' => $this->router->url('requests/'. $milestone_id),
+            'link_tag' => $this->router->url('tag/search'),
+            'link_form' => $this->router->url('request/'. $milestone_id),
         ];
     }
 
@@ -86,7 +84,7 @@ class AdminRequest extends ViewModel
                 'formClass' => 'form-control',
             ],
             'token' => ['hidden',
-                'default' => $this->container->get('token')->value(),
+                'default' => $this->token->value(),
             ],
         ];
 
@@ -95,18 +93,12 @@ class AdminRequest extends ViewModel
 
     public function detail_request()
     {
-        $request = $this->container->get('request');
-        $router = $this->container->get('router');
-        $RequestEntity = $this->container->get('RequestEntity');
-        $TagEntity = $this->container->get('TagEntity');
-        $UserEntity = $this->container->get('UserEntity');
-        $permission = $this->container->exists('PermissionModel') ? $this->container->get('PermissionModel') : null;
-        $MilestoneEntity = $this->container->get('MilestoneEntity');
+        $permission = $this->container->exists('PermissionModel') ? $this->PermissionModel : null;
 
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
-        $request = $RequestEntity->findByPK($request_id);
-        $milestone = $request ? $MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
+        $request = $this->RequestEntity->findByPK($request_id);
+        $milestone = $request ? $this->MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
         
         if ($request)
         {
@@ -114,7 +106,7 @@ class AdminRequest extends ViewModel
             $request['tags'] = [];
             foreach($tags as $tag)
             {
-                $tmp = $TagEntity->findByPK($tag);
+                $tmp = $this->TagEntity->findByPK($tag);
                 if ($tmp)
                 {
                     $request['tags'][] = $tmp;
@@ -125,7 +117,7 @@ class AdminRequest extends ViewModel
             $selected_tmp = [];
             foreach($assigns as $assign)
             {
-                $user_tmp = $UserEntity->findByPK($assign);
+                $user_tmp = $this->UserEntity->findByPK($assign);
                 if ($user_tmp)
                 {
                     $selected_tmp[] = [
@@ -139,18 +131,18 @@ class AdminRequest extends ViewModel
 
         $allow_tag = $permission ? $permission->checkPermission(['tag_manager', 'tag_create']) : true;
 
-        $title_page = '<a class="me-2" href="'.$router->url('notes').'">Notes</a> | <a class="ms-2" href="'. $router->url('requests/'. $milestone['id']).'" >'. $milestone['title'].'</a> >> Request: '. $request['title'].  '<a type="button" class="ms-3" id="edit-request"  data-bs-placement="top" data-bs-toggle="modal" data-bs-target="#formModalToggle" ><i class="fa-solid fa-pen-to-square"></i></a>';
+        $title_page = '<a class="me-2" href="'.$this->router->url('notes').'">Notes</a> | <a class="ms-2" href="'. $this->router->url('requests/'. $milestone['id']).'" >'. $milestone['title'].'</a> >> Request: '. $request['title'].  '<a type="button" class="ms-3" id="edit-request"  data-bs-placement="top" data-bs-toggle="modal" data-bs-target="#formModalToggle" ><i class="fa-solid fa-pen-to-square"></i></a>';
         $note_types = [
             [
-                'link' => $router->url('note/0?type=html'),
+                'link' => $this->router->url('note/0?type=html'),
                 'title' => 'Html',
             ],
             [
-                'link' => $router->url('note/0?type=sheetjs'),
+                'link' => $this->router->url('note/0?type=sheetjs'),
                 'title' => 'Sheet',
             ],
             [
-                'link' => $router->url('note/0?type=presenter'),
+                'link' => $this->router->url('note/0?type=presenter'),
                 'title' => 'Presenter',
             ],
         ];
@@ -159,10 +151,10 @@ class AdminRequest extends ViewModel
             'request_id' => $request_id,
             'note_types' => $note_types,
             'allow_tag' => $allow_tag ? 'true' : 'false',
-            'url' => $router->url(),
-            'link_form_request' => $router->url('request/'. $milestone['id'] . '/' . $request['id']),
-            'link_tag' => $router->url('tag/search'),
-            'link_user_search' => $router->url('request/find-user'),
+            'url' => $this->router->url(),
+            'link_form_request' => $this->router->url('request/'. $milestone['id'] . '/' . $request['id']),
+            'link_tag' => $this->router->url('tag/search'),
+            'link_user_search' => $this->router->url('request/find-user'),
             'title_page' => $title_page,
             'request' => $request,
         ];

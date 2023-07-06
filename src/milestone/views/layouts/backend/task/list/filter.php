@@ -42,4 +42,3 @@
         </div>
     </div>
 </form>
-<?php echo $this->render('backend.task.list.javascript', ['link_list' => $this->link_list, 'link_form' => $this->link_form]); ?>

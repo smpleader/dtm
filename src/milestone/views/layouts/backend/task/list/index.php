@@ -1,4 +1,4 @@
-<?php echo $this->render('notification', []);?>
+<?php echo $this->renderWidget('notification', []);?>
 <div class="pt-2" id="task_link">
 	<div class="container-fluid">
 		<div class="row justify-content-center mx-auto">
@@ -45,3 +45,8 @@
 
 	</div>
 </div>
+<form class="hidden" method="POST" id="form_delete">
+    <input type="hidden" value="<?php echo $this->token ?>" name="token">
+    <input type="hidden" value="DELETE" name="_method">
+</form>
+<?php echo $this->render('backend.task.list.javascript', ['link_list' => $this->link_list, 'link_form' => $this->link_form]); ?>

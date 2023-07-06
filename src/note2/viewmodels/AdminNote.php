@@ -26,20 +26,12 @@ class AdminNote extends ViewModel
     
     public function form()
     {
-        $request = $this->request;
-        $NoteEntity = $this->NoteEntity;
-        $NoteHistoryEntity = $this->NoteHistoryEntity;
-        $UserEntity = $this->UserEntity;
-        $TagEntity = $this->TagEntity;
-        $NoteModel = $this->NoteModel;
-        $AttachmentEntity = $this->AttachmentEntity;
-        $router = $this->router;
         $type = $this->request->get->get('type', 'html');
         $permission = $this->container->exists('PermissionModel') ? $this->PermissionModel : null;
 
         $id = 0;  
         
-        $data = $NoteModel->getDetail($id);
+        $data = $this->NoteModel->getDetail($id);
         $data = $data ? $data : [];
         $allow_tag = $permission ? $permission->checkPermission(['tag_manager', 'tag_create']) : true;
 
@@ -58,13 +50,13 @@ class AdminNote extends ViewModel
             'data_version' => $data ? $data['versions'] : [],
             'attachments' => $data ? $data['attachments'] : [],
             'title_page_edit' => $data && $data['title'] ? $data['title'] : 'New Note',
-            'url' => $router->url(),
-            'link_list' => $router->url('notes'),
-            'link_form' => $router->url('note'),
-            'link_preview' => $id ? $router->url('note/preview/'. $id) : '',
-            'link_form_attachment' => $router->url('attachment'),
-            'link_form_download_attachment' => $router->url('download/attachment'),
-            'link_tag' => $router->url('tag/search'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('notes'),
+            'link_form' => $this->router->url('note'),
+            'link_preview' => $id ? $this->router->url('note/preview/'. $id) : '',
+            'link_form_attachment' => $this->router->url('attachment'),
+            'link_form_download_attachment' => $this->router->url('download/attachment'),
+            'link_tag' => $this->router->url('tag/search'),
         ];
         
     }
@@ -80,11 +72,11 @@ class AdminNote extends ViewModel
         $AttachmentEntity = $this->AttachmentEntity;
         $router = $this->router;
 
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $id = (int) $urlVars['id'];
-        $version = $request->get->get('version', 0);
+        $version = $this->request->get->get('version', 0);
 
-        $data = $NoteModel->getDetail($id);
+        $data = $this->NoteModel->getDetail($id);
         $data = $data ? $data : [];
 
         $form = new Form($this->getFormFields(), $data);
@@ -92,12 +84,12 @@ class AdminNote extends ViewModel
         $title_page = $data['title'];
         $button_header = [
             [
-                'link' => $router->url('notes'),
+                'link' => $this->router->url('notes'),
                 'class' => 'btn btn-outline-secondary',
                 'title' => 'Cancel',
             ],
             [
-                'link' => $router->url('note/'. $id),
+                'link' => $this->router->url('note/'. $id),
                 'class' => 'btn ms-2 btn-outline-success',
                 'title' => 'Edit',
             ],
@@ -113,12 +105,12 @@ class AdminNote extends ViewModel
             'version' => $version,
             'attachments' => $data ? $data['attachments'] : [],
             'title_page' => $title_page,
-            'url' => $router->url(),
-            'link_list' => $router->url('notes'),
-            'link_form' => $router->url('note'),
-            'link_form_attachment' => $router->url('attachment'),
-            'link_form_download_attachment' => $router->url('download/attachment'),
-            'link_tag' => $router->url('tag/search'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('notes'),
+            'link_form' => $this->router->url('note'),
+            'link_form_attachment' => $this->router->url('attachment'),
+            'link_form_download_attachment' => $this->router->url('download/attachment'),
+            'link_tag' => $this->router->url('tag/search'),
         ];
         
     }

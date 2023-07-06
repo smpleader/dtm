@@ -1,7 +1,149 @@
-<form class="hidden" method="POST" id="form_delete">
-    <input type="hidden" value="<?php echo $this->token ?>" name="token">
-    <input type="hidden" value="DELETE" name="_method">
-</form>
+<script>
+    var new_tags = [];
+    $(document).ready(function(){
+        $(".js-example-tags").select2({
+            tags: <?php echo $this->allow_tag ?>,
+            matcher: matchCustom,
+            ajax: {
+                url: "<?php echo $this->link_tag ?>",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults: function(data, params) {
+                    let items = [];
+                    if (data.data.length > 0) {
+                        data.data.forEach(function(item) {
+                            items.push({
+                                id: item.id,
+                                text: item.name
+                            })
+                        })
+                    }
+
+                    return {
+                        results: items,
+                        pagination: {
+                            more: false
+                        }
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Search tags',
+            minimumInputLength: 1,
+        });
+
+        $('.js-example-tags').on('select2:select', async function(e) {
+            setTags();
+        });
+
+        $('.js-example-tags').on('select2:unselect', function(e) {
+            setTags();
+        });
+
+        function matchCustom(params, data) {
+            // If there are no search terms, return all of the data
+            if ($.trim(params.term) === '') {
+                return data;
+            }
+
+            // Do not display the item if there is no 'text' property
+            if (typeof data.text === 'undefined') {
+                return null;
+            }
+
+            // Return `null` if the term should not be displayed
+            return null;
+        }
+
+        
+    })
+    function setTags() {
+        let tmp_tags = $('#select_tags').val();
+        if (tmp_tags.length > 0) {
+            var items = [];
+
+            if (new_tags.length > 0) {
+                tmp_tags.forEach(function(item, key) {
+                    let ck = false;
+                    new_tags.forEach(function(item2, key2) {
+
+                        if (item == item2.text)
+                            ck = item2
+                    })
+
+                    if (ck === false)
+                        items.push(item)
+                    else
+                        items.push(ck.id)
+                })
+            } else items = tmp_tags
+
+            $('#tags').val(items.join(','))
+        } else {
+            $('#tags').val('')
+        }
+    }
+</script>
+<?php
+$js = <<<Javascript
+$(document).ready(function() {
+    $("#assignment").select2({
+        matcher: matchCustom,
+        ajax: {
+            url: "{$this->link_user_search}",
+            dataType: 'json',
+            delay: 100,
+            data: function(params) {
+                return {
+                    search: params.term,
+                };
+            },
+            processResults: function(data, params) {
+                let items = [];
+                if (data.data.length > 0) {
+                    data.data.forEach(function(item) {
+                        items.push({
+                            id: item.id,
+                            text: item.name
+                        })
+                    })
+                }
+
+                return {
+                    results: items,
+                    pagination: {
+                        more: false
+                    }
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Users',
+        minimumInputLength: 1,
+    });
+    function matchCustom(params, data) {
+        // If there are no search terms, return all of the data
+        if ($.trim(params.term) === '') {
+            return data;
+        }
+
+        // Do not display the item if there is no 'text' property
+        if (typeof data.text === 'undefined') {
+            return null;
+        }
+
+        // Return `null` if the term should not be displayed
+        return null;
+    }
+  });
+Javascript;
+
+$this->theme->addInline('js', $js); ?>
 <script>
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);

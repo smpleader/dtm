@@ -25,7 +25,6 @@ class AdminDiagram extends ViewModel
     
     public function form()
     {
-        $router = $this->container->get('router');
         $data = [
             'title' => '',
             'assignment' => [],
@@ -34,8 +33,8 @@ class AdminDiagram extends ViewModel
 
         return [
             'form' => $form,
-            'link_form' => $router->url('report'),
-            'link_search' => $router->url('report/find-user'),
+            'link_form' => $this->router->url('report'),
+            'link_search' => $this->router->url('report/find-user'),
             'data' => $data,
         ];
         
@@ -61,7 +60,7 @@ class AdminDiagram extends ViewModel
                 'formClass' => 'form-control',
             ],
             'token' => ['hidden',
-                'default' => $this->container->get('token')->value(),
+                'default' => $this->token->value(),
             ],
         ];
 

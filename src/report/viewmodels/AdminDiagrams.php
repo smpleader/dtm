@@ -26,21 +26,13 @@ class AdminDiagrams extends ViewModel
     
     public function list()
     {
-        $request = $this->container->get('request');
-        $UserEntity = $this->container->get('UserEntity');
-        $ReportModel = $this->container->get('ReportModel');
-        $session = $this->container->get('session');
-        $user = $this->container->get('user');
-        $router = $this->container->get('router');
-        $DiagramEntity = $this->container->get('DiagramEntity');
-
         $filter = $this->filter()['form'];
 
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
         $search = trim($filter->getField('search')->value);
         $status = $filter->getField('status')->value;
-        $page   = $request->get->get('page', 1);
+        $page   = $this->request->get->get('page', 1);
         if ($page <= 0) $page = 1;
 
         $where = [];
@@ -59,24 +51,24 @@ class AdminDiagrams extends ViewModel
         $start  = ($page-1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
-        $result = $DiagramEntity->list( $start, $limit, $where, $sort);
-        $total = $DiagramEntity->getListTotal();
+        $result = $this->DiagramEntity->list( $start, $limit, $where, $sort);
+        $total = $this->DiagramEntity->getListTotal();
         if (!$result)
         {
             $result = [];
             $total = 0;
             if( !empty($search) )
             {
-                $session->set('flashMsg', 'Not Found Report');
+                $this->session->set('flashMsg', 'Not Found Report');
             }
         }
 
-        $types = $ReportModel->getTypes();
+        $types = $this->ReportModel->getTypes();
 
         foreach($result as &$item)
         {
             $item['report_type'] = isset($types[$item['report_type']]) ? $types[$item['report_type']] : $item['report_type'];
-            $user_tmp = $UserEntity->findByPK($item['created_by']);
+            $user_tmp = $this->UserEntity->findByPK($item['created_by']);
             $item['auth'] = $user_tmp ? $user_tmp['name'] : '';
             $item['created_at'] = $item['created_at'] && $item['created_at'] != '0000-00-00 00:00:00' ? date('d-m-Y', strtotime($item['created_at'])) : '';
             
@@ -85,7 +77,7 @@ class AdminDiagrams extends ViewModel
             $selected_tmp = [];
             foreach($assigns as $assign)
             {
-                $user_tmp = $UserEntity->findByPK($assign);
+                $user_tmp = $this->UserEntity->findByPK($assign);
                 if ($user_tmp)
                 {
                     $assign_tmp[] = $user_tmp['name'];
@@ -107,11 +99,11 @@ class AdminDiagrams extends ViewModel
             'start' => $start,
             'types' => $types,
             'sort' => $sort,
-            'user_id' => $user->get('id'),
-            'url' => $router->url(),
-            'link_list' => $router->url('reports'),
+            'user_id' => $this->user->get('id'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('reports'),
             'title_page' => 'Report',
-            'token' => $this->container->get('token')->value(),
+            'token' => $this->token->value(),
         ];
     }
 

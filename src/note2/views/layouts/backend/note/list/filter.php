@@ -52,4 +52,3 @@
         </div>
     </div>
 </form>
-<?php echo $this->render('backend.note.list.javascript', []); ?>

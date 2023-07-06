@@ -25,24 +25,14 @@ class AdminTasks extends ViewModel
 
     public function list()
     {
-        $request = $this->container->get('request');
-        $router = $this->container->get('router');
-        $user = $this->container->get('user');
-        $session = $this->container->get('session');
-        $TaskEntity = $this->container->get('TaskEntity');
-        $RequestEntity = $this->container->get('RequestEntity');
-        $MilestoneEntity = $this->container->get('MilestoneEntity');
-        $VersionEntity = $this->container->get('VersionEntity');
-        $request = $this->container->get('request');
-
         $filter = $this->filter()['form'];
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
 
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
         $search = trim($filter->getField('search_task')->value);
-        $page   = $request->get->get('page', 1);
+        $page   = $this->request->get->get('page', 1);
         if ($page <= 0) $page = 1;
 
         $where = [];
@@ -63,13 +53,13 @@ class AdminTasks extends ViewModel
             $result = [];
             $total = 0;
         }
-        $request = $RequestEntity->findByPK($request_id);
-        $milestone = $request ? $MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
+        $request = $this->RequestEntity->findByPK($request_id);
+        $milestone = $request ? $this->MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
         $title_page = 'Task';
 
-        $version_lastest = $VersionEntity->list(0, 1, [], 'created_at desc');
+        $version_lastest = $this->VersionEntity->list(0, 1, [], 'created_at desc');
         $version_lastest = $version_lastest ? $version_lastest[0]['version'] : '0.0.0';
-        $tmp_request = $RequestEntity->list(0, 0, ['id = '.$request_id], 0);
+        $tmp_request = $this->RequestEntity->list(0, 0, ['id = '.$request_id], 0);
         foreach($tmp_request as $item) {
         }
         
@@ -83,12 +73,12 @@ class AdminTasks extends ViewModel
             'start' => $start,
             'status' => $status,
             'sort' => $sort,
-            'user_id' => $user->get('id'),
-            'url' => $router->url(),
-            'link_list' => $router->url('tasks/'. $request_id),
+            'user_id' => $this->user->get('id'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('tasks/'. $request_id),
             'title_page_task' => $title_page,
-            'link_form' => $router->url('task/'. $request_id),
-            'token' => $this->container->get('token')->value(),
+            'link_form' => $this->router->url('task/'. $request_id),
+            'token' => $this->token->value(),
         ];
     }
 

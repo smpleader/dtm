@@ -64,7 +64,7 @@ class VersionModel extends Base
             return false;
         }
 
-        $where = ['name' => $name];
+        $where = ['name' => $data['name']];
         if (isset($data['id']) && $data['id'])
         {
             $where[] = 'id <> '. $data['id'];
@@ -117,7 +117,6 @@ class VersionModel extends Base
             'name' => $data['name'],
             'release_date' => $data['release_date'],
             'description' => $data['description'],
-            'version' => $version_number,
             'status' => $data['status'],
             'modified_by' => $this->user->get('id'),
             'modified_at' => date('Y-m-d H:i:s'),

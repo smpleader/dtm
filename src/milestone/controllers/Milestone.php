@@ -104,7 +104,7 @@ class Milestone extends ControllerMVVM
             
             $this->session->set('flashMsg', $msg);
             return $this->app->redirect(
-                $this->router->url('milestone/' . $ids)
+                $this->router->url('milestones')
             );
         }
     }

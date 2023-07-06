@@ -26,7 +26,8 @@ class Usergroup extends ControllerMVVM
     public function add()
     {
         $save_close = $this->request->post->get('save_close', '', 'string');
-        $try = $this->UserGroupModel->validate();
+        $name = $this->request->post->get('name', '', 'string');
+        $try = $this->UserGroupModel->validate(['name' => $name]);
         if (!$try)
         {
             $msg = $this->session->get('validate', '');
@@ -71,10 +72,11 @@ class Usergroup extends ControllerMVVM
     {
         $sth = $this->validateId(); 
         $save_close = $this->request->post->get('save_close', '', 'string');
+        $name = $this->request->post->get('name', '', 'string');
         
         if( is_numeric($sth) )
         {   
-            $try = $this->UserGroupModel->validate($sth);
+            $try = $this->UserGroupModel->validate(['id' => $sth , 'name' => $name]);
             if (!$try)
             {
                 $msg = $this->session->get('validate', '');

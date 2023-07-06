@@ -16,17 +16,16 @@ class Message extends ViewModel
     public static function register()
     {
         return [
-            'layouts.message|render',
-            'layouts.notification|render',
+            'widgets.message|render',
+            'widgets.notification|render',
         ];
     }
 
     public function render()
     {
-        $session = $this->container->get('session');
-        $message = $session->get('flashMsg', '');
+        $message = $this->session->get('flashMsg', '');
         $message = is_array($message) ? implode('<br>', $message) : $message;
-        $session->set('flashMsg', '');
+        $this->session->set('flashMsg', '');
         return [
             'message' => $message,
         ];
