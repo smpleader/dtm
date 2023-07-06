@@ -147,4 +147,16 @@ class SDM extends Base
                 });
         }
     }
+
+    protected function routing()
+    {
+        // TODO: load cache
+        // TODO: load table
+        $router = $this->router;
+        $this->plgManager->call('all')->run('routing', 'registerEndpoints', false, function ($endpoints) use ($router){
+            $router->import($endpoints);
+        });
+
+        $this->plgManager->call('all')->run('routing', 'afterRouting');
+    }
 }
