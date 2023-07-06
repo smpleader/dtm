@@ -19,7 +19,7 @@ class AdminRelateNote extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.relate_note.form'
+            'layout'=>'backend.relate_note.form'
         ];
     }
     

@@ -38,7 +38,7 @@
 								</table>
 							</form>
 							<div class="row g-3 align-items-center">
-								<?php echo $this->render('pagination', []); ?>
+								<?php echo $this->renderWidget('pagination', []); ?>
 							</div>
 						</div>
 					</div>

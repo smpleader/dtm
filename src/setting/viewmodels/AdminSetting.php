@@ -19,7 +19,7 @@ class AdminSetting extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.setting.form',
+            'layout'=>'backend.setting.form',
         ];
     }
 

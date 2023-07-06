@@ -18,7 +18,7 @@ class AdminMilestone extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.milestone.form'
+            'layout'=>'backend.milestone.form'
         ];
     }
     

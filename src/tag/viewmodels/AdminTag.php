@@ -19,7 +19,7 @@ class AdminTag extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.tag.form',
+            'layout'=>'backend.tag.form',
         ];
     }
     

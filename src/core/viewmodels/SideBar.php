@@ -16,9 +16,7 @@ class SideBar extends ViewModel
 {
     public static function register()
     {
-        return [
-            'widgets.backend.sidebar'
-        ];
+        return ['widget' => 'backend.sidebar'];
     }
 
     public function sidebar()

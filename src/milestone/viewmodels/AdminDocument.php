@@ -17,9 +17,7 @@ class AdminDocument extends ViewModel
 {
     public static function register()
     {
-        return [
-            'layouts.backend.document.form'
-        ];
+        return ['layout'=>'backend.document.form'];
     }
     public function form()
     {

@@ -18,9 +18,11 @@ class AdminRelateNotes extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.relate_note.list',
-            'layouts.backend.relate_note.list.filter',
-            'layouts.backend.relate_note.list.javascript',
+            'layout' => [
+                'backend.relate_note.list',
+                'backend.relate_note.list.filter',
+                'backend.relate_note.list.javascript'
+            ]
         ];
     
     }

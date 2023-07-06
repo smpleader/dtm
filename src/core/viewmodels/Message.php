@@ -16,8 +16,10 @@ class Message extends ViewModel
     public static function register()
     {
         return [
-            'layouts.message|render',
-            'layouts.notification|render',
+            'widget' => [
+                'message|render',
+                'notification|render'
+            ]
         ];
     }
 

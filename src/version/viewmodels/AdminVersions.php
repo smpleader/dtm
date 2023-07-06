@@ -20,9 +20,11 @@ class AdminVersions extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.version.list',
-            'layouts.backend.version.list.row',
-            'layouts.backend.version.list.filter',
+            'layout'=>[
+                'backend.version.list',
+                'backend.version.list.row',
+                'backend.version.list.filter'
+            ]
         ];
     }
 

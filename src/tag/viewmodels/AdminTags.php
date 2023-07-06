@@ -20,9 +20,11 @@ class AdminTags extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.tag.list',
-            'layouts.backend.tag.list.row',
-            'layouts.backend.tag.list.filter'
+            'layout'=>[
+                'backend.tag.list',
+                'backend.tag.list.row',
+                'backend.tag.list.filter'
+            ]
         ];
     }
 

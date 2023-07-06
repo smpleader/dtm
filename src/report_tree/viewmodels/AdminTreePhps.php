@@ -20,9 +20,11 @@ class AdminTreePhps extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.tree_php.list',
-            'layouts.backend.tree_php.list.row',
-            'layouts.backend.tree_php.list.filter'
+            'layout'=>[
+                'backend.tree_php.list',
+                'backend.tree_php.list.row',
+                'backend.tree_php.list.filter'
+            ]
         ];
     }
 

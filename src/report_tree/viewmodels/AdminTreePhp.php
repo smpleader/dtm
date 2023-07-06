@@ -19,7 +19,7 @@ class AdminTreePhp extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.tree_php.form'
+            'layout'=>'backend.tree_php.form'
         ];
     }
 

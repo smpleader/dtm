@@ -18,8 +18,10 @@ class AdminTasks extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.task.list',
-            'layouts.backend.task.list.filter',
+            'layout'=>[
+                'backend.task.list',
+                'backend.task.list.filter'
+            ]
         ];
     }
 

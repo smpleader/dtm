@@ -18,9 +18,11 @@ class AdminUsers extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.user.list',
-            'layouts.backend.user.list.row',
-            'layouts.backend.user.list.filter'
+            'layout'=>[
+                'backend.user.list',
+                'backend.user.list.row',
+                'backend.user.list.filter'
+            ]
         ];
     }
 

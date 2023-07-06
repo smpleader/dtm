@@ -19,8 +19,10 @@ class AdminNote extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.note.form',
-            'layouts.backend.note.preview',
+            'layout'=>[
+                'backend.note.form',
+                'backend.note.preview'
+            ]
         ];
     }
     

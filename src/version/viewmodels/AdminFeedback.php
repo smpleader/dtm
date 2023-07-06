@@ -20,9 +20,11 @@ class AdminFeedback extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.feedback.list',
-            'layouts.backend.feedback.list.row',
-            'layouts.backend.feedback.list.filter',
+            'layout'=>[
+                'backend.feedback.list',
+                'backend.feedback.list.row',
+                'backend.feedback.list.filter'
+            ]
         ];
     }
     

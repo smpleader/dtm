@@ -18,7 +18,7 @@ class AdminGroup extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.usergroup.form'
+            'layout'=>'backend.usergroup.form'
         ];
     }
 

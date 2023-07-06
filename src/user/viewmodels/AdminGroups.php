@@ -18,9 +18,11 @@ class AdminGroups extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.usergroup.list',
-            'layouts.backend.usergroup.list.row',
-            'layouts.backend.usergroup.list.filter'
+            'layout'=>[
+                'backend.usergroup.list',
+                'backend.usergroup.list.row',
+                'backend.usergroup.list.filter'
+            ]
         ];
     }
 

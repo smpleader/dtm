@@ -1,4 +1,4 @@
-<?php echo $this->render('notification'); ?>
+<?php echo $this->renderWidget('notification'); ?>
 <div class="main">
 	<main class="content p-0 ">
 		<div class="container-fluid p-0">
@@ -39,7 +39,7 @@
 								</table>
 							</form>
 							<div class="row g-3 align-items-center">
-								<?php echo $this->render('notification'); ?>
+								<?php echo $this->renderWidget('notification'); ?>
 							</div>
 						</div>
 					</div>

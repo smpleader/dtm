@@ -18,7 +18,7 @@ class AdminTask extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.task.form'
+            'layout'=>'backend.task.form'
         ];
     }
 

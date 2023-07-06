@@ -19,7 +19,7 @@ class AdminNoteHistory extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.note_history.form',
+            'layout'=>'backend.note_history.form',
         ];
     }
 

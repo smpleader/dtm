@@ -20,9 +20,11 @@ class AdminNotes extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.note.list',
-            'layouts.backend.note.list.row',
-            'layouts.backend.note.list.filter'
+            'layout'=>[
+                'backend.note.list',
+                'backend.note.list.row',
+                'backend.note.list.filter'
+            ]
         ];
     }
 

@@ -19,7 +19,7 @@ class AdminDiagram extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.diagram.form',
+            'layout'=>'backend.diagram.form',
         ];
     }
     

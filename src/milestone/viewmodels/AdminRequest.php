@@ -18,8 +18,10 @@ class AdminRequest extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.request.form',
-            'layouts.backend.request.detail_request',
+            'layout' => [
+                'backend.request.form',
+                'backend.request.detail_request'
+            ]
         ];
     }
 

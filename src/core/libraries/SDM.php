@@ -29,6 +29,7 @@ use SPT\Application\Web as Base;
 use SPT\Application\Configuration;
 use SPT\Application\Token;
 use SPT\Application\Plugin\Manager;
+use SPT\Web\ViewModelHelper;
 
 class SDM extends Base
 {
@@ -144,6 +145,28 @@ class SDM extends Base
                 function($classname, $fullname) use (&$container)
                 {
                     $container->share( $classname, new $fullname($container), true);
+                });
+
+            // load viewmodels of widgets
+            Loader::findClass( 
+                $plg['path']. '/viewmodels', 
+                $plg['namespace']. '\viewmodels', 
+                function($classname, $fullname) use (&$container, $plg)
+                {
+                    $classname .= 'VM';
+                    $this->vmClasses[$plg['name']][] = [$classname, $fullname];
+
+                    $registers = $fullname::register();
+                    if(isset($registers['widget']))
+                    {
+                        $container->share( $classname, new $fullname($container), true);
+                        ViewModelHelper::prepareVM(
+                            'widget',
+                            $classname, 
+                            $registers['widget'], 
+                            $container
+                        );
+                    }
                 });
         }
     }

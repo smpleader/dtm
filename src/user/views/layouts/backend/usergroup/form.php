@@ -1,4 +1,4 @@
-<?php echo $this->render('notification' , []);?>
+<?php echo $this->renderWidget('notification' , []);?>
 <div class="container-fluid align-items-center row justify-content-center mx-auto p-0">
     <form action="<?php echo $this->link_form . '/' . $this->id ?>" method="post">
         <div class="row g-3 align-items-center">

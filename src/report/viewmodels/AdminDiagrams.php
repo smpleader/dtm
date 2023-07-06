@@ -18,9 +18,11 @@ class AdminDiagrams extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.diagram.list',
-            'layouts.backend.diagram.list.row',
-            'layouts.backend.diagram.list.filter',
+            'layout'=>[
+                'backend.diagram.list',
+                'backend.diagram.list.row',
+                'backend.diagram.list.filter'
+            ]
         ];
     }
     

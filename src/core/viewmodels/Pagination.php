@@ -16,7 +16,7 @@ class Pagination extends ViewModel
 {
     public static function register()
     {
-        return ['layouts.pagination'];
+        return ['widget' => 'pagination'];
     }
 
     public function pagination($layoutData, $viewData)

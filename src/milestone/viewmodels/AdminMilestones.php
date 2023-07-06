@@ -18,10 +18,12 @@ class AdminMilestones extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.milestone.home',
-            'layouts.backend.milestone.list',
-            'layouts.backend.milestone.list.row',
-            'layouts.backend.milestone.list.filter',
+            'layout' => [
+                'backend.milestone.home',
+                'backend.milestone.list',
+                'backend.milestone.list.row',
+                'backend.milestone.list.filter'
+            ]
         ];
     }
     

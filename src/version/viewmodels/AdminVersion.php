@@ -18,7 +18,7 @@ class AdminVersion extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.version.form',
+            'layout'=>'backend.version.form'
         ];
     }
 

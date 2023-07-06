@@ -18,9 +18,11 @@ class AdminUser extends ViewModel
     public static function register()
     {
         return [
-            'layouts.backend.user.login',
-            'layouts.backend.user.form',
-            'layouts.backend.user.profile',
+            'layout'=>[
+                'backend.user.login',
+                'backend.user.form',
+                'backend.user.profile'
+            ]
         ];
     }
 
