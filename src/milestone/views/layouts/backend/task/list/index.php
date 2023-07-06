@@ -1,4 +1,4 @@
-<?php echo $this->renderWidget('notification', []);?>
+<?php echo $this->renderWidget('notification');?>
 <div class="pt-2" id="task_link">
 	<div class="container-fluid">
 		<div class="row justify-content-center mx-auto">

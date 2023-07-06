@@ -4,7 +4,7 @@ $this->theme->add($this->url . 'assets/treephp/css/style.css', '', 'treephp-css'
 $this->theme->add($this->url . 'assets/css/select2_custom.css', '', 'select2-custom-css');
 $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-select2');
 ?>
-<?php echo $this->render('notification', []); ?>
+<?php echo $this->renderWidget('notification'); ?>
 <div class="container-fluid align-items-center row justify-content-center mx-auto pt-3">
     <form enctype="multipart/form-data" action="<?php echo $this->link_form . '/' . $this->id ?>" method="post" id="form_submit">
         <div class="row">

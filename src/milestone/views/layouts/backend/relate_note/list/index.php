@@ -1,4 +1,4 @@
-<?php echo $this->renderWidget('notification', []); ?>
+<?php echo $this->renderWidget('notification'); ?>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-12">
