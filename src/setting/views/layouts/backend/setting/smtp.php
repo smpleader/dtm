@@ -1,4 +1,4 @@
-<?php echo $this->renderWidget('notification'); ?>
+<?php echo $this->render('notification'); ?>
 <div class="container-fluid align-items-center row justify-content-center mx-auto ">
     <?php
     ?>
