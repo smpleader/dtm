@@ -161,13 +161,31 @@ class SDM extends Base
                     $registers = $fullname::register();
                     if(isset($registers['widget']))
                     {
-                        $container->share( $classname, new $fullname($container), true);
-                        ViewModelHelper::prepareVM(
-                            'widget',
-                            $classname, 
-                            $registers['widget'], 
-                            $container
-                        );
+                        $widgetLayouts = false;
+
+                        if(is_array($registers['widget']))
+                        {
+                            $widgetLayouts = [];
+                            foreach($registers['widget'] as $layout)
+                            {
+                                $widgetLayouts[] = $plg['name']. '::'. $layout;
+                            }
+                        }
+                        elseif(is_string($registers['widget']))
+                        {
+                            $widgetLayouts = $plg['name']. '::'. $registers['widget'];
+                        }
+
+                        if($widgetLayouts)
+                        {
+                            $container->share( $classname, new $fullname($container), true);
+                            ViewModelHelper::prepareVM(
+                                'widget',
+                                $classname, 
+                                $widgetLayouts, 
+                                $container
+                            );
+                        }
                     }
                 });
         }
