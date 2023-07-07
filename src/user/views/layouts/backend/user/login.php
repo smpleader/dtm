@@ -16,7 +16,7 @@
                                     <div class="d-flex justify-content-center mb-2">
                                         <hr width="75% ">
                                     </div>
-                                    <?php echo $this->render('message', []); ?>
+                                    <?php echo $this->renderWidget('message'); ?>
                                     <div class="mb-4">
                                         <label class="form-label fw-bold">User Name</label>
                                         <input class="form-control form-control-lg" required type="text" name="username" placeholder="User Name">

@@ -5,7 +5,7 @@
 				<div class="col-12 p-0">
 					<div class="card border-0 shadow-none">
 						<div class="card-body">
-						<?php echo $this->render('message', []);?>
+						<?php echo $this->renderWidget('message');?>
                         <div class="row align-items-center">
 								<?php echo $this->render('backend.version.list.filter', []);?>
 							</div>
