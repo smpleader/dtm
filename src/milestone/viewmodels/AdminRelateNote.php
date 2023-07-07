@@ -10,8 +10,8 @@
  */
 namespace DTM\milestone\viewmodels; 
 
-use SPT\View\Gui\Form;
-use SPT\View\Gui\Listing;
+use SPT\Web\Gui\Form;
+use SPT\Web\Gui\Listing;
 use SPT\Web\ViewModel;
 
 class AdminRelateNote extends ViewModel

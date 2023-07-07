@@ -12,7 +12,7 @@
 namespace DTM\setting\viewmodels;
 
 use SPT\Web\ViewModel;
-use SPT\View\Gui\Form;
+use SPT\Web\Gui\Form;
 
 class AdminSetting extends ViewModel
 {

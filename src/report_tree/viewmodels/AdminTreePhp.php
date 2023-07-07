@@ -12,7 +12,7 @@
 namespace DTM\report_tree\viewmodels;
 
 use SPT\Web\ViewModel;
-use SPT\View\Gui\Form;
+use SPT\Web\Gui\Form;
 
 class AdminTreePhp extends ViewModel
 {
