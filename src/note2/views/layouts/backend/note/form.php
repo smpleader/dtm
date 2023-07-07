@@ -3,7 +3,7 @@ $this->theme->add($this->url . 'assets/css/select2.min.css', '', 'select2-css');
 $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-select2');
 $this->theme->add($this->url . 'assets/tinymce/tinymce.min.js', '', 'tinymce');
 ?>
-<?php echo $this->renderWidget('notification'); ?>
+<?php echo $this->renderWidget('core::notification'); ?>
 <div class="container-fluid align-items-center row justify-content-center mx-auto pt-3">
     <form enctype="multipart/form-data" action="<?php echo $this->link_form . '/' . $this->id ?>" method="post" id="form_submit">
         <div class="row">

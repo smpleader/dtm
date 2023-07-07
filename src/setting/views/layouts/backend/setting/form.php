@@ -1,4 +1,4 @@
-<?php echo $this->renderWidget('notification'); ?>
+<?php echo $this->renderWidget('core::notification'); ?>
 <div class="container-fluid align-items-center mt-2 row justify-content-center mx-auto ">
     <form id="form-update" enctype='multipart/form-data' action="<?php echo  $this->link_form ?>" method="POST">
         <ul class="nav nav-tabs" id="myTab" role="tablist">

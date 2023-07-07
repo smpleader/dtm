@@ -1,4 +1,4 @@
-<?php echo $this->renderWidget('notification');?>
+<?php echo $this->renderWidget('core::notification');?>
 <div class="main">
 	<main class="content p-0 ">
 		<div class="container-fluid p-0">
@@ -30,7 +30,7 @@
 								</table>
 							</form>
 							<div class="row g-3 align-items-center">
-								<?php echo $this->renderWidget('pagination', []); ?>
+								<?php echo $this->renderWidget('core::pagination'); ?>
 							</div>
 						</div>
 					</div>

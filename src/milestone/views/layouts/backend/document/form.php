@@ -1,4 +1,4 @@
-<?php echo $this->renderWidget('notification'); ?>
+<?php echo $this->renderWidget('core::notification'); ?>
 <div id="document_link" class="pt-2">
     <div class="container-fluid">
         <div class="row row justify-content-center mx-auto">

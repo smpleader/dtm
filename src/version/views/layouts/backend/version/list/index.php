@@ -5,7 +5,7 @@
 				<div class="col-12 p-0">
 					<div class="card border-0 shadow-none">
 						<div class="card-body">
-						<?php echo $this->renderWidget('message');?>
+						<?php echo $this->renderWidget('core::message');?>
                         <div class="row align-items-center">
 								<?php echo $this->render('backend.version.list.filter', []);?>
 							</div>
@@ -38,7 +38,7 @@
 								</table>
 							</form>
 							<div class="row g-3 align-items-center">
-								<?php echo $this->renderWidget('pagination', []); ?>
+								<?php echo $this->renderWidget('core::pagination'); ?>
 							</div>
 						</div>
 					</div>
