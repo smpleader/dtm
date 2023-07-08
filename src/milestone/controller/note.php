@@ -3,89 +3,93 @@
 use SPT\Web\ControllerMVVM;
 use SPT\Response;
 
-class Version extends ControllerMVVM 
+class note extends ControllerMVVM 
 {
     public function list()
     {
-        $this->validateVersion();
         $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
-        $list = $this->RequestModel->getVersionNote($request_id);
+        $search = trim($this->request->post->get('search', '', 'string'));
+
+        $list = $this->RelateNoteModel->getNotes($request_id, $search);
 
         $this->app->set('format', 'json');
         $this->set('result', $list);
         return ;
     }
 
-    public function add()
+    public function getNote()
     {
-        $this->validateVersion();
-        //check title sprint
-        $request_id = $this->validateRequestID();
+        $urlVars = $this->request->get('urlVars');
+        $request_id = (int) $urlVars['request_id'];
 
-        $log = $this->request->post->get('log', '', 'string');
-        $data = [
-            'log' => $log,
-            'request_id' => $request_id,
-        ];
+        $search = trim($this->request->post->get('search', '', 'post'));
         
-        // TODO: validate new add
-        $newId =  $this->RequestModel->addVersion($data);
-
-        if( !$newId )
+        $relate_note = $this->RelateNoteEntity->list(0, 0, ['request_id = '. $request_id]);
+        $where = [];
+        if ($relate_note)
         {
-            $msg = 'Error: Create Change log Failed!';
+            foreach ($relate_note as $note)
+            {
+                $where[] = 'id <> '. $note['note_id'];
+            }
+        }
+        if ($search)
+        {
+            $where[] = "title like '%". $search ."%'";
+        }
+        $notes = $this->NoteEntity->list(0 , 0, $where);
+        $this->app->set('format', 'json');
+        $this->set('result', $notes);
+        return ;
+    }
+
+    public function updateAlias()
+    {
+        $urlVars = $this->request->get('urlVars');
+        $id = isset($urlVars['id']) ? (int) $urlVars['id'] : 0;
+        
+        $alias = $this->request->post->get('alias', '', 'string');
+        $try = $this->RelateNoteModel->updateAlias([
+            'alias' => $alias,
+            'id' => $id
+        ]);
+
+        if( !$try )
+        {
             $this->app->set('format', 'json');
             $this->set('result', 'fail');
-            $this->set('message', $msg);
+            $this->set('message', 'Error: Update Relate Note Failed!');
             return ;
         }
         else
         {
             $this->app->set('format', 'json');
             $this->set('result', 'ok');
-            $this->set('message', 'Create Change log Successfully!');
+            $this->set('message', 'Update Relate Note Successfully!');
             return ;
         }
     }
 
-    public function update()
+    public function add()
     {
-        $ids = $this->validateID(); 
         $request_id = $this->validateRequestID();
-
-        // TODO valid the request input
-
-        if( is_array($ids) && $ids != null)
+        $notes = $this->request->post->get('note_id', [], 'array');
+        
+        $try = $this->RelateNoteModel->addNote($notes, $request_id);
+        if( !$try )
         {
             $this->app->set('format', 'json');
             $this->set('result', 'fail');
-            $this->set('message', 'Invalid Version Note');
+            $this->set('message', 'Error: Create Relate Note Failed!');
             return ;
         }
-        if(is_numeric($ids) && $ids)
+        else
         {
-            $data = [
-                'log' => $this->request->post->get('log', '', 'string'),
-                'id' => $ids,
-            ];
-
-            $try = $this->RequestModel->updateVersion($data);
-            
-            if($try) 
-            {
-                $this->app->set('format', 'json');
-                $this->set('result', 'ok');
-                $this->set('message', 'Update Change Log Successfully');
-                return ;
-            }
-            else
-            {
-                $this->app->set('format', 'json');
-                $this->set('result', 'fail');
-                $this->set('message', 'Update Change Log Failed');
-                return ;
-            }
+            $this->app->set('format', 'json');
+            $this->set('result', 'ok');
+            $this->set('message', 'Create Relate Note Successfully!');
+            return ;
         }
     }
 
@@ -100,7 +104,7 @@ class Version extends ControllerMVVM
             foreach($ids as $id)
             {
                 //Delete file in source
-                if( $this->RequestModel->removeVersion( $id ) )
+                if( $this->RelateNoteModel->remove( $id ) )
                 {
                     $count++;
                 }
@@ -108,7 +112,7 @@ class Version extends ControllerMVVM
         }
         elseif( is_numeric($ids) )
         {
-            if( $this->RequestModel->removeVersion($ids ) )
+            if( $this->RelateNoteModel->remove($ids ) )
             {
                 $count++;
             }
@@ -122,17 +126,16 @@ class Version extends ControllerMVVM
 
     public function validateID()
     {
-        $this->validateVersion();
         $request_id = $this->validateRequestID();
         $urlVars = $this->request->get('urlVars');
-        $id = (int) $urlVars['id'];
+        $id = isset($urlVars['id']) ? (int) $urlVars['id'] : 0;
 
         if(empty($id))
         {
             $ids = $this->request->post->get('ids', [], 'array');
             if(count($ids)) return $ids;
 
-            $this->session->set('flashMsg', 'Invalid Task');
+            $this->session->set('flashMsg', 'Invalid Relate Note');
             return $this->app->redirect(
                 $this->router->url('detail-request/'. $request_id),
             );
@@ -151,21 +154,10 @@ class Version extends ControllerMVVM
         {
             $this->session->set('flashMsg', 'Invalid Request');
             return $this->app->redirect(
-                $this->router->url('milestones'),
+                $this->router->url('admin'),
             );
         }
 
         return $id;
-    }
-
-    public function validateVersion()
-    {
-        if (!$this->container->exists('VersionEntity'))
-        {
-            $this->session->set('flashMsg', 'Invalid Plugin Version');
-            return $this->app->redirect(
-                $this->router->url('admin')
-            );
-        }
     }
 }

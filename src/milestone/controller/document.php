@@ -6,7 +6,7 @@ namespace DTM\milestone\controllers;
 use SPT\Web\ControllerMVVM;
 use SPT\Response;
 
-class Document extends ControllerMVVM 
+class document extends ControllerMVVM 
 {
     public function detail()
     {

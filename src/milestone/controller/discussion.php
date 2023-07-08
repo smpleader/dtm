@@ -6,7 +6,7 @@ namespace DTM\milestone\controllers;
 use SPT\Web\ControllerMVVM;
 use SPT\Response;
 
-class Discussion extends ControllerMVVM 
+class discussion extends ControllerMVVM 
 {
     public function add()
     {
