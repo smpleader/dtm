@@ -3,7 +3,7 @@
 use SPT\Web\ControllerMVVM;
 use SPT\Response;
 
-class Request extends ControllerMVVM 
+class request extends ControllerMVVM 
 {
     public function detail()
     {

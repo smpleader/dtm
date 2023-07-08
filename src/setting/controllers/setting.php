@@ -3,7 +3,7 @@
 use SPT\Web\ControllerMVVM;
 use SPT\Response;
 
-class Setting extends ControllerMVVM
+class setting extends ControllerMVVM
 {
     public function form()
     {
@@ -14,7 +14,7 @@ class Setting extends ControllerMVVM
 
     public function save()
     {
-        $settings = $this->SettingModel->getSetting();
+        $settings = $this->SettingModel->getTypes();
         
         $try = true;
         foreach($settings as $fields)

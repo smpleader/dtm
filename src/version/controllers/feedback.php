@@ -3,7 +3,7 @@
 use SPT\Web\ControllerMVVM;
 use SPT\Response;
 
-class Feedback extends ControllerMVVM 
+class feedback extends ControllerMVVM 
 {
     public function list()
     {

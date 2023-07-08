@@ -3,7 +3,7 @@
 use SPT\Response;
 use SPT\Web\ControllerMVVM;
 
-class User extends ControllerMVVM 
+class user extends ControllerMVVM 
 {
     public function gate()
     {

@@ -3,7 +3,7 @@
 use SPT\Web\ControllerMVVM;
 use SPT\Response;
 
-class Milestone extends ControllerMVVM
+class milestone extends ControllerMVVM
 {
     public function detail()
     {
