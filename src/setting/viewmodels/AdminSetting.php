@@ -30,7 +30,7 @@ class AdminSetting extends ViewModel
         $app = $this->container->get('app');
         $router = $this->container->get('router');
         $SettingModel = $this->container->get('SettingModel');
-        $settings = $SettingModel->getSetting();
+        $settings = $SettingModel->getTypes();
 
         $fields = [];
         foreach($settings as $item)

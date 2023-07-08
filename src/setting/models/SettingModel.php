@@ -14,7 +14,7 @@ use SPT\Container\Client as Base;
 
 class SettingModel extends Base 
 { 
-    public function getSetting()
+    public function getTypes()
     {
         $settings = [];
         $this->app->plgLoad('setting', 'registerItem', function ($arr) use ( &$settings ){

@@ -14,7 +14,7 @@ class Setting extends ControllerMVVM
 
     public function save()
     {
-        $settings = $this->SettingModel->getSetting();
+        $settings = $this->SettingModel->getTypes();
         
         $try = true;
         foreach($settings as $fields)
