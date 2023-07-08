@@ -1,126 +1,120 @@
-<?php
-/**
- * SPT software - homeController
- *
- * @project: https://github.com/smpleader/spt
- * @author: Pham Minh - smpleader
- * @description: Just a basic controller
- *
- */
-
-namespace DTM\report_tree\controllers;
+<?php namespace DTM\version\controllers;
 
 use SPT\Web\ControllerMVVM;
+use SPT\Response;
 
-class Treediagram extends ControllerMVVM 
+class version extends ControllerMVVM 
 {
     public function detail()
     {
-             
         $urlVars = $this->request->get('urlVars');
         $id = (int) $urlVars['id'];
 
-        $exist = $this->DiagramEntity->findByPK($id);
-
-        if(!empty($id) && !$exist)
+        $exist = $this->VersionEntity->findByPK($id);
+        if(!empty($id) && !$exist) 
         {
-            $this->session->set('flashMsg', "Invalid note diagram");
+            $this->session->set('flashMsg', "Invalid Version");
             return $this->app->redirect(
-                $this->router->url('reports')
+                $this->router->url('versions')
             );
         }
-        $this->app->set('layout', 'backend.tree_php.form');
+        $this->app->set('layout', 'backend.version.form');
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
     }
 
     public function list()
     {
-        
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
-        $this->app->set('layout', 'backend.tree_php.list');
+        $this->app->set('layout', 'backend.version.list');
     }
 
     public function add()
     {
         //check title sprint
         $data = [
-            'title' => $this->request->post->get('title', '', 'string'),
-            'structure' => $this->request->post->get('structure', '', 'string'),
-            'save_close' => $this->request->post->get('save_close', '', 'string'),
+            'name' => $this->request->post->get('name', '', 'string'),
+            'release_date' => $this->request->post->get('release_date', '', 'string'),
+            'description' => $this->request->post->get('description', '', 'string'),
+            'status' => $this->request->post->get('status', 1, 'string'),
         ];
-        $save_close = $this->request->post->get('save_close', '', 'string');
-        
-        $data = $this->TreePhpModel->validate($data);
+
+
+        $data = $this->VersionModel->validate($data);
         if (!$data)
         {
             return $this->app->redirect(
-                $this->router->url('tree-php/0')
+                $this->router->url('versions')
             );
         }
 
-        // TODO: validate new add
-        $newId =  $this->TreePhpModel->add($data);
+        $newId = $this->VersionModel->add($data);
 
         if( !$newId )
         {
-            $msg = 'Error: Created Failed!';
+            $msg = 'Error: Created failed!';
             $this->session->set('flashMsg', $msg);
             return $this->app->redirect(
-                $this->router->url('tree-php/0')
+                $this->router->url('versions')
             );
         }
         else
         {
             $this->session->set('flashMsg', 'Created Successfully!');
-            $link = $save_close ? 'reports' : 'tree-php/'. $newId;
             return $this->app->redirect(
-                $this->router->url($link)
+                $this->router->url('versions')
             );
         }
     }
 
     public function update()
     {
-        $ids = $this->validateID();
-
+        $ids = $this->validateID(); 
+       
         // TODO valid the request input
 
+        if( is_array($ids) && $ids != null)
+        {
+            $this->session->set('flashMsg', 'Invalid Version');
+            return $this->app->redirect(
+                $this->router->url('versions')
+            );
+        }
         if(is_numeric($ids) && $ids)
         {
             $data = [
-                'title' => $this->request->post->get('title', '', 'string'),
-                'structure' => $this->request->post->get('structure', '', 'string'),
+                'name' => $this->request->post->get('name', '', 'string'),
+                'release_date' => $this->request->post->get('release_date', '', 'string'),
+                'description' => $this->request->post->get('description', '', 'string'),
+                'status' => $this->request->post->get('status', 1, 'string'),
                 'id' => $ids,
-                'removes' => $this->request->post->get('removes', '', 'string'),
             ];
-            $save_close = $this->request->post->get('save_close', '', 'string');
+    
+            $data = $this->VersionModel->validate($data);
 
-            $data = $this->TreePhpModel->validate($data);
             if (!$data)
             {
                 return $this->app->redirect(
-                    $this->router->url('tree-php/'. $ids)
+                    $this->router->url('versions')
                 );
             }
 
-            $try = $this->TreePhpModel->update($data);
+            $try = $this->VersionModel->update($data);
             
-            if($try)
+            if($try) 
             {
-                $this->session->set('flashMsg', 'Updated successfully');
-                $link = $save_close ? 'reports' : 'tree-php/'. $ids;
+                $this->session->set('flashMsg', 'Updated Successfully');
                 return $this->app->redirect(
-                    $this->router->url($link)
+                    $this->router->url('versions')
                 );
             }
             else
             {
-                $msg = 'Error: Updated failed';
+                $msg = 'Error: Updated Failed';
                 $this->session->set('flashMsg', $msg);
                 return $this->app->redirect(
-                    $this->router->url('tree-php/'. $ids)
+                    $this->router->url('versions')
                 );
             }
         }
@@ -129,14 +123,14 @@ class Treediagram extends ControllerMVVM
     public function delete()
     {
         $ids = $this->validateID();
-
+        
         $count = 0;
         if( is_array($ids))
         {
             foreach($ids as $id)
             {
                 //Delete file in source
-                if( $this->TreePhpModel->remove( $id ) )
+                if( $this->VersionModel->remove( $id ) )
                 {
                     $count++;
                 }
@@ -144,16 +138,16 @@ class Treediagram extends ControllerMVVM
         }
         elseif( is_numeric($ids) )
         {
-            if( $this->TreePhpModel->remove($ids ) )
+            if( $this->VersionModel->remove($ids ) )
             {
                 $count++;
             }
-        }
-
+        }  
+        
 
         $this->session->set('flashMsg', $count.' deleted record(s)');
         return $this->app->redirect(
-            $this->router->url('reports'),
+            $this->router->url('versions'), 
         );
     }
 
@@ -168,12 +162,13 @@ class Treediagram extends ControllerMVVM
             $ids = $this->request->post->get('ids', [], 'array');
             if(count($ids)) return $ids;
 
-            $this->session->set('flashMsg', 'Invalid note diagram');
+            $this->session->set('flashMsg', 'Invalid Version');
             return $this->app->redirect(
-                $this->router->url('reports'),
+                $this->router->url('versions'),
             );
         }
 
         return $id;
     }
+
 }

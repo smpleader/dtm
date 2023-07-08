@@ -3,7 +3,7 @@
 use SPT\Web\ControllerMVVM;
 use SPT\Response;
 
-class Setting extends ControllerMVVM
+class setting extends ControllerMVVM
 {
     public function form()
     {

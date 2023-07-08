@@ -15,7 +15,6 @@ class Dispatcher
             $app->plgLoad('permission', 'CheckSession');
         }
         
-        $cName = ucfirst($cName);
         $controller = 'DTM\user\controllers\\'. $cName;
         if(!class_exists($controller))
         {

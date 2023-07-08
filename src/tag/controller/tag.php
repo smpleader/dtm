@@ -12,7 +12,7 @@ namespace DTM\tag\controllers;
 
 use SPT\Web\ControllerMVVM;
 
-class Tag extends ControllerMVVM
+class tag extends ControllerMVVM
 {
     public function list()
     {

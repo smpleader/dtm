@@ -3,7 +3,7 @@
 use SPT\Response;
 use SPT\Web\ControllerMVVM;
 
-class Usergroup extends ControllerMVVM 
+class usergroup extends ControllerMVVM 
 {
     public function list()
     {

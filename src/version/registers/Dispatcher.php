@@ -12,7 +12,6 @@ class Dispatcher
 
         $cName = $app->get('controller');
         $fName = $app->get('function');
-        $cName = ucfirst($cName);
         $controller = 'DTM\version\controllers\\'. $cName;
         if(!class_exists($controller))
         {

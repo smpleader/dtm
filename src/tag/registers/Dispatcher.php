@@ -13,7 +13,6 @@ class Dispatcher
         $cName = $app->get('controller');
         $fName = $app->get('function');
         // prepare note
-        $cName = ucfirst($cName);
 
         $controller = 'DTM\tag\controllers\\'. $cName;
         if(!class_exists($controller))
