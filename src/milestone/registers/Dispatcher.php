@@ -14,6 +14,8 @@ class Dispatcher
         $cName = $app->get('controller');
         $fName = $app->get('function');
 
+        $app->set('theme', $app->cf('adminTheme'));
+
         $controller = 'DTM\milestone\controllers\\'. $cName;
         if(!class_exists($controller))
         {
