@@ -104,7 +104,7 @@ class NoteDispatch extends Base
         
         $controller->{$fName}();
         $controller->setCurrentPlugin($plgName);
-        
+        $this->app->set('theme', $this->app->cf('adminTheme'));
 
         $fName = 'to'. ucfirst($this->app->get('format', 'html'));
 
