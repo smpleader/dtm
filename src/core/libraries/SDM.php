@@ -70,7 +70,6 @@ class SDM extends Base
         $this->prepareDb();
         $this->prepareSession();
         $this->prepareUser();
-        $this->prepareTheme();
         $this->loadClasses();
     }
 
@@ -108,19 +107,6 @@ class SDM extends Base
             'entity' => new  UserEntity($this->container->get('query'))
         ]);
         $this->container->share('user', $user, true);
-    }
-
-    private  function prepareTheme()
-    {
-        if(empty($this->config->exdefaultTheme))
-        {
-            // support to add theme in the controller or dispatcher
-            // then, no warning here
-        }
-        else
-        {
-            $app->set('theme', $this->config->exdefaultTheme);
-        }
     }
 
     private function loadClasses()
