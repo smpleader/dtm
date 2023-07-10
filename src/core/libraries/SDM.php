@@ -110,19 +110,6 @@ class SDM extends Base
         $this->container->share('user', $user, true);
     }
 
-    private  function prepareTheme()
-    {
-        if(empty($this->config->exdefaultTheme))
-        {
-            // support to add theme in the controller or dispatcher
-            // then, no warning here
-        }
-        else
-        {
-            $this->app->set('theme', $this->config->exdefaultTheme);
-        }
-    }
-
     private function loadClasses()
     {
         // TODO: create cache list
