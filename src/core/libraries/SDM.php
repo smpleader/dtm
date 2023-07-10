@@ -70,7 +70,6 @@ class SDM extends Base
         $this->prepareDb();
         $this->prepareSession();
         $this->prepareUser();
-        $this->prepareTheme();
         $this->loadClasses();
     }
 
