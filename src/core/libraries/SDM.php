@@ -119,7 +119,7 @@ class SDM extends Base
         }
         else
         {
-            $app->set('theme', $this->config->exdefaultTheme);
+            $this->app->set('theme', $this->config->exdefaultTheme);
         }
     }
 
