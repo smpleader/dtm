@@ -20,6 +20,7 @@ class Routing
             'note2/detail' => [
                 'fnc' => [
                     'get' => 'note2.note.detail',
+                    'put' => 'note2.note.update',
                 ],
                 'parameters' => ['id'],
                 'loadChildPlugin' => true,

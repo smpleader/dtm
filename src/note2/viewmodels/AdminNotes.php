@@ -89,8 +89,8 @@ class AdminNotes extends ViewModel
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
-        $result = $this->NoteEntity->list($start, $limit, $where, $sort);
-        $total = $this->NoteEntity->getListTotal();
+        $result = $this->Note2Entity->list($start, $limit, $where, $sort);
+        $total = $this->Note2Entity->getListTotal();
         $data_tags = [];
         
         if (!$result) {

@@ -33,4 +33,15 @@ class Note2Model extends Base
         return $noteTypes;
     }
 
+    public function remove($id)
+    {
+        if (!$id)
+        {
+            return false;
+        }
+
+        $try = $this->Note2Entity->remove($id);
+        return $try;
+    }
+
 }

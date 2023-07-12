@@ -32,7 +32,7 @@ class note extends ControllerMVVM
             foreach($ids as $id)
             {
                 //Delete file in source
-                if( $this->NoteModel->remove( $id ) )
+                if( $this->Note2Model->remove( $id ) )
                 {
                     $count++;
                 }
@@ -40,7 +40,7 @@ class note extends ControllerMVVM
         }
         elseif( is_numeric($ids) )
         {
-            if( $this->NoteModel->remove($ids ) )
+            if( $this->Note2Model->remove($ids ) )
             {
                 $count++;
             }
@@ -49,7 +49,7 @@ class note extends ControllerMVVM
 
         $this->session->set('flashMsg', $count.' deleted record(s)');
         return $this->app->redirect(
-            $this->router->url('notes'),
+            $this->router->url('note2'),
         );
     }
 
