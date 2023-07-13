@@ -65,15 +65,6 @@ class AdminNote extends ViewModel
 
     public function preview()
     {
-        $request = $this->request;
-        $NoteEntity = $this->NoteEntity;
-        $NoteHistoryEntity = $this->NoteHistoryEntity;
-        $UserEntity = $this->UserEntity;
-        $TagEntity = $this->TagEntity;
-        $NoteModel = $this->NoteModel;
-        $AttachmentEntity = $this->AttachmentEntity;
-        $router = $this->router;
-
         $urlVars = $this->request->get('urlVars');
         $id = (int) $urlVars['id'];
         $version = $this->request->get->get('version', 0);
