@@ -63,7 +63,7 @@ class NoteDispatch extends Base
         {
             // TODO: verify note exist
             // TODO: setup note data
-            $row = $this->NoteEntity->findByPK($urlVars['id']);
+            $row = $this->Note2Entity->findByPK($urlVars['id']);
             // TODO: use Note2Entity
             $notetype = $row['type']; 
         }
