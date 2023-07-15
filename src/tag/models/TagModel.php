@@ -15,39 +15,13 @@ use SPT\Container\Client as Base;
 class TagModel extends Base
 { 
     // Write your code here
+    use \SPT\Traits\ErrorString;
+
     public function remove($id)
     {
-        $where = [
-            "(`tags` = '" . $id . "'" .
-            " OR `tags` LIKE '%" . ',' . $id . "'" .
-            " OR `tags` LIKE '" . $id . ',' . "%'" .
-            " OR `tags` LIKE '%" . ',' . $id . ',' . "%' )"
-        ];
-
-        //find note
-        $list_note = $this->NoteEntity->list(0, 0, $where);
-        foreach($list_note as $note)
+        if(!$id)
         {
-            $tags = $note['tags'] ? explode(',', $note['tags']) : [];
-            $key = array_search($id, $tags);
-            unset($tags[$key]);
-            $this->NoteEntity->update([
-                'tags' => implode(',', $tags),
-                'id' => $note['id'],
-            ]);
-        }
-
-        //find Request
-        $list_request = $this->RequestEntity->list(0, 0, $where);
-        foreach($list_request as $request)
-        {
-            $tags = $request['tags'] ? explode(',', $request['tags']) : [];
-            $key = array_search($id, $tags);
-            unset($tags[$key]);
-            $this->RequestEntity->update([
-                'tags' => implode(',', $tags),
-                'id' => $request['id'],
-            ]);
+            return false;
         }
 
         return $this->TagEntity->remove($id);
@@ -62,7 +36,7 @@ class TagModel extends Base
 
         if (!$data['name'])
         {
-            $this->session->set('flashMsg', 'Error: Name can\'t empty! ');
+            $this->error = 'Name can\'t empty! ';
             return false;
         }
 
@@ -75,7 +49,7 @@ class TagModel extends Base
         $findOne = $this->TagEntity->findOne($where);
         if ($findOne)
         {
-            $this->session->set('flashMsg', 'Error: Create Failed! Tag already exists');
+            $this->error = 'Tag already exists';
             return false;
         }
 
@@ -84,7 +58,9 @@ class TagModel extends Base
 
     public function add($data)
     {
-        if (!$data || !is_array($data))
+        $try = $this->validate($data);
+
+        if (!$try)
         {
             return false;
         }
@@ -92,7 +68,7 @@ class TagModel extends Base
         $newId =  $this->TagEntity->add([
             'name' => $data['name'],
             'description' => $data['description'],
-            'parent_id' => $data['parent_id'],
+            'parent_id' => isset($data['parent_id']) ? $data['parent_id'] : 0 ,
         ]);
 
         return $newId;
@@ -100,7 +76,9 @@ class TagModel extends Base
 
     public function update($data)
     {
-        if (!$data || !is_array($data) || !$data['id'])
+        $try = $this->validate($data);
+
+        if (!$try || !$data['id'])
         {
             return false;
         }
@@ -108,7 +86,7 @@ class TagModel extends Base
         $try = $this->TagEntity->update([
             'name' => $data['name'],
             'description' => $data['description'],
-            'parent_id' => $data['parent_id'],
+            'parent_id' => isset($data['parent_id']) ? $data['parent_id'] : 0,
             'id' => $data['id'],
         ]);
 
