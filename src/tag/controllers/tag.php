@@ -29,31 +29,14 @@ class tag extends ControllerMVVM
             'parent_id' => $this->request->post->get('parent_id', 0, 'int'),
         ];
 
-        $data = $this->TagModel->validate($data);
-        if (!$data)
-        {
-            return $this->app->redirect(
-                $this->router->url('tags')
-            );
-        }
-        
         $try = $this->TagModel->add($data);
 
-        if( !$try )
-        {
-            $msg = 'Error: Create Failed!';
-            $this->session->set('flashMsg', $msg);
-            return $this->app->redirect(
-                $this->router->url('tags')
-            );
-        }
-        else
-        {
-            $this->session->set('flashMsg', 'Create Successfully!');
-            return $this->app->redirect(
-                $this->router->url('tags')
-            );
-        }
+        $message = $try ? 'Create Successfully!' : 'Error: '. $this->TagModel->getError();
+
+        $this->session->set('flashMsg', $message);
+        return $this->app->redirect(
+            $this->router->url('tags')
+        );
     }
 
     public function update()
@@ -69,30 +52,13 @@ class tag extends ControllerMVVM
                 'id' => $id,
             ];
         
-            $data = $this->TagModel->validate($data);
-            if (!$data)
-            {
-                return $this->app->redirect(
-                    $this->router->url('tags')
-                );
-            }
-            
             $try = $this->TagModel->update($data);
+            $message = $try ? 'Update Successfully!' : 'Error: '. $this->TagModel->getError();
             
-            if($try) 
-            {
-                $this->session->set('flashMsg', 'Update Successfully!');
-                return $this->app->redirect(
-                    $this->router->url('tags')
-                );
-            }
-            else
-            {
-                $this->session->set('flashMsg', 'Error: Update Failed!');
-                return $this->app->redirect(
-                    $this->router->url('tags')
-                );
-            }
+            $this->session->set('flashMsg', $message);
+            return $this->app->redirect(
+                $this->router->url('tags')
+            );
         }
 
         $this->session->set('flashMsg', 'Error: Invalid Task!');
