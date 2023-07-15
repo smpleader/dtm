@@ -41,4 +41,9 @@
 	</main>
 </div>
 </div>
+<form class="hidden" method="POST" id="form_delete">
+    <input type="hidden" value="<?php echo $this->token ?>" name="token">
+    <input type="hidden" value="DELETE" name="_method">
+</form>
 <?php echo $this->render('backend.tag.form', []);?>
+<?php echo $this->render('backend.tag.list.javascript', []); ?>
