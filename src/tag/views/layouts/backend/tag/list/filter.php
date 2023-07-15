@@ -44,4 +44,3 @@
         </div>
     </div>
 </form>
-<?php echo $this->render('backend.tag.list.javascript', []); ?>
