@@ -43,6 +43,14 @@ class Routing
                     'delete' => ['tag_manager', 'tag_delete']
                 ],
             ],
+            'tag/ajax-add' => [
+                'fnc' => [
+                    'post' => 'tag.ajax.add',
+                ],
+                'permission' => [
+                    'post' => ['tag_manager', 'tag_create'],
+                ],
+            ],
         ];
     }
 }
