@@ -81,6 +81,7 @@ class AdminTags extends ViewModel
             'sort' => $sort,
             'user_id' => $user->get('id'),
             'url' => $router->url(),
+            'link_search' => $router->url('tag/search'),
             'link_list' => $router->url('tags'),
             'title_page' => 'Tags',
             'link_form' => $router->url('tag'),
