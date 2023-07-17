@@ -46,6 +46,10 @@ class AdminNotes extends ViewModel
         $where = [];
         $filter_tags = [];
         
+        $where = [
+            'status <> -1',
+        ];
+
         if (!empty($search) && is_string($search)) {
             $where[] = "(`description` LIKE '%" . $search . "%')";
             $where[] = "(`note` LIKE '%" . $search . "%')";
