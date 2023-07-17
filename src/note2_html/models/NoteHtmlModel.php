@@ -31,6 +31,7 @@ class NoteHtmlModel extends Base
     {
         if (!is_array($data))
         {
+            $this->error = 'Error: Invalid data format! ';
             return false;
         }
 
@@ -91,6 +92,7 @@ class NoteHtmlModel extends Base
 
         if (!$try || !$data['id'])
         {
+            $this->error = 'Invalid note!';
             return false;
         }
 
@@ -112,6 +114,7 @@ class NoteHtmlModel extends Base
     {
         if (!$id)
         {
+            $this->error = 'Invalid note!';
             return false;
         }
 
@@ -146,6 +149,7 @@ class NoteHtmlModel extends Base
 
                 if (!$try)
                 {
+                    $this->error = 'Can`t create default note';
                     return false;
                 }
 
