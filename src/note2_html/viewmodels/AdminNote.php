@@ -31,7 +31,7 @@ class AdminNote extends ViewModel
         $urlVars = $this->request->get('urlVars');
         $id = $urlVars && isset($urlVars['id']) ? (int) $urlVars['id'] : 0;
 
-        $data = $id ? $this->NoteHtmlModel->getDetail($id) : [];
+        $data = $this->NoteHtmlModel->getDetail($id);
 
         return $data;
     }

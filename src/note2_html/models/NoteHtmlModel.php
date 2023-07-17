@@ -73,7 +73,7 @@ class NoteHtmlModel extends Base
             'data' => $data['data'],
             'tags' => '',
             'type' => 'html',
-            'parent_id' => 0,
+            'note_ids' => '',
             'notice' => isset($data['notice']) ? $data['notice'] : '',
             'created_at' => date('Y-m-d H:i:s'),
             'created_by' => $this->user->get('id'),
@@ -121,7 +121,36 @@ class NoteHtmlModel extends Base
     {
         if (!$id)
         {
-            return false;
+            $find = $this->Note2Entity->findOne(['status' => '-1', 'created_by' => $this->user->get('id'), 'note_ids' => '', 'type' => 'html']);
+            if (!$find)
+            {
+                $find = [
+                    'title' => '',
+                    'public_id' => '',
+                    'alias' => '',
+                    'data' => '',
+                    'tags' => '',
+                    'type' => 'html',
+                    'note_ids' => '',
+                    'status' => -1,
+                    'notice' => '',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->user->get('id'),
+                    'locked_at' => date('Y-m-d H:i:s'),
+                    'locked_by' => $this->user->get('id'),
+                ];
+                
+                $try = $this->Note2Entity->add($find);
+
+                if (!$try)
+                {
+                    return false;
+                }
+
+                $find['id'] = $try;
+            }
+
+            return $find;
         }
 
         $note = $this->Note2Entity->findByPK($id);
@@ -132,5 +161,5 @@ class NoteHtmlModel extends Base
 
         return $note;
     }
-    
+
 }
