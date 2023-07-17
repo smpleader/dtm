@@ -41,7 +41,7 @@ class AdminUsers extends ViewModel
         $search = trim($filter->getField('search')->value);
         $status = $filter->getField('status')->value;
         $filter_group = $filter->getField('group')->value;
-        $page   = $request->get->get('page', 1, 'int');
+        $page = $this->state('page', 1, 'int', 'get', 'user.page');
         if ($page <= 0) $page = 1;
 
         $where = [];

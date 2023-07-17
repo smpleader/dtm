@@ -42,7 +42,7 @@ class AdminGroups extends ViewModel
         $sort   = $filter->getField('sort')->value;
         $search = trim($filter->getField('search')->value);
         $status = $filter->getField('status')->value;
-        $page   = $request->get->get('page', 1, 'int');
+        $page = $this->state('page', 1, 'int', 'get', 'usergroup.page');
 
         if ($page <= 0) $page = 1;
 

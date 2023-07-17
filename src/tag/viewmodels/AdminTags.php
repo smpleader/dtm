@@ -41,7 +41,7 @@ class AdminTags extends ViewModel
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
         $search = trim($filter->getField('search')->value);
-        $page   = $request->get->get('page', 1);
+        $page = $this->state('page', 1, 'int', 'get', 'tag.page');
         if ($page <= 0) $page = 1;
 
         $where = [];

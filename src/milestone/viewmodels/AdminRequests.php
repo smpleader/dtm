@@ -41,7 +41,7 @@ class AdminRequests extends ViewModel
         $sort   = $filter->getField('sort')->value;
         $tags   = $filter->getField('filter_tags')->value;
         $search = trim($filter->getField('search')->value);
-        $page   = $this->request->get->get('page', 1);
+        $page = $this->state('page', 1, 'int', 'get', 'request.page');
         if ($page <= 0) $page = 1;
         $where = [];
         $where[] = ['milestone_id = '. $milestone_id];

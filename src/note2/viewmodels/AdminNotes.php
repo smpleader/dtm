@@ -40,7 +40,7 @@ class AdminNotes extends ViewModel
         $sort   = $filter->getField('sort')->value;
         $tags   = $filter->getField('tags')->value;
         $search = trim($filter->getField('search')->value);
-        $page   = $this->request->get->get('page', 1);
+        $page = $this->state('page', 1, 'int', 'get', 'note.page');
         if ($page <= 0) $page = 1;
 
         $where = [];
