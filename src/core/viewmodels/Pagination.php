@@ -25,10 +25,12 @@ class Pagination extends ViewModel
         if( isset($viewData['list']) )
         {
             $list = $viewData['list'];
+            $page = $viewData['page'];
+            
             $total = $list->getTotal();
             return [
                 'total' => $total,
-                'page' => $this->request->get->get('page', 1),
+                'page' => $page ? $page : 1,
                 'totalPage' => $list->getTotalPage(),
                 'limit' => $list->getLimit(),
                 'path_current' => $this->router->get('actualPath'),

@@ -8,10 +8,13 @@ class Dispatcher
 {
     public static function dispatch(IApp $app)
     {
-        $app->plgLoad('permission', 'CheckSession');
-
         $cName = $app->get('controller');
         $fName = $app->get('function');
+        if( $cName != 'user' || !in_array($fName, ['gate', 'login']))
+        {
+            $app->plgLoad('permission', 'CheckSession');
+        }
+        
         $controller = 'DTM\version\controllers\\'. $cName;
         if(!class_exists($controller))
         {
@@ -21,7 +24,14 @@ class Dispatcher
         $controller = new $controller($app->getContainer());
         $controller->{$fName}();
 
-        $fName = 'to'. ucfirst($app->get('format', 'html'));
+        $app->set('theme', $app->cf('adminTheme'));
+
+        $fName = 'to'. ucfirst($app->get('format', 'html')); 
+
+        if(empty( $app->get('theme', '') ))
+        {
+            $app->set('theme', $app->cf('defaultTheme'));
+        }
 
         $app->finalize(
             $controller->{$fName}()

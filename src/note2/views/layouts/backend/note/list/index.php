@@ -33,7 +33,7 @@
 								</table>
 							</form>
 							<div class="row g-3 align-items-center">
-								<?php echo $this->renderWidget('core::notification'); ?>
+								<?php echo $this->renderWidget('core::pagination'); ?>
 							</div>
 						</div>
 					</div>
