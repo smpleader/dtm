@@ -51,8 +51,8 @@ class AdminNotes extends ViewModel
         ];
 
         if (!empty($search) && is_string($search)) {
-            $where[] = "(`description` LIKE '%" . $search . "%')";
-            $where[] = "(`note` LIKE '%" . $search . "%')";
+            $where[] = "(`data` LIKE '%" . $search . "%')";
+            $where[] = "(`notice` LIKE '%" . $search . "%')";
             $where[] = "(`title` LIKE '%" . $search . "%')";
             $where = [implode(" OR ", $where)];
         }
