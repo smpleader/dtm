@@ -16,6 +16,7 @@
             </div>
             <div class="col-lg-4 col-sm-12">
                 <?php echo $this->renderWidget('note2_attachment::backend.attachments'); ?>
+                <?php echo $this->renderWidget('tag::backend.tags'); ?>
             </div>
         </div>
     </form>
