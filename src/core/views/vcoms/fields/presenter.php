@@ -83,7 +83,7 @@ if(!isset($presenter))
 </div>
 <input name="<?php echo $this->field->name ?>" type="hidden" id="<?php echo $this->field->id ?>" value='<?php echo $this->field->value ?>' />
 <script>
-    var data_canvas = $('#description_presenter').val();
+    var data_canvas = $('#<?php echo $this->field->id ?>').val();
     data_canvas = data_canvas ? JSON.parse(data_canvas) : [];
     var total_page_canvas = 1;
     var canvas_index = 0;
