@@ -20,6 +20,7 @@ class AdminTag extends ViewModel
     {
         return [
             'layout'=>'backend.tag.form',
+            'widget'=>'backend.javascript',
         ];
     }
     
@@ -77,5 +78,13 @@ class AdminTag extends ViewModel
         ];
 
         return $fields;
+    }
+
+    public function javascript()
+    {
+        return [
+            'link_tag' => $this->router->url('tag/search'),
+            'link_add_tag' => $this->router->url('tag/ajax-add'),
+        ];
     }
 }

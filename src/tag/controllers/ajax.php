@@ -28,6 +28,7 @@ class ajax extends ControllerMVVM
 
         $this->set('message', $message);
         $this->set('status', $try ? 'done' : 'failed');
+        $this->set('id', $try ? $try : 0);
         $this->app->set('format', 'json');
         return;
     }
