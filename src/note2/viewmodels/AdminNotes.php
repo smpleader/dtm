@@ -45,10 +45,6 @@ class AdminNotes extends ViewModel
 
         $where = [];
         $filter_tags = [];
-        
-        $where = [
-            'status <> -1',
-        ];
 
         if (!empty($search) && is_string($search)) {
             $where[] = "(`data` LIKE '%" . $search . "%')";
@@ -76,7 +72,8 @@ class AdminNotes extends ViewModel
                 $where[] = '('. $where_tag . ')';
             }
         } 
-        
+
+        $where[] = 'status <> -1';
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
