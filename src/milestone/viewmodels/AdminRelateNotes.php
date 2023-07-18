@@ -74,7 +74,7 @@ class AdminRelateNotes extends ViewModel
                 {
                     $item['title'] = $note_tmp['title'];
                     $item['type'] = $note_tmp['type'];
-                    $item['description'] = strip_tags((string) $note_tmp['description']) ;
+                    $item['data'] = strip_tags((string) $note_tmp['data']) ;
                     $item['tags'] = $note_tmp['tags'] ;
                 }
                 else
