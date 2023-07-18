@@ -9,14 +9,18 @@
                 <div>
                     <?php $this->ui->field('data'); ?>
                 </div>
-                <div class="mt-3">
-                    <?php $this->ui->field('notice'); ?>
-                </div>
                 <input id="save_close" type="hidden" name="save_close">
             </div>
             <div class="col-lg-4 col-sm-12">
-                <?php echo $this->renderWidget('note2_attachment::backend.attachments'); ?>
-                <?php echo $this->renderWidget('tag::backend.tags'); ?>
+                <div>
+                    <?php $this->ui->field('notice'); ?>
+                </div>
+                <div class="mt-3">
+                    <?php echo $this->renderWidget('tag::backend.tags'); ?>
+                </div>
+                <div class="mt-3">
+                    <?php echo $this->renderWidget('note2_attachment::backend.attachments'); ?>
+                </div>            
             </div>
         </div>
     </form>
