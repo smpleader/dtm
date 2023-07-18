@@ -122,4 +122,30 @@ class TagModel extends Base
 
         return $data;
     }
+
+    public function convert($data, $check = true)
+    {
+        if ($check)
+        {
+            if (!is_array($data))
+            {
+                $this->error = 'Invalid data format';
+                return false;
+            }
+
+            $data = implode('),(', $data);
+            $data = $data ? '('. $data .')' : '';
+            return $data;
+        }
+
+        if (!is_string($data))
+        {
+            $this->error = 'Invalid data format';
+            return false;
+        }
+
+        $data = str_replace(['(', ')'], '', $data);
+        $data = explode(',', $data);
+        return $data;
+    }
 }

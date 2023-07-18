@@ -4,7 +4,10 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
 ?>
 <div>
     <label class="form-label">Tags</label>
-    <select class="select-tag" multiple id="tags">
+    <select name="tags[]" class="select-tag" multiple id="tags">
+        <?php foreach($this->tags as $item) : ?>
+        <option value="<?php echo $item['id'] ?>" selected><?php echo $item['name'] ?></option>
+        <?php endforeach; ?>
     </select>
 </div>
 <?php echo $this->renderWidget('tag::backend.javascript'); ?>
