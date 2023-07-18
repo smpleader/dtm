@@ -65,20 +65,7 @@ class AdminNotes extends ViewModel
             {
                 if ($tag)
                 {
-                    $tag_tmp = $this->TagEntity->findByPK($tag);
-                    if ($tag_tmp)
-                    {
-                        $filter_tags[] = [
-                            'id' => $tag,
-                            'name' => $tag_tmp['name'],
-                        ];
-                    }
-    
-                    $where_tag[] = 
-                    "(`tags` = '" . $tag . "'" .
-                    " OR `tags` LIKE '%" . ',' . $tag . "'" .
-                    " OR `tags` LIKE '" . $tag . ',' . "%'" .
-                    " OR `tags` LIKE '%" . ',' . $tag . ',' . "%' )";
+                    $where_tag[] = 'tags LIKE "('. $tag .')"';
                 }
                 
             }
@@ -89,7 +76,7 @@ class AdminNotes extends ViewModel
                 $where[] = '('. $where_tag . ')';
             }
         } 
-
+        
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
