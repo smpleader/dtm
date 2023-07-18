@@ -40,7 +40,7 @@ class AdminRelateNote extends ViewModel
 
     public function getFormFields()
     {
-        $notes = $this->NoteEntity->list(0, 0, [], 'title asc');
+        $notes = $this->Note2Entity->list(0, 0, [], 'title asc');
         
         $options = [];
         foreach ($notes as $note) {
