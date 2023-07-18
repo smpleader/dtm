@@ -20,6 +20,10 @@ class AdminTag extends ViewModel
     {
         return [
             'layout'=>'backend.tag.form',
+            'widget'=>[
+                'backend.javascript',
+                'backend.tags',
+            ],
         ];
     }
     
@@ -77,5 +81,34 @@ class AdminTag extends ViewModel
         ];
 
         return $fields;
+    }
+
+    public function javascript()
+    {
+        return [
+            'link_tag' => $this->router->url('tag/search'),
+            'link_add_tag' => $this->router->url('tag/ajax-add'),
+        ];
+    }
+
+    public function tags($layoutData, $viewData)
+    {
+        $data = isset($viewData['data']) ? $viewData['data'] : [];
+        $tags = isset($data['tags']) ? $data['tags'] : '';
+
+        $tags = $this->TagModel->convert($tags, false);
+        if ($tags)
+        {
+            $where = ['id IN ('. implode(',', $tags) .')'];
+            $tags = $this->TagEntity->list(0, 0, $where);
+        }
+        else
+        {
+            $tags = [];
+        }
+        
+        return [
+            'tags' => $tags,
+        ];
     }
 }

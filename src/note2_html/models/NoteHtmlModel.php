@@ -66,13 +66,14 @@ class NoteHtmlModel extends Base
         }
 
         $data['data'] = $this->replaceContent($data['data']);
+        $data['tags'] = isset($data['tags']) ? $this->TagModel->convert($data['tags']) : '';
 
         $newId =  $this->Note2Entity->add([
             'title' => $data['title'],
             'public_id' => '',
             'alias' => '',
             'data' => $data['data'],
-            'tags' => '',
+            'tags' => $data['tags'],
             'type' => 'html',
             'note_ids' => '',
             'notice' => isset($data['notice']) ? $data['notice'] : '',
@@ -97,10 +98,12 @@ class NoteHtmlModel extends Base
         }
 
         $data['data'] = $this->replaceContent($data['data']);
-        
+        $data['tags'] = isset($data['tags']) ? $this->TagModel->convert($data['tags']) : '';
+
         $try =  $this->Note2Entity->update([
             'title' => $data['title'],
             'data' => $data['data'],
+            'tags' => $data['tags'],
             'notice' => isset($data['notice']) ? $data['notice'] : '',
             'status' => isset($data['status']) ? $data['status'] : 0,
             'id' => $data['id'],

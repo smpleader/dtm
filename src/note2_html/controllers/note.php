@@ -50,6 +50,7 @@ class note extends NoteController
         $data = [
             'title' => $this->request->post->get('title', '', 'string'),
             'data' => $this->request->post->get('data', '', 'string'),
+            'tags' => $this->request->post->get('tags', [], 'array'),
             'notice' => $this->request->post->get('notice', '', 'string'),
         ];
         
@@ -82,6 +83,7 @@ class note extends NoteController
             $data = [
                 'title' => $this->request->post->get('title', '', 'string'),
                 'data' => $this->request->post->get('data', '', 'string'),
+                'tags' => $this->request->post->get('tags', [], 'array'),
                 'notice' => $this->request->post->get('notice', '', 'string'),
                 'id' => $id,
             ];
