@@ -53,20 +53,31 @@
             if (data.newTag)
             {
                 var form = new FormData();
-                form.append('_method', 'DELETE');
-
+                form.append('name', data.text);
+                selected = $('#tags').select2('data');
                 $.ajax({
-                    url: <?php echo $this->link_add_tag; ?>,
+                    url: '<?php echo $this->link_add_tag; ?>',
                     type: 'POST',
                     processData: false,
                     contentType: false,
                     data: form,
                     success: function(result) {
                         if (result.status != 'done') {
-                            var message = result.message ? result.message : 'Upload Failed';
+                            var message = result.message ? result.message : 'Create Tag Failed';
                             alert(result.message);
                         }else{
-                            alert(result.message);
+                            $('#tags').val(null).trigger('change');
+                            id = result.id;
+                            // update selected
+                            selected.forEach(function(value, index){
+                                if(value.id == data.text && value.newTag)
+                                {
+                                    value.id = id;
+                                }
+
+                                var newOption = new Option(value.text, value.id, true, true);
+                                $('#tags').append(newOption).trigger('change');
+                            })
                         }
                     }
                 });
