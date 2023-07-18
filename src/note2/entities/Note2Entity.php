@@ -69,10 +69,12 @@ class Note2Entity extends Entity
                     'type' => 'text',
                     'default' => ''
                 ],
-                'parent_id' => [
+                'note_ids' => [
+                    'type' => 'text',
+                ],
+                'status' => [
                     'type' => 'int',
                     'default' => 0,
-                    'option' => 'unsigned',
                 ],
                 'type' => [
                     'type' => 'varchar',

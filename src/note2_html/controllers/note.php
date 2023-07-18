@@ -49,7 +49,7 @@ class note extends NoteController
         //check title sprint
         $data = [
             'title' => $this->request->post->get('title', '', 'string'),
-            'data' => $this->request->post->get('data', [], 'array'),
+            'data' => $this->request->post->get('data', '', 'string'),
             'notice' => $this->request->post->get('notice', '', 'string'),
         ];
         
@@ -81,7 +81,7 @@ class note extends NoteController
         {
             $data = [
                 'title' => $this->request->post->get('title', '', 'string'),
-                'data' => $this->request->post->get('data', [], 'array'),
+                'data' => $this->request->post->get('data', '', 'string'),
                 'notice' => $this->request->post->get('notice', '', 'string'),
                 'id' => $id,
             ];

@@ -31,6 +31,7 @@ class NoteHtmlModel extends Base
     {
         if (!is_array($data))
         {
+            $this->error = 'Error: Invalid data format! ';
             return false;
         }
 
@@ -73,8 +74,9 @@ class NoteHtmlModel extends Base
             'data' => $data['data'],
             'tags' => '',
             'type' => 'html',
-            'parent_id' => 0,
+            'note_ids' => '',
             'notice' => isset($data['notice']) ? $data['notice'] : '',
+            'status' => isset($data['status']) ? $data['status'] : 0,
             'created_at' => date('Y-m-d H:i:s'),
             'created_by' => $this->user->get('id'),
             'locked_at' => date('Y-m-d H:i:s'),
@@ -90,6 +92,7 @@ class NoteHtmlModel extends Base
 
         if (!$try || !$data['id'])
         {
+            $this->error = 'Invalid note!';
             return false;
         }
 
@@ -99,6 +102,7 @@ class NoteHtmlModel extends Base
             'title' => $data['title'],
             'data' => $data['data'],
             'notice' => isset($data['notice']) ? $data['notice'] : '',
+            'status' => isset($data['status']) ? $data['status'] : 0,
             'id' => $data['id'],
         ]);
 
@@ -110,6 +114,7 @@ class NoteHtmlModel extends Base
     {
         if (!$id)
         {
+            $this->error = 'Invalid note!';
             return false;
         }
 
@@ -121,7 +126,37 @@ class NoteHtmlModel extends Base
     {
         if (!$id)
         {
-            return false;
+            $find = $this->Note2Entity->findOne(['status' => '-1', 'created_by' => $this->user->get('id'), 'type' => 'html']);
+            if (!$find)
+            {
+                $find = [
+                    'title' => '',
+                    'public_id' => '',
+                    'alias' => '',
+                    'data' => '',
+                    'tags' => '',
+                    'type' => 'html',
+                    'note_ids' => '',
+                    'status' => -1,
+                    'notice' => '',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->user->get('id'),
+                    'locked_at' => date('Y-m-d H:i:s'),
+                    'locked_by' => $this->user->get('id'),
+                ];
+                
+                $try = $this->Note2Entity->add($find);
+
+                if (!$try)
+                {
+                    $this->error = 'Can`t create default note';
+                    return false;
+                }
+
+                $find['id'] = $try;
+            }
+
+            return $find;
         }
 
         $note = $this->Note2Entity->findByPK($id);
@@ -132,5 +167,5 @@ class NoteHtmlModel extends Base
 
         return $note;
     }
-    
+
 }
