@@ -9,11 +9,6 @@ class Routing
     public static function registerEndpoints()
     {
         return [
-            'note2/types' => [
-                'fnc' => [
-                    'get' => 'note2.ajax.types',
-                ]
-            ],
             'note2' => [
                 'fnc' => [
                     'get' => 'note2.note.list',

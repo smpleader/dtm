@@ -17,4 +17,3 @@
 		</div>
 	</div>
 </div>
-<?php echo $this->renderWidget('note2::backend') ?>
