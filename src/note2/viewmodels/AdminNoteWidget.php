@@ -20,12 +20,12 @@ class AdminNoteWidget extends ViewModel
     {
         return [
             'widget'=>[
-                'backend.note_modal',
+                'backend.popup_new',
             ]
         ];
     }
     
-    public function note_modal()
+    public function popup_new()
     {
         $types = $this->Note2Model->getTypes();
         $note_types = [];

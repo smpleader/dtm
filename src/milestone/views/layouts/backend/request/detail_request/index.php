@@ -83,4 +83,5 @@ echo $this->render('backend.version_latest.list', []);
         </div>
     </div>
 </div>
+<?php echo $this->renderWidget('note2::backend.popup_new'); ?>
 <?php echo $this->render('backend.request.detail_request.javascript'); ?>
