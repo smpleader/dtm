@@ -38,7 +38,7 @@ class note extends ControllerMVVM
         {
             $where[] = "title like '%". $search ."%'";
         }
-        $notes = $this->NoteEntity->list(0 , 0, $where);
+        $notes = $this->Note2Entity->list(0 , 0, $where);
         $this->app->set('format', 'json');
         $this->set('result', $notes);
         return ;

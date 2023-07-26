@@ -23,7 +23,7 @@ class Note2Model extends Base
         if(false === $noteTypes)
         {
             $noteTypes = [];
-            $this->app->childLoad('notetype', 'registerType', function($types) use (&$noteTypes) {
+            $this->app->plgLoad('notetype', 'registerType', function($types) use (&$noteTypes) {
                 $noteTypes += $types;
             });
     
