@@ -61,7 +61,7 @@ class AdminRelateNotes extends ViewModel
         $milestone = $request ? $this->MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
         $title_page_relate_note = 'Related Notes';
 
-        $note_exist = $this->container->exists('NoteEntity');
+        $note_exist = $this->container->exists('Note2Entity');
 
         $notes = [];
         foreach ($result as $index => &$item)
@@ -69,12 +69,12 @@ class AdminRelateNotes extends ViewModel
             $note_tmp = false;
             if ($note_exist)
             {
-                $note_tmp = $this->NoteEntity->findByPK($item['note_id']);
+                $note_tmp = $this->Note2Entity->findByPK($item['note_id']);
                 if ($note_tmp)
                 {
                     $item['title'] = $note_tmp['title'];
                     $item['type'] = $note_tmp['type'];
-                    $item['description'] = strip_tags((string) $note_tmp['description']) ;
+                    $item['data'] = strip_tags((string) $note_tmp['data']) ;
                     $item['tags'] = $note_tmp['tags'] ;
                 }
                 else

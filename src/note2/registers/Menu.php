@@ -23,7 +23,7 @@ class Menu
         $menu = [
             [
                 'link' => $router->url('note2'),
-                'title' => 'Note2',
+                'title' => 'Notes',
                 'icon' => '<i class="fa-solid fa-clipboard"></i>',
                 'class' => $active
             ],

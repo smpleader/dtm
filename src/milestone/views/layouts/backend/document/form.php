@@ -34,7 +34,7 @@
                         ?>
                     </div>
                     <div class="col-lg-5 col-6">
-                        <?php echo $this->render('layouts.backend.relate_note.list', []); ?>
+                        <?php echo $this->render('backend.relate_note.list', []); ?>
                         <ul id="list-discussion" class="list-unstyled pt-2" style="max-height: 60vh; overflow:auto;">
                             <?php foreach ($this->discussion as $item) : ?>
                                 <li class="d-flex <?php echo $this->user_id == $item['user_id'] ? 'ms-5 me-2 justify-content-end' : 'me-5 ms-2 justify-content-between'; ?>  mb-4">

@@ -3,8 +3,8 @@
 $this->theme->add($this->url . 'assets/css/select2.min.css', '', 'select2-css');
 $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-select2');
 
-echo $this->render('layouts.backend.document.form', []);
-echo $this->render('layouts.backend.version_latest.list', []);
+echo $this->render('backend.document.form', []);
+echo $this->render('backend.version_latest.list', []);
 ?>
 <div class="toast message-toast" id="message_ajax">
     <div id="message_form" class="d-flex message-body ">

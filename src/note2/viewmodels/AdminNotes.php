@@ -45,14 +45,10 @@ class AdminNotes extends ViewModel
 
         $where = [];
         $filter_tags = [];
-        
-        $where = [
-            'status <> -1',
-        ];
 
         if (!empty($search) && is_string($search)) {
-            $where[] = "(`description` LIKE '%" . $search . "%')";
-            $where[] = "(`note` LIKE '%" . $search . "%')";
+            $where[] = "(`data` LIKE '%" . $search . "%')";
+            $where[] = "(`notice` LIKE '%" . $search . "%')";
             $where[] = "(`title` LIKE '%" . $search . "%')";
             $where = [implode(" OR ", $where)];
         }
@@ -65,20 +61,7 @@ class AdminNotes extends ViewModel
             {
                 if ($tag)
                 {
-                    $tag_tmp = $this->TagEntity->findByPK($tag);
-                    if ($tag_tmp)
-                    {
-                        $filter_tags[] = [
-                            'id' => $tag,
-                            'name' => $tag_tmp['name'],
-                        ];
-                    }
-    
-                    $where_tag[] = 
-                    "(`tags` = '" . $tag . "'" .
-                    " OR `tags` LIKE '%" . ',' . $tag . "'" .
-                    " OR `tags` LIKE '" . $tag . ',' . "%'" .
-                    " OR `tags` LIKE '%" . ',' . $tag . ',' . "%' )";
+                    $where_tag[] = 'tags LIKE "('. $tag .')"';
                 }
                 
             }
@@ -90,6 +73,7 @@ class AdminNotes extends ViewModel
             }
         } 
 
+        $where[] = 'status <> -1';
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
