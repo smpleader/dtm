@@ -74,5 +74,6 @@
     <input type="hidden" value="<?php echo $this->token ?>" name="token">
     <input type="hidden" value="DELETE" name="_method">
 </form>
-<?php echo $this->render('backend.relate_note.form', []); ?>
+<?php echo $this->render('backend.relate_note.form'); ?>
+<?php echo $this->renderWidget('note2::backend.note_modal'); ?>
 <?php echo $this->render('backend.relate_note.list.javascript', ['link_update_relate_note' => $this->link_update_relate_note]); ?>
