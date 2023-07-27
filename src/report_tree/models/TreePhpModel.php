@@ -236,4 +236,28 @@ class TreePhpModel extends Base
 
         return $find;
     }
+
+    public function findRequest($id)
+    {
+        if (!$id)
+        {
+            $this->error = 'Invalid id';
+            return false;
+        }
+        
+        $list = $this->RelateNoteEntity->list(0, 0, ['note_id = '. $id]);
+        $result = [];
+        foreach($list as &$item)
+        {
+            $request = $this->RequestEntity->findByPK($item['request_id']);
+            if ($request)
+            {
+                $request['start_at'] = $request['start_at'] && $request['start_at'] != '0000-00-00 00:00:00' ? date('m-d-Y', strtotime($request['start_at'])) : '';
+                $request['finished_at'] = $request['finished_at'] && $request['finished_at'] != '0000-00-00 00:00:00' ? date('m-d-Y', strtotime($request['finished_at'])) : '';
+                $result[] = $request;
+            }
+        }
+
+        return $result;
+    }
 }
