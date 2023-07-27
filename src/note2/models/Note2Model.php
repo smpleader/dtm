@@ -44,4 +44,25 @@ class Note2Model extends Base
         return $try;
     }
 
+    public function searchAjax($search, $ignore)
+    {
+        $where = [];
+        if ($search)
+        {
+            $where[] = "(`data` LIKE '%" . $search . "%')";
+            $where[] = "(`notice` LIKE '%" . $search . "%')";
+            $where[] = "(`title` LIKE '%" . $search . "%')";
+
+            $where = ['('. implode(" OR ", $where). ')'];
+        }
+
+        if ($ignore)
+        {
+            $where[] = 'id NOT IN('.$ignore.')';
+        }
+
+        $result = $this->Note2Entity->list(0, 0, $where, '`title` asc');
+        $result = $result ? $result : [];
+        return $result;
+    }
 }
