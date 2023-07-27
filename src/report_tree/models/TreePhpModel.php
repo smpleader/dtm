@@ -85,7 +85,7 @@ class TreePhpModel extends Base
             $this->TreeStructureEntity->remove($item['id']);
         }
 
-        $try = $this->DiagramEntity->remove($id);
+        $try = $this->ReportEntity->remove($id);
         return $try;
     }
 
