@@ -23,9 +23,9 @@ class Menu
         $menu = [];
         foreach($list as $item)
         {
-            $active = strpos($path_current, 'tree-php/'. $item['id']) !== false ? 'active' : '';
+            $active = strpos($path_current, 'report/detail/'. $item['id']) !== false ? 'active' : '';
             $menu[] = [
-                'link' => $router->url('tree-php/'. $item['id']),
+                'link' => $router->url('report/detail/'. $item['id']),
                 'title' => $item['title'], 
                 'icon' => '<i class="me-4 pe-2"></i>',
                 'class' => 'back-ground-sidebar ' . $active,
