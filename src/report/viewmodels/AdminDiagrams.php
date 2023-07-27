@@ -69,7 +69,7 @@ class AdminDiagrams extends ViewModel
 
         foreach($result as &$item)
         {
-            $item['report_type'] = isset($types[$item['report_type']]) ? $types[$item['report_type']] : $item['report_type'];
+            $item['type'] = isset($types[$item['type']]) ? $types[$item['type']] : $item['type'];
             $user_tmp = $this->UserEntity->findByPK($item['created_by']);
             $item['auth'] = $user_tmp ? $user_tmp['name'] : '';
             $item['created_at'] = $item['created_at'] && $item['created_at'] != '0000-00-00 00:00:00' ? date('d-m-Y', strtotime($item['created_at'])) : '';
@@ -105,7 +105,7 @@ class AdminDiagrams extends ViewModel
             'url' => $this->router->url(),
             'link_list' => $this->router->url('reports'),
             'link_new_form' => $this->router->url('new-report'),
-            'link_form' => $this->router->url('report-detail'),
+            'link_form' => $this->router->url('report/detail'),
             'title_page' => 'Report',
             'token' => $this->token->value(),
         ];

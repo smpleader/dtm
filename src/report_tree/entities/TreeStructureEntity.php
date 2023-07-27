@@ -107,8 +107,11 @@ class TreeStructureEntity extends Entity
         $array[$id]['tree_left'] = $n++;
         // loop over the node's children and process their data
         // before assigning the right value
-        foreach ($array[$id]['children'] as $child_id) {
-            $this->rebuildGenerateTreeData($array, $child_id, $level + 1, $n);
+        if (isset($array[$id]['children']))
+        {
+            foreach ($array[$id]['children'] as $child_id) {
+                $this->rebuildGenerateTreeData($array, $child_id, $level + 1, $n);
+            }
         }
 
         $array[$id]['tree_right'] = $n++;

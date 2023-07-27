@@ -53,11 +53,11 @@ class ReportEntity extends Entity
                 'type' => 'int',
                 'option' => 'unsigned',
             ],
-            'locked_at' => [
+            'modified_at' => [
                 'type' => 'datetime',
                 'default' => 'NOW()',
             ],
-            'locked_by' => [
+            'modified_by' => [
                 'type' => 'int',
                 'option' => 'unsigned',
             ],

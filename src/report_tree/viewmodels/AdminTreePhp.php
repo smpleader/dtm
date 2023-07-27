@@ -23,41 +23,33 @@ class AdminTreePhp extends ViewModel
         ];
     }
 
-    public function getData()
+    private function getItem()
     {
+        $urlVars = $this->request->get('urlVars');
+        $id = $urlVars && isset($urlVars['id']) ? (int) $urlVars['id'] : 0;
 
+        $data = $this->TreePhpModel->getDetail($id);
+
+        return $data;
     }
-    
+
     public function form()
     {
-
-        $urlVars = $this->request->get('urlVars');
-        $id = (int) $urlVars['id'];
-
-        $data = $id ? $this->ReportEntity->findByPK($id) : [];
-        $ignore = [];
-        $list_tree = [];
-        if ($data)
-        {
-            $list_tree = $this->TreePhpModel->getTree($id);
-            foreach($list_tree as $item)
-            {
-                $ignore[] = $item['note_id'];
-            }
-        }
+        $data = $this->getItem();
+        $data = $data ? $data : [];
+        $id  = $data ? $data['id'] : '';
 
         $form = new Form($this->getFormFields(), $data);
+
         return [
             'id' => $id,
             'form' => $form,
-            'list_tree' => $list_tree,
             'data' => $data,
-            'ignore' => $ignore,
             'title_page_edit' => $data && $data['title'] ? $data['title'] : 'New Diagrams',
             'url' => $this->router->url(),
             'link_note' => $this->router->url('note2-detail/'),
             'link_list' => $this->router->url('reports'),
-            'link_form' => $this->router->url('tree-php'),
+            'link_form' => $id ? $this->router->url('report/detail') : $this->router->url('new-report/tree'),
             'link_search' => $this->router->url('note2/search'),
         ];
         

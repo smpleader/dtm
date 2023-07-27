@@ -31,8 +31,20 @@ class Routing
                 'parameters' => ['type'],
                 'loadChildPlugin' => true,
                 'permission' => [
-                    'get' => ['report_manager', 'report_read'],
+                    'get' => ['report_manager', 'report_create'],
                     'post' => ['report_manager', 'report_create'],
+                ],
+            ],
+            'report/detail'=>[
+                'fnc' => [
+                    'get' => 'report.report.detail',
+                    'put' => 'report.report.update',
+                ],
+                'parameters' => ['id'],
+                'loadChildPlugin' => true,
+                'permission' => [
+                    'get' => ['report_manager', 'report_update'],
+                    'post' => ['report_manager', 'report_update'],
                 ],
             ],
             'report/find-user'=>[

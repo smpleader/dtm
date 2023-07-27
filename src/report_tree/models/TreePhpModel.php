@@ -30,7 +30,7 @@ class TreePhpModel extends Base
                 continue;
             }
 
-            $note = $this->NoteEntity->findByPK($item['note_id']);
+            $note = $this->Note2Entity->findByPK($item['note_id']);
             if (!$note)
             {
                 $removes[] = $item['id'];
@@ -117,12 +117,17 @@ class TreePhpModel extends Base
         $newId =  $this->ReportEntity->add([
             'title' => $data['title'],
             'status' => 1,
-            'type' => 'php',
+            'type' => 'tree',
             'created_by' => $this->user->get('id'),
             'created_at' => date('Y-m-d H:i:s'),
             'modified_by' => $this->user->get('id'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
+
+        if (!$newId)
+        {
+            $this->error = "Can't create report";
+        }
 
         if ($newId && $data['structure'])
         {
@@ -201,5 +206,34 @@ class TreePhpModel extends Base
         }
 
         return $try;
+    }
+
+    public function getDetail($id)
+    {
+        if (!$id)
+        {
+            $this->error = 'Invalid id';
+            return false;
+        }
+
+        $find = $this->ReportEntity->findByPK($id);
+        if (!$find)
+        {
+            $this->error = 'Invalid report';
+            return false;
+        }
+
+        $list_tree = $this->getTree($id);
+        $find['list_tree'] = $list_tree;
+        $ignore = [];
+
+        foreach($list_tree as $item)
+        {
+            $ignore[] = $item['note_id'];
+        }
+
+        $find['ignore'] = $ignore;
+
+        return $find;
     }
 }

@@ -46,7 +46,7 @@ class report extends ReportController
         $save_close = $this->request->post->get('save_close', '', 'string');
         
         $newId =  $this->TreePhpModel->add($data);
-
+        
         if( !$newId )
         {
             $this->session->set('flashMsg', $this->TreePhpModel->getError());
@@ -57,7 +57,7 @@ class report extends ReportController
         else
         {
             $this->session->set('flashMsg', 'Created Successfully!');
-            $link = $save_close ? 'reports' : 'report-detail/'. $newId;
+            $link = $save_close ? 'reports' : 'report/detail/'. $newId;
             return $this->app->redirect(
                 $this->router->url($link)
             );
@@ -85,7 +85,7 @@ class report extends ReportController
             if($try)
             {
                 $this->session->set('flashMsg', 'Updated successfully');
-                $link = $save_close ? 'reports' : 'report-detail/'. $ids;
+                $link = $save_close ? 'reports' : 'report/detail/'. $ids;
                 return $this->app->redirect(
                     $this->router->url($link)
                 );
@@ -94,7 +94,7 @@ class report extends ReportController
             {
                 $this->session->set('flashMsg', $this->TreePhpModel->getError());
                 return $this->app->redirect(
-                    $this->router->url('report-detail/'. $ids)
+                    $this->router->url('report/detail/'. $ids)
                 );
             }
         }
