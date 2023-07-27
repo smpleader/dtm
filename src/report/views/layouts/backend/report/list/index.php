@@ -52,9 +52,9 @@
 			</div>
 			<div class="modal-body">
 				<div class="d-flex justify-content-around flex-wrap">
-				<?php foreach($this->types as $type) : ?>
+				<?php foreach($this->types as $key => $type) : ?>
 					<h4 class="text-nowrap mb-3">
-						<a class="mx-3" href="<?php echo $type['new_link']?>"><?php echo $type['title']?></a>
+						<a class="mx-3" href="<?php echo $this->link_new_form . '/'. $key?>"><?php echo $type['title']?></a>
 					</h4>
 				<?php endforeach; ?>
 				</div>

@@ -104,6 +104,8 @@ class AdminDiagrams extends ViewModel
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
             'link_list' => $this->router->url('reports'),
+            'link_new_form' => $this->router->url('new-report'),
+            'link_form' => $this->router->url('report-detail'),
             'title_page' => 'Report',
             'token' => $this->token->value(),
         ];

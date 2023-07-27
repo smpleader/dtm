@@ -25,7 +25,7 @@ class Routing
             ],
             'new-report'=>[
                 'fnc' => [
-                    'post' => 'report.report.add',
+                    'get' => 'report.report.newform',
                     'post' => 'report.report.add',
                 ],
                 'parameters' => ['type'],

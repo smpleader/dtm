@@ -10,41 +10,34 @@
 
 namespace DTM\report_tree\controllers;
 
+use DTM\report\libraries\ReportController;
 use SPT\Web\ControllerMVVM;
 
-class treediagram extends ControllerMVVM 
+class report extends ReportController 
 {
-    public function detail()
+    public function newform()
     {
-             
-        $urlVars = $this->request->get('urlVars');
-        $id = (int) $urlVars['id'];
-
-        $exist = $this->DiagramEntity->findByPK($id);
-
-        if(!empty($id) && !$exist)
-        {
-            $this->session->set('flashMsg', "Invalid note diagram");
-            return $this->app->redirect(
-                $this->router->url('reports')
-            );
-        }
-        $this->app->set('layout', 'backend.tree_php.form');
+        $this->app->set('layout', 'backend.report.form');
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
     }
 
-    public function list()
+    public function detail()
     {
-        
+        $this->app->set('layout', 'backend.report.form');
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
-        $this->app->set('layout', 'backend.tree_php.list');
+    }
+
+    public function preview()
+    {
+        $this->app->set('layout', 'backend.note.preview');
+        $this->app->set('page', 'backend');
+        $this->app->set('format', 'html');
     }
 
     public function add()
     {
-        //check title sprint
         $data = [
             'title' => $this->request->post->get('title', '', 'string'),
             'structure' => $this->request->post->get('structure', '', 'string'),
@@ -52,29 +45,19 @@ class treediagram extends ControllerMVVM
         ];
         $save_close = $this->request->post->get('save_close', '', 'string');
         
-        $data = $this->TreePhpModel->validate($data);
-        if (!$data)
-        {
-            return $this->app->redirect(
-                $this->router->url('tree-php/0')
-            );
-        }
-
-        // TODO: validate new add
         $newId =  $this->TreePhpModel->add($data);
 
         if( !$newId )
         {
-            $msg = 'Error: Created Failed!';
-            $this->session->set('flashMsg', $msg);
+            $this->session->set('flashMsg', $this->TreePhpModel->getError());
             return $this->app->redirect(
-                $this->router->url('tree-php/0')
+                $this->router->url('new-report/tree')
             );
         }
         else
         {
             $this->session->set('flashMsg', 'Created Successfully!');
-            $link = $save_close ? 'reports' : 'tree-php/'. $newId;
+            $link = $save_close ? 'reports' : 'report-detail/'. $newId;
             return $this->app->redirect(
                 $this->router->url($link)
             );
@@ -97,64 +80,24 @@ class treediagram extends ControllerMVVM
             ];
             $save_close = $this->request->post->get('save_close', '', 'string');
 
-            $data = $this->TreePhpModel->validate($data);
-            if (!$data)
-            {
-                return $this->app->redirect(
-                    $this->router->url('tree-php/'. $ids)
-                );
-            }
-
             $try = $this->TreePhpModel->update($data);
             
             if($try)
             {
                 $this->session->set('flashMsg', 'Updated successfully');
-                $link = $save_close ? 'reports' : 'tree-php/'. $ids;
+                $link = $save_close ? 'reports' : 'report-detail/'. $ids;
                 return $this->app->redirect(
                     $this->router->url($link)
                 );
             }
             else
             {
-                $msg = 'Error: Updated failed';
-                $this->session->set('flashMsg', $msg);
+                $this->session->set('flashMsg', $this->TreePhpModel->getError());
                 return $this->app->redirect(
-                    $this->router->url('tree-php/'. $ids)
+                    $this->router->url('report-detail/'. $ids)
                 );
             }
         }
-    }
-
-    public function delete()
-    {
-        $ids = $this->validateID();
-
-        $count = 0;
-        if( is_array($ids))
-        {
-            foreach($ids as $id)
-            {
-                //Delete file in source
-                if( $this->TreePhpModel->remove( $id ) )
-                {
-                    $count++;
-                }
-            }
-        }
-        elseif( is_numeric($ids) )
-        {
-            if( $this->TreePhpModel->remove($ids ) )
-            {
-                $count++;
-            }
-        }
-
-
-        $this->session->set('flashMsg', $count.' deleted record(s)');
-        return $this->app->redirect(
-            $this->router->url('reports'),
-        );
     }
 
     public function validateID()
@@ -168,7 +111,7 @@ class treediagram extends ControllerMVVM
             $ids = $this->request->post->get('ids', [], 'array');
             if(count($ids)) return $ids;
 
-            $this->session->set('flashMsg', 'Invalid note diagram');
+            $this->session->set('flashMsg', 'Invalid report');
             return $this->app->redirect(
                 $this->router->url('reports'),
             );

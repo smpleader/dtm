@@ -58,7 +58,7 @@ class ReportModel extends Base
         $find = $this->ReportEntity->findByPK($id);
         if ($find) 
         {
-            $type = isset($types[$find['report_type']]) ? $types[$find['report_type']] : [];
+            $type = isset($types[$find['type']]) ? $types[$find['type']] : [];
         }
 
         if (isset($type['remove_object'])) {

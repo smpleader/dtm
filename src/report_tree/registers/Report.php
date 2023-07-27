@@ -18,10 +18,9 @@ class Report
         }
         
         return [
-            'tree_php' => [
+            'tree' => [
                 'title' => 'Tree Of Note',
-                'new_link' => $router->url('tree-php/0'),
-                'detail_link' => $router->url('tree-php'),
+                'namespace' => 'DTM\report_tree\\',
                 'remove_object' => 'TreePhpModel',
             ],
         ];

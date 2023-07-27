@@ -11,9 +11,12 @@
 namespace DTM\report_tree\models;
 
 use SPT\Container\Client as Base;
+use SPT\Traits\ErrorString;
 
 class TreePhpModel extends Base
 { 
+    use ErrorString; 
+
     // Write your code here
     public function getTree($id)
     {
@@ -90,12 +93,13 @@ class TreePhpModel extends Base
     {
         if (!$data || !is_array($data))
         {
+            $this->error = 'Invalid data format';
             return false;
         }
 
         if (!$data['title'])
         {
-            $this->session->set('flashMsg', 'Error: Title is required! ');
+            $this->error = "title can't empry";
             return false;
         }
 
@@ -104,15 +108,16 @@ class TreePhpModel extends Base
 
     public function add($data)
     {
-        if (!$data || !is_array($data))
+        $try = $this->validate($data);
+        if (!$try)
         {
             return false;
         }
 
-        $newId =  $this->TreePhpModel->add([
+        $newId =  $this->ReportEntity->add([
             'title' => $data['title'],
             'status' => 1,
-            'report_type' => 'tree_php',
+            'type' => 'php',
             'created_by' => $this->user->get('id'),
             'created_at' => date('Y-m-d H:i:s'),
             'modified_by' => $this->user->get('id'),
@@ -143,12 +148,13 @@ class TreePhpModel extends Base
 
     public function update($data)
     {
-        if (!$data || !is_array($data) || !$data['id'])
+        $try = $this->validate($data);
+        if (!$try || !$data['id'])
         {
             return false;
         }
 
-        $try = $this->DiagramEntity->update([
+        $try = $this->ReportEntity->update([
             'title' => $data['title'],
             'modified_by' => $this->user->get('id'),
             'modified_at' => date('Y-m-d H:i:s'),
