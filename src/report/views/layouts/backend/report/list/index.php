@@ -7,7 +7,7 @@
 					<div class="card border-0 shadow-none">
 						<div class="card-body">
 							<div class="row align-items-center">
-								<?php echo $this->render('backend.diagram.list.filter', []); ?>
+								<?php echo $this->render('backend.report.list.filter', []); ?>
 							</div>
 							<form action="<?php echo $this->link_list ?>" method="POST" id="formList">
 								<input type="hidden" value="<?php echo $this->token ?>" name="token">
@@ -28,7 +28,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php while ($this->list->hasRow()) echo $this->render('backend.diagram.list.row', []); ?>
+										<?php while ($this->list->hasRow()) echo $this->render('backend.report.list.row', []); ?>
 									</tbody>
 									<?php
 									?>
@@ -71,5 +71,5 @@
     <input type="hidden" value="" name="id" class="toogle_status_id">
     <input type="hidden" value="PUT" name="_method">
 </form>
-<?php echo $this->render('backend.diagram.form', []); ?>
-<?php echo $this->render('backend.diagram.list.javascript', []); ?>
+<?php echo $this->render('backend.report.form', []); ?>
+<?php echo $this->render('backend.report.list.javascript', []); ?>

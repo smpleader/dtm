@@ -23,13 +23,16 @@ class Routing
                     'delete' => ['report_manager', 'report_delete']
                 ],
             ],
-            'report'=>[
+            'new-report'=>[
                 'fnc' => [
-                    'put' => 'report.report.update',
+                    'post' => 'report.report.add',
+                    'post' => 'report.report.add',
                 ],
-                'parameters' => ['id'],
+                'parameters' => ['type'],
+                'loadChildPlugin' => true,
                 'permission' => [
-                    'put' => ['report_manager', 'report_update'],
+                    'get' => ['report_manager', 'report_read'],
+                    'post' => ['report_manager', 'report_create'],
                 ],
             ],
             'report/find-user'=>[

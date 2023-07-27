@@ -19,9 +19,9 @@ class AdminDiagrams extends ViewModel
     {
         return [
             'layout'=>[
-                'backend.diagram.list',
-                'backend.diagram.list.row',
-                'backend.diagram.list.filter'
+                'backend.report.list',
+                'backend.report.list.row',
+                'backend.report.list.filter'
             ]
         ];
     }
@@ -53,8 +53,8 @@ class AdminDiagrams extends ViewModel
         $start  = ($page-1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
-        $result = $this->DiagramEntity->list( $start, $limit, $where, $sort);
-        $total = $this->DiagramEntity->getListTotal();
+        $result = $this->ReportEntity->list( $start, $limit, $where, $sort);
+        $total = $this->ReportEntity->getListTotal();
         if (!$result)
         {
             $result = [];

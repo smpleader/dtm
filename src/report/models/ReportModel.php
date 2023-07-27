@@ -12,21 +12,26 @@
 namespace DTM\report\models;
 
 use SPT\Container\Client as Base;
+use SPT\Traits\ErrorString;
 
 class ReportModel extends Base
 {
-    // Write your code here
+    use ErrorString; 
+
     public function getTypes()
     {
-        $app = $this->container->get('app');
-        $types = [];
-        $app->plgLoad('report', 'registerType', function ($type) use (&$types) {
-            if (is_array($type) && $type) {
-                $types = array_merge($type, $types);
-            }
-        });
+        $reportTypes = $this->app->get('reportTypes', false);
+        if(false === $reportTypes)
+        {
+            $reportTypes = [];
+            $this->app->plgLoad('report', 'registerType', function($types) use (&$reportTypes) {
+                $reportTypes += $types;
+            });
+    
+            $this->app->set('reportTypes', $reportTypes);
+        }
 
-        return $types;
+        return $reportTypes;
     }
 
     public function updateStatus($data)
@@ -35,7 +40,7 @@ class ReportModel extends Base
             return false;
         }
 
-        $try = $this->DiagramEntity->update([
+        $try = $this->ReportEntity->update([
             'id' => $data['id'],
             'status' => $data['status'],
         ]);
@@ -50,7 +55,7 @@ class ReportModel extends Base
         }
 
         $types = $this->getTypes();
-        $find = $this->DiagramEntity->findByPK($id);
+        $find = $this->ReportEntity->findByPK($id);
         if ($find) 
         {
             $type = isset($types[$find['report_type']]) ? $types[$find['report_type']] : [];
@@ -69,7 +74,7 @@ class ReportModel extends Base
         } 
         else 
         {
-            if ($this->DiagramEntity->remove($id)) 
+            if ($this->ReportEntity->remove($id)) 
             {
                 return true;
             }

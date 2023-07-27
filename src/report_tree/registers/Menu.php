@@ -12,14 +12,14 @@ class Menu
         $router = $container->get('router');
         $path_current = $router->get('actualPath');
         $permission = $container->exists('PermissionModel') ? $container->get('PermissionModel') : null;
-        $DiagramEntity = $container->get('DiagramEntity');
+        $ReportEntity = $container->get('ReportEntity');
         $allow = $permission ? $permission->checkPermission(['treephp_manager', 'treephp_read']) : true;
         if (!$allow)
         {
             return false;
         }
         
-        $list = $DiagramEntity->list(0, 0, ['report_type' => 'tree_php', 'status' => 1]);
+        $list = $ReportEntity->list(0, 0, ['type' => 'tree_php', 'status' => 1]);
         $menu = [];
         foreach($list as $item)
         {

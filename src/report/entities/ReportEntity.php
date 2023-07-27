@@ -12,9 +12,9 @@ namespace DTM\report\entities;
 
 use SPT\Storage\DB\Entity;
 
-class DiagramEntity extends Entity
+class ReportEntity extends Entity
 {
-    protected $table = '#__diagrams';
+    protected $table = '#__reports';
     protected $pk = 'id';
 
     public function getFields()
@@ -33,11 +33,11 @@ class DiagramEntity extends Entity
             'status' => [
                 'type' => 'tinyint',
             ],
-            'report_type' => [
+            'type' => [
                 'type' => 'varchar',
                 'limit' => 255,
             ],
-            'config' => [
+            'data' => [
                 'type' => 'text',
                 'null' => 'YES',
             ],
@@ -47,17 +47,17 @@ class DiagramEntity extends Entity
             ],
             'created_at' => [
                 'type' => 'datetime',
-                'null' => 'YES',
+                'default' => 'NOW()',
             ],
             'created_by' => [
                 'type' => 'int',
                 'option' => 'unsigned',
             ],
-            'modified_at' => [
+            'locked_at' => [
                 'type' => 'datetime',
-                'null' => 'YES',
+                'default' => 'NOW()',
             ],
-            'modified_by' => [
+            'locked_by' => [
                 'type' => 'int',
                 'option' => 'unsigned',
             ],
