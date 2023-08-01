@@ -11,16 +11,12 @@ class Menu
         $container = $app->getContainer();
         $router = $app->getRouter();
         $permission = $container->exists('PermissionModel') ? $container->get('PermissionModel') : null;
+        $ReportEntity = $container->get('ReportEntity');
         $allow = $permission ? $permission->checkPermission(['report_manager', 'report_read']) : true;
         $path_current = $router->get('actualPath');
 
         $menu_report = [];
-        $app->plgLoad('menu', 'registerReportItem', function ($reports) use (&$menu_report){
-            if ($reports && is_array($reports))
-            {
-                $menu_report = array_merge($menu_report, $reports);
-            }
-        });
+        $reports = $ReportEntity->list(0, 0, ['status' => 1]);
 
         $active = strpos($path_current, 'reports') !== false ? 'active' : '';
         $menu = [];
@@ -34,7 +30,18 @@ class Menu
                     'class' => $active,
                 ],
             ];
-        }        
+        }   
+        
+        foreach($reports as $item)
+        {
+            $active = strpos($path_current, 'report/detail/'. $item['id']) !== false ? 'active' : '';
+            $menu[] = [
+                'link' => $router->url('report/detail/'. $item['id']),
+                'title' => $item['title'], 
+                'icon' => '<i class="me-4 pe-2"></i>',
+                'class' => 'back-ground-sidebar ' . $active,
+            ];
+        }
 
         if ($menu_report)
         {
