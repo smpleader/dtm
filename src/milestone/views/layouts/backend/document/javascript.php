@@ -33,7 +33,7 @@
                 var list = '';
                 if (Array.isArray(resultData.list)) {
                     resultData.list.forEach(function(item) {
-                        if (user_id == item['user_id']) {
+                        if (user_id == item['created_by']) {
                             var class_name = 'ms-5 me-2 justify-content-end';
                             var name = 'You';
                         } else {
@@ -46,11 +46,11 @@
                             <div class="card">
                                 <div class="card-header d-flex justify-content-between p-3">
                                     <p class="fw-bold mb-0">${name}</p>
-                                    <p class="ms-2 text-muted small mb-0 align-self-center"><i class="far fa-clock"></i>${item['sent_at']}</p>
+                                    <p class="ms-2 text-muted small mb-0 align-self-center"><i class="far fa-clock"></i>${item['created_at']}</p>
                                 </div>
                                 <div class="card-body pt-0">
                                     <p class="mb-0">
-                                        ${item['message']}
+                                        ${item['comment']}
                                     </p>
                                 </div>
                             </div>
@@ -73,7 +73,6 @@
                 var form = new FormData();
 
                 form.append("_method", 'DELETE');
-                console.log(form);
                 $.ajax({
                     type: 'POST',
                     url: '<?php echo $this->url . 'document/version/'; ?>' + id,
@@ -113,6 +112,7 @@
 
     $(document).ready(function() {
         $("#description").attr('rows', 25);
+        loadDiscussion();
         $('.request-collapse-document').click(function() {
             $("#list-discussion").scrollTop($("#list-discussion")[0].scrollHeight);
         });
