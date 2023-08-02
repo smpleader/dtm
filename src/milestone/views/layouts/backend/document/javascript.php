@@ -158,12 +158,14 @@
 
         $("#form_comment").on('submit', function(e) {
             e.preventDefault();
+            $("#form_comment button").attr('disabled', 'disabled');
             $.ajax({
                 type: 'POST',
                 url: $("#form_comment").attr('action'),
                 data: $('#form_comment').serialize(),
                 success: function(result) {
                     showMessage(result.result, result.message);
+                    $("#form_comment button").removeAttr('disabled');
                     $('textarea[name=message]').val('');
                     loadDiscussion();
                 }
