@@ -21,6 +21,7 @@ class AdminNote extends ViewModel
         return [
             'layout' => [
                 'backend.form',
+                'backend.history',
                 'backend.preview'
             ]
         ];
@@ -53,9 +54,48 @@ class AdminNote extends ViewModel
             'title_page_edit' => $data && $data['title'] ? $data['title'] : 'New Note',
             'url' => $this->router->url(),
             'link_list' => $this->router->url('note2'),
+            'link_history' => $this->router->url('history/note-html'),
             'link_form' => $id ? $this->router->url('note2/detail') : $this->router->url('new-note2/html'),
         ];
         
+    }
+
+    public function history()
+    {
+        $urlVars = $this->request->get('urlVars');
+        $id = $urlVars && isset($urlVars['id']) ? (int) $urlVars['id'] : 0;
+
+        $history = $this->HistoryModel->detail($id);
+
+        $data = $this->NoteHtmlModel->getDetail($history['object_id']);
+        $data['data'] = $history['data'];
+
+        $form = new Form($this->getFormFields(), $data);
+
+        $button_header = [
+            [
+                'link' => $this->router->url('note2/detail/'.$data['id']),
+                'class' => 'btn btn-outline-secondary',
+                'title' => 'Cancel',
+            ],
+            [
+                'link' => '',
+                'class' => 'btn ms-2 btn-outline-success button-rollback',
+                'title' => 'Rollback',
+            ],
+        ];
+
+        return [
+            'id' => $id,
+            'form' => $form,
+            'button_header' => $button_header,
+            'data' => $data,
+            'title_page' => $data['title'] . ' - Modified at: '. $history['created_at'] ,
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('note2/detail/'. $data['id']),
+            'link_history' => $this->router->url('history/note-html'),
+            'link_form' => $this->router->url('history/note-html'),
+        ];
     }
 
     public function getFormFields()

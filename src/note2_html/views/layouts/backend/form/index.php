@@ -25,7 +25,7 @@
                     <ul class="list-group list-group-flush">
                         <?php foreach ($this->history as $item) : ?>
                             <li class="list-group-item">
-                                <a href="#" class="openHistory" data-id="<?php echo $item['id']; ?>" data-modified_at="<?php echo $item['created_at']; ?>">Modified at <?php echo $item['created_at']; ?> by <?php echo $item['user']; ?></a>
+                                <a href="<?php echo $this->link_history.'/'. $item['id'] ?>" class="openHistory" data-id="<?php echo $item['id']; ?>" data-modified_at="<?php echo $item['created_at']; ?>">Modified at <?php echo $item['created_at']; ?> by <?php echo $item['user']; ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
