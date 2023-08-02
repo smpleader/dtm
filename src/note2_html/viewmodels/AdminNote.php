@@ -42,11 +42,14 @@ class AdminNote extends ViewModel
         $id = isset($data['id']) ? $data['id'] : 0;
 
         $form = new Form($this->getFormFields(), $data);
+
+        $history = $this->HistoryModel->list(0, 0, ['object' => 'note', 'object_id' => $id]);
         
         return [
             'id' => $id,
             'form' => $form,
             'data' => $data,
+            'history' => $history,
             'title_page_edit' => $data && $data['title'] ? $data['title'] : 'New Note',
             'url' => $this->router->url(),
             'link_list' => $this->router->url('note2'),
