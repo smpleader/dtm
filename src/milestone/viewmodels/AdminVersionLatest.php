@@ -44,7 +44,7 @@ class AdminVersionLatest extends ViewModel
         $request = $this->RequestEntity->findByPK($request_id);
         $milestone = $request ? $this->MilestoneEntity->findByPK($request['milestone_id']) : ['title' => '', 'id' => 0];
         
-        if($version_latest) {
+        if($version_latest && $version_latest['id']) {
             $title_page = 'Version changelog : '. $version_latest['version'];
         } else {
             $title_page = 'Version changelog (Please create Version first)';
