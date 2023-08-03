@@ -81,7 +81,7 @@ class document extends ControllerMVVM
         $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
 
-        $list = $this->DocumentModel->getComment($request_id);
+        $list = $this->CommentModel->list(0, 0, ['object' => 'request', 'object_id' => $request_id]);
         $list = $list ? $list : [];
 
         $this->app->set('format', 'json');

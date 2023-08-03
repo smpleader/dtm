@@ -45,7 +45,7 @@
                                         </div>
                                         <div class="card-body pt-0">
                                             <p class="mb-0">
-                                                <?php echo $item['message'] ?>
+                                                <?php echo $item['comment'] ?>
                                             </p>
                                         </div>
                                     </div>
@@ -99,4 +99,4 @@
         </div>
     </div>
 </div>
-<?php echo $this->render('backend.document.javascript'); ?>
+<?php echo $this->render('backend.document.javascript', ['user_id' => $this->user_id]); ?>
