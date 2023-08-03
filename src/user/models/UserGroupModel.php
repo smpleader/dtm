@@ -11,9 +11,12 @@
 namespace DTM\user\models;
 
 use SPT\Container\Client as Base;
+use SPT\Traits\ErrorString;
 
 class UserGroupModel extends Base
 {
+    use ErrorString; 
+
     public function removeByGroup($group_id)
     {
         $user_group = $this->UserGroupEntity->list(0, 0, ['group_id' => $group_id]);
@@ -137,13 +140,13 @@ class UserGroupModel extends Base
             $find = $this->GroupEntity->findOne(['name' => $data['name']]);
             if ($find && (isset($data['id']) && $find['id'] != $data['id']))
             {
-                $this->session->set('validate', "Error: Group Name already exists");
+                $this->error = "Error: Group Name already exists";
                 return false;
             }
         } 
         else 
         {
-            $this->session->set('validate', "Error: Group name can't empty");
+            $this->error = "Error: Group name can't empty";
             return false;
         }
 
@@ -152,7 +155,8 @@ class UserGroupModel extends Base
 
     public function add($data)
     {
-        if (!$data || !is_array($data) || !$data['name'])
+        $try = $this->validate($data);
+        if (!$try)
         {
             return false;
         }
@@ -164,7 +168,8 @@ class UserGroupModel extends Base
 
     public function update($data)
     {
-        if (!$data || !is_array($data) || !$data['name'] || !$data['id'])
+        $try = $this->validate($data);
+        if (!$try || !isset($data['id']) || !$data['id'])
         {
             return false;
         }

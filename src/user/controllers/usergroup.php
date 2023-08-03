@@ -27,16 +27,7 @@ class usergroup extends ControllerMVVM
     {
         $save_close = $this->request->post->get('save_close', '', 'string');
         $name = $this->request->post->get('name', '', 'string');
-        $try = $this->UserGroupModel->validate(['name' => $name]);
-        if (!$try)
-        {
-            $msg = $this->session->get('validate', '');
-            $this->session->set('flashMsg', $msg);
-            return $this->app->redirect(
-                $this->router->url('user-group/0')
-            );
-        }
-        // TODO: validate new add
+        
         $status = $this->request->post->get('status', 0, 'string');
 
         $newId =  $this->UserGroupModel->add([
@@ -52,8 +43,7 @@ class usergroup extends ControllerMVVM
         
         if( !$newId )
         {
-            $msg = 'Error: Created Fail';
-            $this->session->set('flashMsg', $msg);
+            $this->session->set('flashMsg', 'Error: '. $this->UserGroupModel->getError());
             return $this->app->redirect(
                 $this->router->url('user-group/0')
             );
@@ -76,15 +66,6 @@ class usergroup extends ControllerMVVM
         
         if( is_numeric($sth) )
         {   
-            $try = $this->UserGroupModel->validate(['id' => $sth , 'name' => $name]);
-            if (!$try)
-            {
-                $msg = $this->session->get('validate', '');
-                $this->session->set('flashMsg', $msg);
-                return $this->app->redirect(
-                    $this->router->url('user-group/'.$sth)
-                );
-            }
 
             $status = $this->request->post->get('status', 0, 'string');
             if (!$this->UserGroupModel->checkAccessGroup($sth, $this->request->post->get('access', [], 'array')))
@@ -105,7 +86,7 @@ class usergroup extends ControllerMVVM
                 'id' => $sth,
             ];
             $try = $this->UserGroupModel->update( $user );
-            $msg = $try ? 'Updated Successfully' : 'Updated Fail';
+            $msg = $try ? 'Updated Successfully' :  'Error: '. $this->UserGroupModel->getError();
             $this->session->set('flashMsg', $msg);
     
             if ($try)
@@ -177,7 +158,7 @@ class usergroup extends ControllerMVVM
     public function validateID()
     {
         $urlVars = $this->request->get('urlVars');
-        $id = (int) $urlVars['id'];
+        $id = $urlVars ? (int) $urlVars['id'] : [];
         if(empty($id) && !$id)
         {
             $ids = $this->request->post->get('ids', [], 'array');
