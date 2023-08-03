@@ -12,7 +12,7 @@ class Installer
     
     public static function name()
     {
-        return 'Plugin note';
+        return 'Plugin report';
     }
 
     public static function detail()

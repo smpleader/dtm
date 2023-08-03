@@ -19,9 +19,9 @@ class AdminDiagrams extends ViewModel
     {
         return [
             'layout'=>[
-                'backend.diagram.list',
-                'backend.diagram.list.row',
-                'backend.diagram.list.filter'
+                'backend.report.list',
+                'backend.report.list.row',
+                'backend.report.list.filter'
             ]
         ];
     }
@@ -53,8 +53,8 @@ class AdminDiagrams extends ViewModel
         $start  = ($page-1) * $limit;
         $sort = $sort ? $sort : 'title asc';
 
-        $result = $this->DiagramEntity->list( $start, $limit, $where, $sort);
-        $total = $this->DiagramEntity->getListTotal();
+        $result = $this->ReportEntity->list( $start, $limit, $where, $sort);
+        $total = $this->ReportEntity->getListTotal();
         if (!$result)
         {
             $result = [];
@@ -69,7 +69,7 @@ class AdminDiagrams extends ViewModel
 
         foreach($result as &$item)
         {
-            $item['report_type'] = isset($types[$item['report_type']]) ? $types[$item['report_type']] : $item['report_type'];
+            $item['type'] = isset($types[$item['type']]) ? $types[$item['type']] : $item['type'];
             $user_tmp = $this->UserEntity->findByPK($item['created_by']);
             $item['auth'] = $user_tmp ? $user_tmp['name'] : '';
             $item['created_at'] = $item['created_at'] && $item['created_at'] != '0000-00-00 00:00:00' ? date('d-m-Y', strtotime($item['created_at'])) : '';
@@ -104,6 +104,8 @@ class AdminDiagrams extends ViewModel
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
             'link_list' => $this->router->url('reports'),
+            'link_new_form' => $this->router->url('new-report'),
+            'link_form' => $this->router->url('report/detail'),
             'title_page' => 'Report',
             'token' => $this->token->value(),
         ];

@@ -11,9 +11,12 @@
 namespace DTM\report_tree\models;
 
 use SPT\Container\Client as Base;
+use SPT\Traits\ErrorString;
 
 class TreePhpModel extends Base
 { 
+    use ErrorString; 
+
     // Write your code here
     public function getTree($id)
     {
@@ -27,7 +30,7 @@ class TreePhpModel extends Base
                 continue;
             }
 
-            $note = $this->NoteEntity->findByPK($item['note_id']);
+            $note = $this->Note2Entity->findByPK($item['note_id']);
             if (!$note)
             {
                 $removes[] = $item['id'];
@@ -82,7 +85,7 @@ class TreePhpModel extends Base
             $this->TreeStructureEntity->remove($item['id']);
         }
 
-        $try = $this->DiagramEntity->remove($id);
+        $try = $this->ReportEntity->remove($id);
         return $try;
     }
 
@@ -90,12 +93,13 @@ class TreePhpModel extends Base
     {
         if (!$data || !is_array($data))
         {
+            $this->error = 'Invalid data format';
             return false;
         }
 
         if (!$data['title'])
         {
-            $this->session->set('flashMsg', 'Error: Title is required! ');
+            $this->error = "title can't empry";
             return false;
         }
 
@@ -104,20 +108,26 @@ class TreePhpModel extends Base
 
     public function add($data)
     {
-        if (!$data || !is_array($data))
+        $try = $this->validate($data);
+        if (!$try)
         {
             return false;
         }
 
-        $newId =  $this->TreePhpModel->add([
+        $newId =  $this->ReportEntity->add([
             'title' => $data['title'],
             'status' => 1,
-            'report_type' => 'tree_php',
+            'type' => 'tree',
             'created_by' => $this->user->get('id'),
             'created_at' => date('Y-m-d H:i:s'),
             'modified_by' => $this->user->get('id'),
             'modified_at' => date('Y-m-d H:i:s')
         ]);
+
+        if (!$newId)
+        {
+            $this->error = "Can't create report";
+        }
 
         if ($newId && $data['structure'])
         {
@@ -143,12 +153,13 @@ class TreePhpModel extends Base
 
     public function update($data)
     {
-        if (!$data || !is_array($data) || !$data['id'])
+        $try = $this->validate($data);
+        if (!$try || !$data['id'])
         {
             return false;
         }
 
-        $try = $this->DiagramEntity->update([
+        $try = $this->ReportEntity->update([
             'title' => $data['title'],
             'modified_by' => $this->user->get('id'),
             'modified_at' => date('Y-m-d H:i:s'),
@@ -195,5 +206,58 @@ class TreePhpModel extends Base
         }
 
         return $try;
+    }
+
+    public function getDetail($id)
+    {
+        if (!$id)
+        {
+            $this->error = 'Invalid id';
+            return false;
+        }
+
+        $find = $this->ReportEntity->findByPK($id);
+        if (!$find)
+        {
+            $this->error = 'Invalid report';
+            return false;
+        }
+
+        $list_tree = $this->getTree($id);
+        $find['list_tree'] = $list_tree;
+        $ignore = [];
+
+        foreach($list_tree as $item)
+        {
+            $ignore[] = $item['note_id'];
+        }
+
+        $find['ignore'] = $ignore;
+
+        return $find;
+    }
+
+    public function findRequest($id)
+    {
+        if (!$id)
+        {
+            $this->error = 'Invalid id';
+            return false;
+        }
+        
+        $list = $this->RelateNoteEntity->list(0, 0, ['note_id = '. $id]);
+        $result = [];
+        foreach($list as &$item)
+        {
+            $request = $this->RequestEntity->findByPK($item['request_id']);
+            if ($request)
+            {
+                $request['start_at'] = $request['start_at'] && $request['start_at'] != '0000-00-00 00:00:00' ? date('m-d-Y', strtotime($request['start_at'])) : '';
+                $request['finished_at'] = $request['finished_at'] && $request['finished_at'] != '0000-00-00 00:00:00' ? date('m-d-Y', strtotime($request['finished_at'])) : '';
+                $result[] = $request;
+            }
+        }
+
+        return $result;
     }
 }

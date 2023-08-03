@@ -7,7 +7,7 @@
 					<div class="card border-0 shadow-none">
 						<div class="card-body">
 							<div class="row align-items-center">
-								<?php echo $this->render('backend.diagram.list.filter', []); ?>
+								<?php echo $this->render('backend.report.list.filter', []); ?>
 							</div>
 							<form action="<?php echo $this->link_list ?>" method="POST" id="formList">
 								<input type="hidden" value="<?php echo $this->token ?>" name="token">
@@ -28,7 +28,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php while ($this->list->hasRow()) echo $this->render('backend.diagram.list.row', []); ?>
+										<?php while ($this->list->hasRow()) echo $this->render('backend.report.list.row', []); ?>
 									</tbody>
 									<?php
 									?>
@@ -52,9 +52,9 @@
 			</div>
 			<div class="modal-body">
 				<div class="d-flex justify-content-around flex-wrap">
-				<?php foreach($this->types as $type) : ?>
+				<?php foreach($this->types as $key => $type) : ?>
 					<h4 class="text-nowrap mb-3">
-						<a class="mx-3" href="<?php echo $type['new_link']?>"><?php echo $type['title']?></a>
+						<a class="mx-3" href="<?php echo $this->link_new_form . '/'. $key?>"><?php echo $type['title']?></a>
 					</h4>
 				<?php endforeach; ?>
 				</div>
@@ -71,5 +71,5 @@
     <input type="hidden" value="" name="id" class="toogle_status_id">
     <input type="hidden" value="PUT" name="_method">
 </form>
-<?php echo $this->render('backend.diagram.form', []); ?>
-<?php echo $this->render('backend.diagram.list.javascript', []); ?>
+<?php echo $this->render('backend.report.form', []); ?>
+<?php echo $this->render('backend.report.list.javascript', []); ?>
