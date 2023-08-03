@@ -33,7 +33,7 @@ use SPT\Web\ViewModelHelper;
 
 class Cli extends Base
 {
-    protected function envLoad()
+    public function envLoad()
     {   
         if(!defined('SPT_VENDOR_PATH'))
         {
