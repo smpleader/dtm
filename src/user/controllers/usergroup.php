@@ -158,7 +158,7 @@ class usergroup extends ControllerMVVM
     public function validateID()
     {
         $urlVars = $this->request->get('urlVars');
-        $id = (int) $urlVars['id'];
+        $id = $urlVars ? (int) $urlVars['id'] : [];
         if(empty($id) && !$id)
         {
             $ids = $this->request->post->get('ids', [], 'array');
