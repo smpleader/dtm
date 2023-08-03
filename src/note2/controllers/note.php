@@ -78,7 +78,7 @@ class note extends ControllerMVVM
         $search = trim($this->request->get->get('search', '', 'string'));
         $ignore = $this->request->get->get('ignore', '', 'string');
         
-        $list = $this->NoteModel->searchAjax($search, $ignore);
+        $list = $this->Note2Model->searchAjax($search, $ignore);
 
         $this->app->set('format', 'json');
         $this->set('status' , 'success');

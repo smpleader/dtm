@@ -31,7 +31,8 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
                             <tbody>
                                 
                                 <?php
-                                    foreach ($this->list_tree as $item) {
+                                if ($this->data) {
+                                    foreach ($this->data['list_tree'] as $item) {
                                 ?>
                                 <tr data-text="<?php echo $item['title'];?>" id="item_<?php echo $item['note_id'] ?>" data-level="<?php echo $item['tree_level'] ?>" class="item-tree" data-id="<?php echo $item['note_id'] ?>" data-parent="<?php echo $item['parent_id'] ?>" data-position="<?php echo $item['tree_position'] ?>">
                                     <td ><?php echo str_repeat('&nbsp; &nbsp; &nbsp; &nbsp;', (int) $item['tree_level']-1). '<span class="title"> |&mdash; ' .$item['title'] ?></span></td>
@@ -43,7 +44,8 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
                                         </div>
                                     </td>
                                 </tr>
-                                <?php } ?>
+                                <?php } 
+                                }?>
                             </tbody>
                         </table>
                     </div>
@@ -74,7 +76,7 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
     </form>
 </div>
 <script>
-    var ignore = <?php echo json_encode($this->ignore) ?>;
+    var ignore = <?php echo $this->data ? json_encode($this->data['ignore']) : "[]" ;?>;
     var removes= [];
     var active_item = 0;
     function removeItem(id)

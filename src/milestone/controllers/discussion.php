@@ -13,21 +13,14 @@ class discussion extends ControllerMVVM
         $request_id = $this->validateRequestID();
         
         $data = [
-            'message' => $this->request->post->get('message', '', 'string'),
-            'request_id' => $request_id,
+            'comment' => $this->request->post->get('message', '', 'string'),
+            'object_id' => $request_id,
+            'object' => 'request',
         ];
 
-        $data = $this->DiscussionModel->validate($data);
-        if (!$data)
-        {
-            $this->app->set('format', 'json');
-            $this->set('result', 'fail');
-            return;
-        }
+        $newId = $this->CommentModel->add($data);
 
-        $newId = $this->DiscussionModel->add($data);
-
-        $msg = $newId ? 'Comment Successfully' : 'Comment Fail';
+        $msg = $newId ? 'Comment Successfully' : $this->CommentModel->getError();
         $this->app->set('format', 'json');
         $this->set('result', 'ok');
         $this->set('message', $msg);

@@ -63,16 +63,6 @@ class DocumentModel extends Base
             $document_id = $try;
         }
 
-        if ($try)
-        {
-            $try_history = $this->DocumentHistoryEntity->add([
-                'document_id' => $document_id,
-                'description' => $data['description'],
-                'modified_by' => $this->user->get('id'),
-                'modified_at' => date('Y-m-d H:i:s')
-            ]);
-        }
-
         return $try;
     }
 
@@ -132,25 +122,31 @@ class DocumentModel extends Base
 
     public function rollback($id)
     {
-        $document = $this->DocumentHistoryEntity->findByPK($id);
+        $document = $this->HistoryModel->detail($id);
         if (!$document)
         {
             return false;
         }
         
+        $find_document = $this->DocumentEntity->findOne(['request_id' => $document['object_id']]);
+        if (!$find_document)
+        {
+            return false;
+        }
+
         $try = $this->DocumentEntity->update([
-            'id' => $document['document_id'],
-            'description' => $document['description'],
+            'id' => $find_document['id'],
+            'description' => $document['data'],
         ]);
 
         if ($try)
         {
-            $remove_list = $this->DocumentHistoryEntity->list(0, 0, ['id > '. $id, 'document_id = '. $document['document_id']]);
+            $remove_list = $this->HistoryEntity->list(0, 0, ['id > '. $id, 'object_id = '. $document['object_id'], 'object' => 'request']);
             if ($remove_list)
             {
                 foreach($remove_list as $item)
                 {
-                    $this->DocumentHistoryEntity->remove($item['id']);
+                    $this->HistoryEntity->remove($item['id']);
                 } 
             }
         }

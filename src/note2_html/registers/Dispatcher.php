@@ -1,20 +1,22 @@
 <?php
-namespace DTM\report_tree\registers;
+namespace DTM\note2_html\registers;
 
-use SPT\Application\IApp; 
-use SPT\File;
+use SPT\Application\IApp;
+use SPT\Response;
 
 class Dispatcher
 {
     public static function dispatch(IApp $app)
-    {
+    {   
+        // Check Permission
         $app->plgLoad('permission', 'CheckSession');
 
         $cName = $app->get('controller');
         $fName = $app->get('function');
-        // prepare note
 
-        $controller = 'DTM\report_tree\controllers\\'. $cName;
+        $app->set('theme', $app->cf('adminTheme'));
+
+        $controller = 'DTM\note2_html\controllers\\'. $cName;
         if(!class_exists($controller))
         {
             $app->raiseError('Invalid controller '. $cName);
@@ -23,7 +25,7 @@ class Dispatcher
         $controller = new $controller($app->getContainer());
         $controller->{$fName}();
         
-        $app->set('theme', $app->cf('adminTheme'));
+        
 
         $fName = 'to'. ucfirst($app->get('format', 'html'));
 

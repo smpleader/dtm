@@ -45,7 +45,7 @@
                                         </div>
                                         <div class="card-body pt-0">
                                             <p class="mb-0">
-                                                <?php echo $item['message'] ?>
+                                                <?php echo $item['comment'] ?>
                                             </p>
                                         </div>
                                     </div>
@@ -73,7 +73,7 @@
                         <ul class="list-group list-group-flush" id="document_history">
                             <?php foreach ($this->history as $item) : ?>
                                 <li class="list-group-item">
-                                    <a href="#" class="openHistory" data-id="<?php echo $item['id']; ?>" data-modified_at="<?php echo $item['modified_at']; ?>">Modified at <?php echo $item['modified_at']; ?> by <?php echo $item['modified_by']; ?></a>
+                                    <a href="#" class="openHistory" data-id="<?php echo $item['id']; ?>" data-modified_at="<?php echo $item['created_at']; ?>">Modified at <?php echo $item['created_at']; ?> by <?php echo $item['user']; ?></a>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -99,4 +99,4 @@
         </div>
     </div>
 </div>
-<?php echo $this->render('backend.document.javascript'); ?>
+<?php echo $this->render('backend.document.javascript', ['user_id' => $this->user_id]); ?>

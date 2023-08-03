@@ -172,4 +172,38 @@ class NotePresenterModel extends Base
         return $note;
     }
 
+    public function rollback($id)
+    {
+        $history = $this->HistoryModel->detail($id);
+        if (!$history)
+        {
+            return false;
+        }
+        
+        $find_note = $this->Note2Entity->findOne(['id' => $history['object_id']]);
+        if (!$find_note)
+        {
+            return false;
+        }
+
+        $try = $this->Note2Entity->update([
+            'id' => $find_note['id'],
+            'data' => $history['data'],
+        ]);
+
+        if ($try)
+        {
+            $remove_list = $this->HistoryEntity->list(0, 0, ['id > '. $id, 'object_id = '. $history['object_id'], 'object' => 'note']);
+            if ($remove_list)
+            {
+                foreach($remove_list as $item)
+                {
+                    $this->HistoryEntity->remove($item['id']);
+                } 
+            }
+        }
+        
+        return $try ? $find_note['id'] : false;
+    }
+
 }

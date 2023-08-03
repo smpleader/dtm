@@ -19,6 +19,18 @@
                 <div class="mt-3">
                     <?php echo $this->renderWidget('tag::backend.tags'); ?>
                 </div>
+                <?php if ($this->history) : ?>
+                <div class="mt-3">
+                    <label for="label">History:</label>
+                    <ul class="list-group list-group-flush">
+                        <?php foreach ($this->history as $item) : ?>
+                            <li class="list-group-item">
+                                <a href="<?php echo $this->link_history.'/'. $item['id'] ?>" class="openHistory" data-id="<?php echo $item['id']; ?>" data-modified_at="<?php echo $item['created_at']; ?>">Modified at <?php echo $item['created_at']; ?> by <?php echo $item['user']; ?></a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <?php endif; ?>
                 <div class="mt-3">
                     <?php echo $this->renderWidget('note2_attachment::backend.attachments'); ?>
                 </div>
