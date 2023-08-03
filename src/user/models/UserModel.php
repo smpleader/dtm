@@ -11,17 +11,21 @@
 namespace DTM\user\models;
 
 use SPT\Container\Client as Base; 
+use SPT\Traits\ErrorString;
 
 class UserModel extends Base 
 { 
-    public function validate($data, $id = null)
+    use ErrorString; 
+
+    public function validate($data)
     {
         if (!$data || !is_array($data))
         {
             return false;
         }
         
-        $password = $data['password'];
+        $id = isset($data['id']) ? $data['id'] : 0;
+        $password = isset($data['password']) ? $data['password'] : '';
         $username = $data['username'];
         $email = $data['email'];
 
@@ -30,13 +34,19 @@ class UserModel extends Base
             $password = $password;
             if (strlen($password) < '6') 
             {
-                $this->session->set('validate', "Error: Your Password Must Contain At Least 6 Characters!");
+                $this->error = "Your Password Must Contain At Least 6 Characters!";
+                return false;
+            }
+
+            if ($password != $data['confirm_password'])
+            {
+                $this-> error = 'Error: Confirm Password Invalid';
                 return false;
             }
         } 
         elseif (!$id) 
         {
-            $this->session->set('validate', "Error: Passwords cant't empty");
+            $this->error = "Error: Passwords can't empty";
             return false;
         }
 
@@ -47,13 +57,13 @@ class UserModel extends Base
             $find = $this->UserEntity->findOne(['username' => $username]);
             if ($find && $find['id'] != $id)
             {
-                $this->session->set('validate', "Error: Username already exists");
+                $this->error = "Username already exists";
                 return false;
             }
         } 
         else 
         {
-            $this->session->set('validate', "Error: UserName cant't empty");
+            $this->error = "UserName cant't empty";
             return false;
         }
 
@@ -63,11 +73,11 @@ class UserModel extends Base
             $findEmail = $this->UserEntity->findOne(['email' => $email]);
             if ($findEmail && $findEmail['id'] != $id)
             {
-                $this->session->set('validate', "Error: Email already exists");
+                $this->error = "Email already exists";
                 return false;
             }
         } else {
-            $this->session->set('validate', "Error: Email can't empty");
+            $this->error = "Email can't empty";
             return false;
         }
         
@@ -98,7 +108,7 @@ class UserModel extends Base
     {
         if (!$passowrd || !$passowrd)
         {
-            $this->session->set('flashMsg', 'Username and Password invalid.');
+            $this->error = 'Username and Password invalid.';
             return false;
         }
 
@@ -111,7 +121,7 @@ class UserModel extends Base
         {
             if($result['status'] != 1) 
             {
-                $this->session->set('flashMsg', 'Error: User has been block');
+                $this->error = 'Error: User has been block';
                 return false;
             }
             else
@@ -121,14 +131,16 @@ class UserModel extends Base
         }
         else
         {
-            $this->session->set('flashMsg', 'Username or Password Incorrect');
+            $this->error = 'Username or Password Incorrect';
             return false;
         }
     }
 
     public function add($data)
     {
-        if (!$data || !is_array($data) || !$data['username'])
+        $try = $this->validate($data);
+        
+        if (!$try)
         {
             return false;
         }
@@ -150,12 +162,28 @@ class UserModel extends Base
 
     public function update($data)
     {
-        if (!$data || !is_array($data) || !$data['id'])
+        $try = $this->validate($data);
+        if (!$try)
         {
             return false;
         }
 
-        $try = $this->UserEntity->update($data);
+        $data_update = [
+            'name' => $data['name'],
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'status' => $data['status'],
+            'modified_by' => $this->user->get('id'),
+            'modified_at' => date('Y-m-d H:i:s'),
+            'id' => $data['id'],
+        ]; 
+
+        if (isset($data['password']) && $data['password'])
+        {
+            $data_update['password'] = md5($data['password']);
+        }
+
+        $try = $this->UserEntity->update($data_update);
 
         return $try;
     }
