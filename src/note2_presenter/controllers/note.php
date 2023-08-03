@@ -65,6 +65,12 @@ class note extends NoteController
             );
         }
 
+        $this->HistoryModel->add([
+            'object' => 'note',
+            'object_id' => $newId,
+            'data' => $data['data'],
+        ]);
+
         $this->session->set('flashMsg', 'Create Successfully'); 
         $link = $save_close ? $this->router->url('note2') : $this->router->url('note2/detail/'. $newId);
         return $this->app->redirect(
@@ -100,6 +106,12 @@ class note extends NoteController
                 );
             }
 
+            $this->HistoryModel->add([
+                'object' => 'note',
+                'object_id' => $id,
+                'data' => $data['data'],
+            ]);
+            
             $this->session->set('flashMsg', 'Updated successfully');
             $link = $save_close ? 'note2' : 'note2/detail/'. $id;
 

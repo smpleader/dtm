@@ -11,7 +11,7 @@
                     resultData.list.forEach(function(item) {
                         list += `
                         <li class="list-group-item">
-                            <a href="#" class="openHistory" data-id="${item['id']}" data-modified_at="${item['modified_at']}">Modified at ${item['modified_at']} by ${item['modified_by']}</a>
+                            <a href="#" class="openHistory" data-id="${item['id']}" data-modified_at="${item['created_at']}">Modified at ${item['created_at']} by ${item['user']}</a>
                             <a href="#" class="ps-3 clear-version ms-auto" data-version-id="${item['id']}"><i class="fa-solid fa-trash"></i></a>
                         </li>
                         `

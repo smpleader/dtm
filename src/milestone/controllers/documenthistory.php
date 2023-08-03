@@ -12,10 +12,10 @@ class documenthistory extends ControllerMVVM
     {
         $id = $this->validateID();
         $result = '';
-        $document = $this->DocumentHistoryEntity->findByPK($id);
+        $document = $this->HistoryModel->detail($id);
         if ($document)
         {
-            $result = $document['description'];
+            $result = $document['data'];
         }
 
         $this->app->set('format', 'json');
@@ -26,11 +26,11 @@ class documenthistory extends ControllerMVVM
     public function rollback()
     {
         $id = $this->validateID();
-        $try = $this->DocumentModel-> rollback($id);
+        $try = $this->DocumentModel->rollback($id);
         
         $result = $try ? 'ok' : 'failed';
         $message = $try ? 'Update Successfully' : 'Update Failed';
-        $description = $try ? $try['description'] : '';
+        $description = $try ? $try['data'] : '';
         
         $this->app->set('format', 'json');
         $this->set('result', $result);

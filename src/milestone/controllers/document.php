@@ -37,6 +37,16 @@ class document extends ControllerMVVM
         $try  = $this->DocumentModel->save($data);
        
         $msg = $try ? 'Update Document Successfully!' : 'Error: Update Document Failed!';
+        
+        if ($try)
+        {
+            $this->HistoryModel->add([
+                'object_id' => $request_id,
+                'object' => 'request',
+                'data' => $data['description'],
+            ]);
+        }
+
         $status = $try ? 'ok' : 'fail';
 
         $this->app->set('format', 'json');
@@ -67,7 +77,7 @@ class document extends ControllerMVVM
         $urlVars = $this->request->get('urlVars');
         $request_id = (int) $urlVars['request_id'];
 
-        $list = $this->DocumentModel->getHistory($request_id);
+        $list = $this->HistoryModel->list(0, 0, ['object' => 'request', 'object_id' => $request_id]);
         $list = $list ? $list : [];
 
         $this->app->set('format', 'json');

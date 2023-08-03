@@ -73,7 +73,7 @@
                         <ul class="list-group list-group-flush" id="document_history">
                             <?php foreach ($this->history as $item) : ?>
                                 <li class="list-group-item">
-                                    <a href="#" class="openHistory" data-id="<?php echo $item['id']; ?>" data-modified_at="<?php echo $item['modified_at']; ?>">Modified at <?php echo $item['modified_at']; ?> by <?php echo $item['modified_by']; ?></a>
+                                    <a href="#" class="openHistory" data-id="<?php echo $item['id']; ?>" data-modified_at="<?php echo $item['created_at']; ?>">Modified at <?php echo $item['created_at']; ?> by <?php echo $item['user']; ?></a>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
