@@ -32,6 +32,10 @@ class AdminGroup extends ViewModel
         $id = (int) $urlVars['id'];
 
         $data = $id ? $GroupEntity->findByPK($id) : [];
+        $data_form = $this->session->get('data_form', []);
+        $this->session->set('data_form', []);
+        $data = $data_form ? $data_form : $data;
+        
         if (isset($data['access']) && $data['access'])
         {
             $data['access'] = (array) json_decode($data['access']);

@@ -53,6 +53,10 @@ class AdminUser extends ViewModel
         $id = (int) $urlVars['id'];
 
         $data = $id ? $UserEntity->findByPK($id) : [];
+        $data_form = $this->session->get('data_form', []);
+        $this->session->set('data_form', []);
+        $data = $data_form ? $data_form : $data;
+
         if ($data)
         {
             $data['password'] = '';
@@ -169,6 +173,9 @@ class AdminUser extends ViewModel
         $router = $this->container->get('router');
         $id = $user->get('id');
         $data = $id ? $UserEntity->findByPK($id) : [];
+        $data_form = $this->session->get('data_form', []);
+        $this->session->set('data_form', []);
+        $data = $data_form ? $data_form : $data;
         if ($data)
         {
             $data['password'] = '';
