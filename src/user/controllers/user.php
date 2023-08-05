@@ -109,7 +109,6 @@ class user extends ControllerMVVM
         }
         else
         {
-            $this->session->set('data_form', $user);
             $msg = 'Error: Updated Fail';
             $this->session->set('flashMsg', $this->UserModel->getError());
             return $this->app->redirect(
