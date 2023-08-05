@@ -109,7 +109,6 @@ class user extends ControllerMVVM
         }
         else
         {
-            $this->session->set('data_form', $user);
             $msg = 'Error: Updated Fail';
             $this->session->set('flashMsg', $this->UserModel->getError());
             return $this->app->redirect(
@@ -152,7 +151,7 @@ class user extends ControllerMVVM
 
         if( !$newId )
         {
-            $this->session->set('data_form', $data);
+            $this->session->setform('user', $data);
             $this->session->set('flashMsg', 'Error: '. $this->UserModel->getError());
             return $this->app->redirect(
                 $this->router->url('user/0')
@@ -217,7 +216,6 @@ class user extends ControllerMVVM
             }
             else
             {
-                $this->session->set('data_form', $user);
                 $this->session->set('flashMsg', 'Error: '. $this->UserModel->getError());
                 return $this->app->redirect(
                     $this->router->url('user/'. $ids)

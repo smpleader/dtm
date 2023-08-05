@@ -19,7 +19,7 @@ use SPT\Support\Loader;
 use SPT\Extend\Pdo as PdoWrapper;
 use SPT\Session\Instance as Session;
 use SPT\Session\PhpSession;
-use SPT\Session\DatabaseSession;
+use DTM\core\libraries\DatabaseSession;
 use SPT\Session\DatabaseSessionEntity;
 use SPT\User\Instance as UserInstance;
 use SPT\User\SPT\User as UserAdapter;

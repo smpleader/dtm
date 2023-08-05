@@ -44,7 +44,7 @@ class usergroup extends ControllerMVVM
         
         if( !$newId )
         {
-            $this->session->set('data_form', $data);
+            $this->session->setform('usergroup', $data);
             $this->session->set('flashMsg', 'Error: '. $this->UserGroupModel->getError());
             return $this->app->redirect(
                 $this->router->url('user-group/0')
@@ -88,10 +88,6 @@ class usergroup extends ControllerMVVM
                 'id' => $sth,
             ];
             $try = $this->UserGroupModel->update( $user );
-            if (!$try)
-            {
-                $this->session->set('data_form', $user);
-            }
             $msg = $try ? 'Updated Successfully' :  'Error: '. $this->UserGroupModel->getError();
             $this->session->set('flashMsg', $msg);
     
