@@ -16,23 +16,6 @@ class HistoryModel extends Base
 { 
     use \SPT\Traits\ErrorString;
 
-    public function validate($data)
-    {
-        if (!$data && !is_array($data))
-        {
-            $this->error = 'Invalid format data';
-            return false;
-        }
-
-        if(!$data['object'] || !$data['object_id'])
-        {
-            $this->error = "Invalid object history";
-            return false;
-        }
-
-        return true;
-    }
-
     public function add($data)
     {
         $data = $this->HistoryEntity->bind($data);
