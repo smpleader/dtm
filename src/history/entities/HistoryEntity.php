@@ -46,4 +46,47 @@ class HistoryEntity extends Entity
                 ],
         ];
     }
+
+    public function validate( $data )
+    {
+        if (!$data && !is_array($data))
+        {
+            $this->error = 'Invalid format data';
+            return false;
+        }
+
+        if(!$data['object'] || !$data['object_id'])
+        {
+            $this->error = "Invalid object history";
+            return false;
+        }
+
+        return $data;
+    }
+
+    public function bind($data = [], $returnObject = false)
+    {
+        $row = [];
+        $data = (array) $data;
+        $fields = $this->getFields();
+        $skips = isset($data['id']) && $data['id'] ? [] : ['id'];
+        foreach ($fields as $key => $field)
+        {
+            if (!in_array($key, $skips))
+            {
+                $default = isset($field['default']) ? $field['default'] : '';
+                $row[$key] = isset($data[$key]) ? $data[$key] : $default;
+            }
+        }
+
+        if (isset($data['id']) && $data['id'])
+        {
+            $row['readyUpdate'] = true;
+        }
+        else{
+            $row['readyNew'] = true;
+        }
+
+        return $returnObject ? (object)$row : $row;
+    }
 }

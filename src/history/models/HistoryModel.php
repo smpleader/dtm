@@ -37,10 +37,12 @@ class HistoryModel extends Base
     {
         $data = $this->HistoryEntity->bind($data);
 
-        if (!$this->validate($data))
+        if (!$data || !isset($data['readyNew']) || !$data['readyNew'])
         {
+            $this->error = $this->HistoryEntity->getError();
             return false;
         }
+        unset($data['readyNew']);
 
         $try = $this->HistoryEntity->add([
             'object' => $data['object'],
@@ -63,22 +65,18 @@ class HistoryModel extends Base
     {
         $data = $this->HistoryEntity->bind($data);
 
-        if (!$this->validate($data) || !$data['id'])
+        if (!$data || !isset($data['readyUpdate']) || !$data['readyUpdate'])
         {
+            $this->error = $this->HistoryEntity->getError();
             return false;
         }
+        unset($data['readyUpdate']);
 
-        $try = $this->HistoryEntity->update([
-            'object' => $data['object'],
-            'object_id' => $data['object_id'],
-            'data' => $data['data'],
-            'created_at' => date('Y-m-d H:i:s'),
-            'created_by' => $this->user->get('id'),
-        ]);
+        $try = $this->HistoryEntity->update($data);
 
         if (!$try)
         {
-            $this->error = "Can't update history";
+            $this->error = $this->HistoryEntity->getError();
             return false;
         }
 
