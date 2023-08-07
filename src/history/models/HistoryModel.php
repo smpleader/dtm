@@ -35,6 +35,8 @@ class HistoryModel extends Base
 
     public function add($data)
     {
+        $data = $this->HistoryEntity->bind($data);
+
         if (!$this->validate($data))
         {
             return false;
@@ -59,6 +61,8 @@ class HistoryModel extends Base
 
     public function update($data)
     {
+        $data = $this->HistoryEntity->bind($data);
+
         if (!$this->validate($data) || !$data['id'])
         {
             return false;
