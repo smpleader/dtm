@@ -128,73 +128,44 @@ class UserGroupModel extends Base
         return true;
     }
 
-    public function validate($data)
-    {
-        if (!$data || !is_array($data))
-        {
-            return false;
-        }
-
-        if(!empty($data['name'])) 
-        {
-            $find = $this->GroupEntity->findOne(['name' => $data['name']]);
-            if ($find && (isset($data['id']) && $find['id'] != $data['id']))
-            {
-                $this->error = "Error: Group Name already exists";
-                return false;
-            }
-        } 
-        else 
-        {
-            $this->error = "Error: Group name can't empty";
-            return false;
-        }
-
-        return true;
-    }
-
     public function add($data)
     {
-        $data = $this->GroupEntity->bind($data);
-
-        $try = $this->validate($data);
-        if (!$try)
+        $data = $this->GroupEntity->bind($data);   
+        if (!$data || !isset($data['readyNew']) || !$data['readyNew'])
         {
+            $this->error = $this->GroupEntity->getError();
             return false;
         }
+        unset($data['readyNew']);
 
-        $try = $this->GroupEntity->add([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'access' => $data['access'],
-            'status' => $data['status'],
-            'created_by' => $this->user->get('id'),
-            'created_at' => date('Y-m-d H:i:s'),
-            'modified_by' => $this->user->get('id'),
-            'modified_at' => date('Y-m-d H:i:s')
-        ]);
+        $try = $this->GroupEntity->add($data);
+
+        if (!$try)
+        {
+            $this->error = $this->GroupEntity->getError();
+            return false;
+        }
 
         return $try;
     }
 
     public function update($data)
     {
-        $data = $this->GroupEntity->bind($data);
-        $try = $this->validate($data);
-        if (!$try || !isset($data['id']) || !$data['id'])
+        $data = $this->GroupEntity->bind($data);   
+        if (!$data || !isset($data['readyUpdate']) || !$data['readyUpdate'])
         {
+            $this->error = $this->GroupEntity->getError();
             return false;
         }
+        unset($data['readyUpdate']);
 
-        $try = $this->GroupEntity->update([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'access' => $data['access'],
-            'status' => $data['status'],
-            'modified_by' => $this->user->get('id'),
-            'modified_at' => date('Y-m-d H:i:s'),
-            'id' => $data['id']
-        ]);
+        $try = $this->GroupEntity->update($data);
+
+        if (!$try)
+        {
+            $this->error = $this->GroupEntity->getError();
+            return false;
+        }
 
         return $try;
     }
