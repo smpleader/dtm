@@ -58,6 +58,8 @@ class TagModel extends Base
 
     public function add($data)
     {
+        $data = $this->TagEntity->bind($data);
+
         $try = $this->validate($data);
 
         if (!$try)
@@ -76,6 +78,8 @@ class TagModel extends Base
 
     public function update($data)
     {
+        $data = $this->TagEntity->bind($data);
+        
         $try = $this->validate($data);
 
         if (!$try || !$data['id'])

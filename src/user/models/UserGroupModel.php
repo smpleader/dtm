@@ -155,6 +155,8 @@ class UserGroupModel extends Base
 
     public function add($data)
     {
+        $data = $this->GroupEntity->bind($data);
+
         $try = $this->validate($data);
         if (!$try)
         {
@@ -168,6 +170,7 @@ class UserGroupModel extends Base
 
     public function update($data)
     {
+        $data = $this->GroupEntity->bind($data);
         $try = $this->validate($data);
         if (!$try || !isset($data['id']) || !$data['id'])
         {

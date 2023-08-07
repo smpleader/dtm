@@ -40,13 +40,13 @@ class UserModel extends Base
 
             if ($password != $data['confirm_password'])
             {
-                $this-> error = 'Error: Confirm Password Invalid';
+                $this-> error = 'Confirm Password Invalid';
                 return false;
             }
         } 
         elseif (!$id) 
         {
-            $this->error = "Error: Passwords can't empty";
+            $this->error = "Passwords can't empty";
             return false;
         }
 
@@ -121,7 +121,7 @@ class UserModel extends Base
         {
             if($result['status'] != 1) 
             {
-                $this->error = 'Error: User has been block';
+                $this->error = 'User has been block';
                 return false;
             }
             else
@@ -138,6 +138,10 @@ class UserModel extends Base
 
     public function add($data)
     {
+        $confirmPassword = isset($data['confirm_password']) ? $data['confirm_password'] : '';
+        $data = $this->UserEntity->bind($data);
+        $data['confirm_password'] = $confirmPassword;
+
         $try = $this->validate($data);
         
         if (!$try)
@@ -162,7 +166,11 @@ class UserModel extends Base
 
     public function update($data)
     {
+        $confirmPassword = isset($data['confirm_password']) ? $data['confirm_password'] : '';
+        $data = $this->UserEntity->bind($data);
+        $data['confirm_password'] = $confirmPassword;
         $try = $this->validate($data);
+
         if (!$try)
         {
             return false;
