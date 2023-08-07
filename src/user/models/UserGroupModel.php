@@ -163,7 +163,16 @@ class UserGroupModel extends Base
             return false;
         }
 
-        $try = $this->GroupEntity->add($data);
+        $try = $this->GroupEntity->add([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'access' => $data['access'],
+            'status' => $data['status'],
+            'created_by' => $this->user->get('id'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'modified_by' => $this->user->get('id'),
+            'modified_at' => date('Y-m-d H:i:s')
+        ]);
 
         return $try;
     }
@@ -177,7 +186,15 @@ class UserGroupModel extends Base
             return false;
         }
 
-        $try = $this->GroupEntity->update($data);
+        $try = $this->GroupEntity->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'access' => $data['access'],
+            'status' => $data['status'],
+            'modified_by' => $this->user->get('id'),
+            'modified_at' => date('Y-m-d H:i:s'),
+            'id' => $data['id']
+        ]);
 
         return $try;
     }
