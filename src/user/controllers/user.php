@@ -146,6 +146,10 @@ class user extends ControllerMVVM
             'password' => $this->request->post->get('password', ''),
             'confirm_password' => $this->request->post->get('confirm_password', ''),
             'status' => $this->request->post->get('status', 0),
+            'created_by' => $this->user->get('id'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'modified_by' => $this->user->get('id'),
+            'modified_at' => date('Y-m-d H:i:s')
         ];
         $newId = $this->UserModel->add($data);
 

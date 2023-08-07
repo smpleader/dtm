@@ -46,7 +46,7 @@ class AdminGroup extends ViewModel
             'id' => $id,
             'form' => $form,
             'data' => $data,
-            'title_page' => $data ? 'Update User Group' : 'New User Group',
+            'title_page' => $id ? 'Update User Group' : 'New User Group',
             'url' => $router->url(),
             'link_list' => $router->url('user-groups'),
             'link_form' => $router->url('user-group'),

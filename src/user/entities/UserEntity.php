@@ -85,4 +85,108 @@ class UserEntity extends Entity
         return $list->list(0, 0);
     }
 
+    public function validate( $data )
+    {
+        if (!$data || !is_array($data))
+        {
+            return false;
+        }
+        
+        $id = isset($data['id']) ? $data['id'] : 0;
+        $password = isset($data['password']) ? $data['password'] : '';
+        $username = $data['username'];
+        $email = $data['email'];
+        if(!empty($password)) 
+        {
+            $password = $password;
+            if (strlen($password) < '6') 
+            {
+                $this->error = "Your Password Must Contain At Least 6 Characters!";
+                return false;
+            }
+
+            if ($password != $data['confirm_password'])
+            {
+                $this-> error = 'Confirm Password Invalid';
+                return false;
+            }
+        } 
+        elseif (!$id) 
+        {
+            $this->error = "Passwords can't empty";
+            return false;
+        }
+
+        // validate user name
+        if(!empty($username)) 
+        {
+            $username = $username;
+            $find = $this->findOne(['username' => $username]);
+            if ($find && $find['id'] != $id)
+            {
+                $this->error = "Username already exists";
+                return false;
+            }
+        } 
+        else 
+        {
+            $this->error = "UserName cant't empty";
+            return false;
+        }
+
+        //validate email
+        if(!empty($email)) {
+            $email = $email;
+            $findEmail = $this->findOne(['email' => $email]);
+            if ($findEmail && $findEmail['id'] != $id)
+            {
+                $this->error = "Email already exists";
+                return false;
+            }
+        } else {
+            $this->error = "Email can't empty";
+            return false;
+        }
+        
+        unset($data['confirm_password']);
+        if (!$data['password'])
+        {
+            unset($data['password']);
+        }
+        else
+        {
+            $data['password'] = md5($data['password']);
+        }
+
+        return $data;
+    }
+
+    public function bind($data = [], $returnObject = false)
+    {
+        $row = [];
+        $data = (array) $data;
+        $fields = $this->getFields();
+        $skips = isset($data['id']) && $data['id'] ? ['created_at', 'created_by'] : ['id'];
+        foreach ($fields as $key => $field)
+        {
+            if (!in_array($key, $skips))
+            {
+                $default = isset($field['default']) ? $field['default'] : '';
+                $row[$key] = isset($data[$key]) ? $data[$key] : $default;
+            }
+        }
+
+        $row['confirm_password'] = isset($data['confirm_password']) ? $data['confirm_password'] : '';
+    
+        if (isset($data['id']) && $data['id'])
+        {
+            $row['readyUpdate'] = true;
+        }
+        else{
+            $row['readyNew'] = true;
+        }
+
+        return $returnObject ? (object)$row : $row;
+    }
+
 }

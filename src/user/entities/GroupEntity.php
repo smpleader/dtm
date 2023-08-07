@@ -68,4 +68,55 @@ class GroupEntity extends Entity
         ], ['id' => $id ]);
     }
 
+    public function validate( $data )
+    {
+        if (!$data || !is_array($data))
+        {
+            $this->error = "Data invalid format";
+            return false;
+        }
+
+        if(!empty($data['name'])) 
+        {
+            $find = $this->findOne(['name' => $data['name']]);
+            if ($find && ((isset($data['id']) && $find['id'] != $data['id']) || !isset($data['id']) || !$data['id']))
+            {
+                $this->error = "Group Name already exists";
+                return false;
+            }
+        } 
+        else 
+        {
+            $this->error = "Group name can't empty";
+            return false;
+        }
+
+        return $data;
+    }
+
+    public function bind($data = [], $returnObject = false)
+    {
+        $row = [];
+        $data = (array) $data;
+        $fields = $this->getFields();
+        $skips = isset($data['id']) && $data['id'] ? ['created_at', 'created_by'] : ['id'];
+        foreach ($fields as $key => $field)
+        {
+            if (!in_array($key, $skips))
+            {
+                $default = isset($field['default']) ? $field['default'] : '';
+                $row[$key] = isset($data[$key]) ? $data[$key] : $default;
+            }
+        }
+
+        if (isset($data['id']) && $data['id'])
+        {
+            $row['readyUpdate'] = true;
+        }
+        else{
+            $row['readyNew'] = true;
+        }
+
+        return $returnObject ? (object)$row : $row;
+    }
 }
