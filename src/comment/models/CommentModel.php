@@ -41,6 +41,8 @@ class CommentModel extends Base
 
     public function add($data)
     {
+        $data = $this->CommentEntity->bind($data, false);
+        
         if (!$this->validate($data))
         {
             return false;
@@ -65,6 +67,8 @@ class CommentModel extends Base
 
     public function update($data)
     {
+        $data = $this->CommentEntity->bind($data, false);
+
         if (!$this->validate($data) || !$data['id'])
         {
             return false;
