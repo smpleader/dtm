@@ -27,68 +27,46 @@ class TagModel extends Base
         return $this->TagEntity->remove($id);
     }
 
-    public function validate($data)
-    {
-        if (!$data || !is_array($data))
-        {
-            return false;
-        }
-
-        if (!$data['name'])
-        {
-            $this->error = 'Name can\'t empty! ';
-            return false;
-        }
-
-        $where = ['name' => $data['name']];
-        if (isset($data['id']) && $data['id'])
-        {
-            $where[] = 'id <> '. $data['id'];
-        }
-
-        $findOne = $this->TagEntity->findOne($where);
-        if ($findOne)
-        {
-            $this->error = 'Tag already exists';
-            return false;
-        }
-
-        return $data;
-    }
-
     public function add($data)
     {
-        $try = $this->validate($data);
+        $data = $this->TagEntity->bind($data);
 
-        if (!$try)
+        if (!$data || !isset($data['readyNew']) || !$data['readyNew'])
         {
+            $this->error = $this->TagEntity->getError();
             return false;
         }
+        unset($data['readyNew']);
 
-        $newId =  $this->TagEntity->add([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'parent_id' => isset($data['parent_id']) ? $data['parent_id'] : 0 ,
-        ]);
+        $newId =  $this->TagEntity->add($data);
+
+        if (!$newId)
+        {
+            $this->error = $this->TagEntity->getError();
+            return false;
+        }
 
         return $newId;
     }
 
     public function update($data)
     {
-        $try = $this->validate($data);
+        $data = $this->TagEntity->bind($data);
 
-        if (!$try || !$data['id'])
+        if (!$data || !isset($data['readyUpdate']) || !$data['readyUpdate'])
         {
+            $this->error = $this->TagEntity->getError();
+            return false;
+        }
+        unset($data['readyUpdate']);
+
+        $try = $this->TagEntity->update($data);
+        if (!$try)
+        {
+            $this->error = $this->TagEntity->getError();
             return false;
         }
 
-        $try = $this->TagEntity->update([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'parent_id' => isset($data['parent_id']) ? $data['parent_id'] : 0,
-            'id' => $data['id'],
-        ]);
 
         return $try;
     }

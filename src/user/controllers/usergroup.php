@@ -30,7 +30,7 @@ class usergroup extends ControllerMVVM
         
         $status = $this->request->post->get('status', 0, 'string');
 
-        $newId =  $this->UserGroupModel->add([
+        $data = [
             'name' => $this->request->post->get('name', '', 'string'),
             'description' => $this->request->post->get('description', '', 'string'),
             'access' => json_encode($this->request->post->get('access', [], 'array')),
@@ -39,10 +39,12 @@ class usergroup extends ControllerMVVM
             'created_at' => date('Y-m-d H:i:s'),
             'modified_by' => $this->user->get('id'),
             'modified_at' => date('Y-m-d H:i:s')
-        ]);
+        ];
+        $newId =  $this->UserGroupModel->add($data);
         
         if( !$newId )
         {
+            $this->session->setform('usergroup', $data);
             $this->session->set('flashMsg', 'Error: '. $this->UserGroupModel->getError());
             return $this->app->redirect(
                 $this->router->url('user-group/0')

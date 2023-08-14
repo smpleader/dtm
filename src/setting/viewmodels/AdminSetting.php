@@ -47,6 +47,10 @@ class AdminSetting extends ViewModel
                 $data[$key] =  $OptionModel->get($key, '');
             }
         }
+        $data_form = $this->session->get('data_form', []);
+        $this->session->set('data_form', []);
+        $data = $data_form ? $data_form : $data;
+        
         $form = new Form($fields, $data);
         $button_header = [
             [

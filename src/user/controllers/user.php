@@ -139,17 +139,23 @@ class user extends ControllerMVVM
         $groups = $this->request->post->get('groups', [], 'array');
         
         // TODO: validate new add
-        $newId = $this->UserModel->add([
+        $data = [
             'name' => $this->request->post->get('name', '', 'string'),
             'username' => $this->request->post->get('username', '' , 'string'),
             'email' => $this->request->post->get('email', '' , 'string'),
             'password' => $this->request->post->get('password', ''),
             'confirm_password' => $this->request->post->get('confirm_password', ''),
             'status' => $this->request->post->get('status', 0),
-        ]);
+            'created_by' => $this->user->get('id'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'modified_by' => $this->user->get('id'),
+            'modified_at' => date('Y-m-d H:i:s')
+        ];
+        $newId = $this->UserModel->add($data);
 
         if( !$newId )
         {
+            $this->session->setform('user', $data);
             $this->session->set('flashMsg', 'Error: '. $this->UserModel->getError());
             return $this->app->redirect(
                 $this->router->url('user/0')

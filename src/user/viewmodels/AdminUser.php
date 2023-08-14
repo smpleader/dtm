@@ -53,7 +53,11 @@ class AdminUser extends ViewModel
         $id = (int) $urlVars['id'];
 
         $data = $id ? $UserEntity->findByPK($id) : [];
-        if ($data)
+        $data_form = $this->session->getform('user', []);
+        $this->session->setform('user', []);
+        $data = $data_form ? $data_form : $data;
+
+        if ($data && $id)
         {
             $data['password'] = '';
             $groups = $UserEntity->getGroups($data['id']);
@@ -68,7 +72,7 @@ class AdminUser extends ViewModel
            'id' => $id,
            'form' => $form,
            'data' => $data,
-           'title_page' => $data ? 'Update User' : 'New User',
+           'title_page' => $id ? 'Update User' : 'New User',
            'url' => $router->url(),
            'link_list' => $router->url('users'),
            'link_form' => $router->url('user'),
@@ -169,6 +173,9 @@ class AdminUser extends ViewModel
         $router = $this->container->get('router');
         $id = $user->get('id');
         $data = $id ? $UserEntity->findByPK($id) : [];
+        $data_form = $this->session->get('data_form', []);
+        $this->session->set('data_form', []);
+        $data = $data_form ? $data_form : $data;
         if ($data)
         {
             $data['password'] = '';

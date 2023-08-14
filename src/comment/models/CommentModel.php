@@ -16,47 +16,22 @@ class CommentModel extends Base
 { 
     use \SPT\Traits\ErrorString;
 
-    public function validate($data)
-    {
-        if (!$data && !is_array($data))
-        {
-            $this->error = 'Invalid format data';
-            return false;
-        }
-
-        if(!$data['comment'])
-        {
-            $this->error = "Comment can't empty";
-            return false;
-        }
-
-        if(!$data['object'] || !$data['object_id'])
-        {
-            $this->error = "Invalid object comment";
-            return false;
-        }
-
-        return true;
-    }
-
     public function add($data)
     {
-        if (!$this->validate($data))
+        $data = $this->CommentEntity->bind($data);
+
+        if (!$data || !isset($data['readyNew']) || !$data['readyNew'])
         {
+            $this->error = $this->CommentEntity->getError();
             return false;
         }
+        unset($data['readyNew']);
 
-        $try = $this->CommentEntity->add([
-            'object' => $data['object'],
-            'object_id' => $data['object_id'],
-            'comment' => $data['comment'],
-            'created_at' => date('Y-m-d H:i:s'),
-            'created_by' => $this->user->get('id'),
-        ]);
+        $try = $this->CommentEntity->add($data);
 
         if (!$try)
         {
-            $this->error = "Can't create comment";
+            $this->error = $this->CommentEntity->getError();
             return false;
         }
 
@@ -65,22 +40,20 @@ class CommentModel extends Base
 
     public function update($data)
     {
-        if (!$this->validate($data) || !$data['id'])
+        $data = $this->CommentEntity->bind($data);
+
+        if (!$data || !isset($data['readyUpdate']) || !$data['readyUpdate'])
         {
+            $this->error = $this->CommentEntity->getError();
             return false;
         }
+        unset($data['readyUpdate']);
 
-        $try = $this->CommentEntity->update([
-            'object' => $data['object'],
-            'object_id' => $data['object_id'],
-            'comment' => $data['comment'],
-            'created_at' => date('Y-m-d H:i:s'),
-            'created_by' => $this->user->get('id'),
-        ]);
+        $try = $this->CommentEntity->update($data);
 
         if (!$try)
         {
-            $this->error = "Can't update comment";
+            $this->error = $this->CommentEntity->getError();
             return false;
         }
 

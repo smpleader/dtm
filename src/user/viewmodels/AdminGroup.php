@@ -32,6 +32,10 @@ class AdminGroup extends ViewModel
         $id = (int) $urlVars['id'];
 
         $data = $id ? $GroupEntity->findByPK($id) : [];
+        $data_form = $this->session->getform('usergroup', []);
+        $this->session->setform('usergroup', []);
+        $data = $data_form ? $data_form : $data;
+        
         if (isset($data['access']) && $data['access'])
         {
             $data['access'] = (array) json_decode($data['access']);
@@ -42,7 +46,7 @@ class AdminGroup extends ViewModel
             'id' => $id,
             'form' => $form,
             'data' => $data,
-            'title_page' => $data ? 'Update User Group' : 'New User Group',
+            'title_page' => $id ? 'Update User Group' : 'New User Group',
             'url' => $router->url(),
             'link_list' => $router->url('user-groups'),
             'link_form' => $router->url('user-group'),

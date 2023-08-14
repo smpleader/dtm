@@ -17,73 +17,6 @@ class UserModel extends Base
 { 
     use ErrorString; 
 
-    public function validate($data)
-    {
-        if (!$data || !is_array($data))
-        {
-            return false;
-        }
-        
-        $id = isset($data['id']) ? $data['id'] : 0;
-        $password = isset($data['password']) ? $data['password'] : '';
-        $username = $data['username'];
-        $email = $data['email'];
-
-        if(!empty($password)) 
-        {
-            $password = $password;
-            if (strlen($password) < '6') 
-            {
-                $this->error = "Your Password Must Contain At Least 6 Characters!";
-                return false;
-            }
-
-            if ($password != $data['confirm_password'])
-            {
-                $this-> error = 'Error: Confirm Password Invalid';
-                return false;
-            }
-        } 
-        elseif (!$id) 
-        {
-            $this->error = "Error: Passwords can't empty";
-            return false;
-        }
-
-        // validate user name
-        if(!empty($username)) 
-        {
-            $username = $username;
-            $find = $this->UserEntity->findOne(['username' => $username]);
-            if ($find && $find['id'] != $id)
-            {
-                $this->error = "Username already exists";
-                return false;
-            }
-        } 
-        else 
-        {
-            $this->error = "UserName cant't empty";
-            return false;
-        }
-
-        //validate email
-        if(!empty($email)) {
-            $email = $email;
-            $findEmail = $this->UserEntity->findOne(['email' => $email]);
-            if ($findEmail && $findEmail['id'] != $id)
-            {
-                $this->error = "Email already exists";
-                return false;
-            }
-        } else {
-            $this->error = "Email can't empty";
-            return false;
-        }
-        
-        return true;
-    }
-
     public function getAccessByGroup($groups)
     {
         if (!is_array($groups))
@@ -121,7 +54,7 @@ class UserModel extends Base
         {
             if($result['status'] != 1) 
             {
-                $this->error = 'Error: User has been block';
+                $this->error = 'User has been block';
                 return false;
             }
             else
@@ -138,53 +71,41 @@ class UserModel extends Base
 
     public function add($data)
     {
-        $try = $this->validate($data);
-        
-        if (!$try)
+        $data = $this->UserEntity->bind($data);       
+        if (!$data || !isset($data['readyNew']) || !$data['readyNew'])
         {
             return false;
         }
+        unset($data['readyNew']);
 
-        $newId =  $this->UserEntity->add([
-            'name' => $data['name'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => md5($data['password']),
-            'status' => $data['status'],
-            'created_by' => $this->user->get('id'),
-            'created_at' => date('Y-m-d H:i:s'),
-            'modified_by' => $this->user->get('id'),
-            'modified_at' => date('Y-m-d H:i:s')
-        ]);
+        $newId =  $this->UserEntity->add($data);
+
+        if (!$newId)
+        {
+            $this->error = $this->UserEntity->getError();
+            return false;
+        }
 
         return $newId;
     }
 
     public function update($data)
     {
-        $try = $this->validate($data);
-        if (!$try)
+        $data = $this->UserEntity->bind($data);   
+        if (!$data || !isset($data['readyUpdate']) || !$data['readyUpdate'])
         {
+            $this->error = $this->UserEntity->getError();
             return false;
         }
+        unset($data['readyUpdate']);
 
-        $data_update = [
-            'name' => $data['name'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'status' => $data['status'],
-            'modified_by' => $this->user->get('id'),
-            'modified_at' => date('Y-m-d H:i:s'),
-            'id' => $data['id'],
-        ]; 
-
-        if (isset($data['password']) && $data['password'])
+        $try = $this->UserEntity->update($data);
+        if (!$try)
         {
-            $data_update['password'] = md5($data['password']);
+            $this->error = $this->UserEntity->getError();
+            return false;
         }
-
-        $try = $this->UserEntity->update($data_update);
-
+        
         return $try;
     }
 
