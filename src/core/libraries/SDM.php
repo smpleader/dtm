@@ -73,7 +73,7 @@ class SDM extends Base
         $this->loadClasses();
     }
 
-    private function prepareDb()
+    protected function prepareDb()
     {
         try{
             $pdo = new PdoWrapper( $this->config->db );
