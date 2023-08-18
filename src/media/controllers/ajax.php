@@ -12,15 +12,8 @@ namespace DTM\media\controllers;
 
 use SPT\Web\ControllerMVVM;
 
-class media extends ControllerMVVM
+class ajax extends ControllerMVVM
 {
-    public function list()
-    {
-        $this->app->set('page', 'backend');
-        $this->app->set('format', 'html');
-        $this->app->set('layout', 'backend.list');
-    }
-
     public function upload()
     {
         $data = [
@@ -29,12 +22,12 @@ class media extends ControllerMVVM
 
         $try = $this->MediaModel->add($data);
 
-        $message = $try ? 'Create Successfully!' : 'Error: '. $this->MediaModel->getError();
+        $message = $try ? 'Upload Successfully!' : 'Error: '. $this->MediaModel->getError();
 
-        $this->session->set('flashMsg', $message);
-        return $this->app->redirect(
-            $this->router->url('admin/media')
-        );
+        $this->set('message', $message);
+        $this->set('status', $try ? 'done' : 'failed');
+        $this->app->set('format', 'json');
+        return;
     }
 
     public function delete()
@@ -65,24 +58,5 @@ class media extends ControllerMVVM
         return $this->app->redirect(
             $this->router->url('admin/media'), 
         );
-    }
-
-    public function validateID()
-    {
-        $urlVars = $this->request->get('urlVars');
-        $id = $urlVars ? (int) $urlVars['id'] : 0;
-
-        if(empty($id))
-        {
-            $ids = $this->request->post->get('ids', [], 'array');
-            if(count($ids)) return $ids;
-
-            $this->session->set('flashMsg', 'Invalid Media');
-            return $this->app->redirect(
-                $this->router->url('admin/media'),
-            );
-        }
-
-        return $id;
     }
 }
