@@ -17,6 +17,59 @@ class MediaModel extends Base
     // Write your code here
     use \SPT\Traits\ErrorString;
 
+    public function add($data)
+    {
+        $files = [];
+        if (!$data || !$data['file'] || !$data['file']['name'])
+        {
+            $this->error = 'Invalid file';
+            return false;
+        }
+
+        for ($i=0; $i < count($data['file']['name']); $i++) 
+        { 
+            $file = [
+                'name' => $data['file']['name'][$i],
+                'full_paths' => $data['file']['full_paths'][$i],
+                'type' => $data['file']['type'][$i],
+                'tmp_name' => $data['file']['tmp_name'][$i],
+                'error' => $data['file']['error'][$i],
+                'size' => $data['file']['size'][$i],
+            ];
+        }
+
+        foreach($files as $file)
+        {
+            $path = $this->upload($file);
+            if (!$path)
+            {
+                return false;
+            }
+
+            $data = [
+                'name' => basename($path),
+                'path' => $path,
+                'note' => '',
+                'type' => $file['type'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => $this->user->get('id'),
+                'modified_at' => date('Y-m-d H:i:s'),
+                'modified_by' => $this->user->get('id'),
+            ];
+
+            $data = $this->MediaEntity->bind($data);
+            $try = $this->MediaEntity->add($data);
+
+            if (!$try)
+            {
+                $this->error = $this->MediaEntity->getError();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function upload($file)
     {
         if($file && $file['name']) 
@@ -29,19 +82,25 @@ class MediaModel extends Base
                 'targetDir' => $path_attachment
             ]);
     
+            if ($path_attachment)
+            {
+                $this->error = "Can't create folder media";
+                return false;
+            }
             // TODO: create dynamice fieldName for file
             $index = 0;
             $tmp_name = $file['name'];
             while(file_exists($path_attachment. '/' . $file['name']))
             {
-                $file['name'] = $index. "_". $tmp_name;
+                $file['name'] = 'media/attachments/' . date('Y/m/d'). '/'. $index. "_". $tmp_name;
                 $index ++;
             }
             if( false === $uploader->upload($file) )
             {
-                $this->session->set('flashMsg', 'Invalid attachment');
+                $this->error = 'Invalid attachment';
                 return false;
             }
+
             return $file['name'];
         }
 

@@ -16,9 +16,9 @@ class Menu
         $active = strpos($path_current, 'media') !== false ? 'active' : '';
         $menu = [
             [
-                'link' => $router->url('media'),
+                'link' => $router->url('admin/media'),
                 'title' => 'Media', 
-                'icon' => '<i class="fa-solid fa-clipboard"></i>',
+                'icon' => '<i class="fa-solid fa-camera"></i>',
                 'class' => $active,
             ]
         ];

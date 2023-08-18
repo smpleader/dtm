@@ -9,7 +9,7 @@ class Permission
     public static function registerAccess()
     {
         return [
-            'tag_manager', 'tag_read', 'tag_create', 'tag_update', 'tag_delete' 
+            'media_manager', 'media_read', 'media_create', 'media_update', 'media_delete' 
         ];
     }
 }

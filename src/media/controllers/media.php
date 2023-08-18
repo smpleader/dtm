@@ -12,30 +12,28 @@ namespace DTM\media\controllers;
 
 use SPT\Web\ControllerMVVM;
 
-class tag extends ControllerMVVM
+class media extends ControllerMVVM
 {
     public function list()
     {
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
-        $this->app->set('layout', 'backend.tag.list');
+        $this->app->set('layout', 'backend.list');
     }
 
-    public function add()
+    public function upload()
     {
         $data = [
-            'name' => $this->request->post->get('name', '', 'string'),
-            'description' => $this->request->post->get('description', '', 'string'),
-            'parent_id' => $this->request->post->get('parent_id', 0, 'int'),
+            'file' => $this->request->file->get('file', [], 'array'),
         ];
 
-        $try = $this->TagModel->add($data);
+        $try = $this->MediaModel->add($data);
 
-        $message = $try ? 'Create Successfully!' : 'Error: '. $this->TagModel->getError();
+        $message = $try ? 'Create Successfully!' : 'Error: '. $this->MediaModel->getError();
 
         $this->session->set('flashMsg', $message);
         return $this->app->redirect(
-            $this->router->url('tags')
+            $this->router->url('admin/media')
         );
     }
 
@@ -52,18 +50,18 @@ class tag extends ControllerMVVM
                 'id' => $id,
             ];
         
-            $try = $this->TagModel->update($data);
-            $message = $try ? 'Update Successfully!' : 'Error: '. $this->TagModel->getError();
+            $try = $this->MediaModel->update($data);
+            $message = $try ? 'Update Successfully!' : 'Error: '. $this->MediaModel->getError();
             
             $this->session->set('flashMsg', $message);
             return $this->app->redirect(
-                $this->router->url('tags')
+                $this->router->url('admin/media')
             );
         }
 
         $this->session->set('flashMsg', 'Error: Invalid Task!');
         return $this->app->redirect(
-            $this->router->url('tags')
+            $this->router->url('admin/media')
         );
     }
 
@@ -76,7 +74,7 @@ class tag extends ControllerMVVM
             foreach($ids as $id)
             {
                 //Delete file in source
-                if( $this->TagModel->remove( $id ) )
+                if( $this->MediaModel->remove( $id ) )
                 {
                     $count++;
                 }
@@ -84,7 +82,7 @@ class tag extends ControllerMVVM
         }
         elseif( is_numeric($ids) )
         {
-            if( $this->TagModel->remove($ids ) )
+            if( $this->MediaModel->remove($ids ) )
             {
                 $count++;
             }
@@ -93,7 +91,7 @@ class tag extends ControllerMVVM
 
         $this->session->set('flashMsg', $count.' deleted record(s)');
         return $this->app->redirect(
-            $this->router->url('tags'), 
+            $this->router->url('admin/media'), 
         );
     }
 
@@ -107,26 +105,12 @@ class tag extends ControllerMVVM
             $ids = $this->request->post->get('ids', [], 'array');
             if(count($ids)) return $ids;
 
-            $this->session->set('flashMsg', 'Invalid Tag');
+            $this->session->set('flashMsg', 'Invalid Media');
             return $this->app->redirect(
-                $this->router->url('tags'),
+                $this->router->url('admin/media'),
             );
         }
 
         return $id;
-    }
-
-    public function search()
-    {
-        $search = trim($this->request->get->get('search', '', 'string'));
-        $ignores = $this->request->get->get('ignores', [], 'array');
-
-        $data = $this->TagModel->search($search, $ignores);
-
-        $this->app->set('format', 'json');
-        $this->set('status' , 'success');
-        $this->set('data' , $data);
-        $this->set('message' , '');
-        return;
     }
 }

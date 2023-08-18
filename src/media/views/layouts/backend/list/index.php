@@ -7,7 +7,7 @@
 					<div class="card border-0 shadow-none">
 						<div class="card-body">
                         <div class="row align-items-center">
-								<?php echo $this->render('backend.tag.list.filter', []);?>
+								<?php echo $this->render('backend.list.filter', []);?>
 							</div>
 							<form action="<?php echo $this->link_list ?>" method="POST" id="formList">
 								<input type="hidden" value="<?php echo $this->token ?>" name="token">
@@ -19,11 +19,11 @@
 												<input type="checkbox" id="select_all">
 											</th>
 											<th>Name</th>
-											<th>Parent Tag</th>
-											<th>Description</th>
+											<th>Type</th>
+											<th>Created at</th>
 									</thead>
 									<tbody>
-										<?php while($this->list->hasRow()) echo $this->render('backend.tag.list.row', []); ?>
+										<?php while($this->list->hasRow()) echo $this->render('backend.list.row', []); ?>
 									</tbody>
 								<?php
 								?>
@@ -45,5 +45,5 @@
     <input type="hidden" value="<?php echo $this->token ?>" name="token">
     <input type="hidden" value="DELETE" name="_method">
 </form>
-<?php echo $this->render('backend.tag.form', []);?>
-<?php echo $this->render('backend.tag.list.javascript', []); ?>
+<?php echo $this->render('backend.form', []);?>
+<?php echo $this->render('backend.list.javascript', []); ?>
