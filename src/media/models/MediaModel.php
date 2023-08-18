@@ -150,4 +150,18 @@ class MediaModel extends Base
         $try = $this->MediaEntity->remove($id);
         return $try;
     }
+
+    public function search($search, $page, $limit)
+    {
+        $where = [];
+        if ($search)
+        {
+            $where[] = 'name LIKE "%'. $search .'%"';
+        }
+
+        $start  = ($page - 1) * $limit;
+        $result = $this->MediaEntity->list($start, $limit, $where, 'created_at desc');
+        
+        return $result;
+    }
 }

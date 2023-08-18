@@ -31,6 +31,11 @@ class Routing
                     'post' => 'media.ajax.upload',
                 ],
             ],
+            'admin/media/list' => [
+                'fnc' => [
+                    'post' => 'media.ajax.list',
+                ],
+            ],
         ];
     }
 }

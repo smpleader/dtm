@@ -35,7 +35,7 @@
                     <div class="tab-content" id="mediaTabContent">
                         <div class="tab-pane fade show active" id="media-libraries" role="tabpanel" aria-labelledby="libraries-tab">
                             <div class="d-flex mt-2">
-                                <input placeholder="Search..." style="max-width:300px;" type="text" class="form-control me-2" name="search" id="media-search">
+                                <input placeholder="Search..." style="max-width:300px;" type="text" class="form-control me-2" id="media-search">
                                 <button id="btn-search-media" class="btn btn-outline-success">Search</button>
                             </div>
                             <div class="list">
@@ -56,40 +56,49 @@
         </div>
     </div>
     <script>
+        function loadMedia()
+        {
+            var search = $('#media-search').val();
+            var form = new FormData();
+            form.append('search', search);
+            form.append('page', page_media);
+            $.ajax({
+                url: `<?php echo $this->url('admin/media/list'); ?>`,
+                type: 'POST',
+                data: form,
+                contentType: false,
+                processData: false,
+                success: function(result) {
+                    if (result.status != 'done') {
+                        alert(result.message);
+                        return;
+                    }
+
+                    $("#upload_files").val(null);
+                    alert(result.message);
+                    return;
+                },
+                error : function(result){
+                    alert('Can`t load media libraries');
+                    return;
+                }
+            });
+            content = '';
+            list = [];
+            $('#media-libraries .list').html(content);
+        }
+        var page_media = 1;
+
         $(document).ready(function() {
-            var page = 1;
+            $('#btn-search-media').on('click', function(e){
+                e.preventDefault();
+                loadMedia();
+            });
+
             $('.open-media-popup').on('click', function(e) {
                 e.preventDefault();
                 $('#mediaPopup').modal('show');
             })
-
-            function loadMedia()
-            {
-                var search = $();
-                $.ajax({
-                    url: '<?php echo $this->url('admin/media/list'); ?>',
-                    type: 'GET',
-                    data: {},
-                    success: function(result) {
-                        $('#upload-image-button').removeAttr('disabled');
-                        if (result.status != 'done') {
-                            $("#upload_files").val(null);
-                            alert(result.message);
-                            return;
-                        }
-                        
-                        alert(result.message);
-                        return;
-                    },
-                    error : function(result){
-                        alert('Can`t load media libraries');
-                        return;
-                    }
-                });
-                content = '';
-                list = [];
-                $('#media-libraries .list').html(content);
-            }
 
             $('#upload-image-button').on('click', function(e){
                 e.preventDefault();
@@ -108,11 +117,11 @@
                     success: function(result) {
                         $('#upload-image-button').removeAttr('disabled');
                         if (result.status != 'done') {
-                            $("#upload_files").val(null);
                             alert(result.message);
                             return;
                         }
                         
+                        $("#upload_files").val(null);
                         alert(result.message);
                         return;
                     },

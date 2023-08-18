@@ -30,6 +30,20 @@ class ajax extends ControllerMVVM
         return;
     }
 
+    public function list()
+    {
+        $search = $this->request->post->get('search', '', 'string');
+        $page = $this->request->post->get('page', 1, 'int');
+        $limit = 20;
+
+        $list = $this->MediaModel->search($search, $page, $limit);
+
+        $this->set('list', $list ? $list : []);
+        $this->set('status', 'done');
+        $this->app->set('format', 'json');
+        return;
+    }
+
     public function delete()
     {
         $ids = $this->validateID();
