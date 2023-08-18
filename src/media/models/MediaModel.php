@@ -126,4 +126,28 @@ class MediaModel extends Base
         }
         return $dir;
     }
+
+    public function remove($id)
+    {
+        if (!$id)
+        {
+            $this->error = 'Invalid id';
+            return false;
+        } 
+
+        $find = $this->MediaEntity->findByPK($id);
+        if (!$find)
+        {
+            $this->error = 'Invalid media';
+            return false;
+        }
+        
+        if(file_exists(PUBLIC_PATH. $find['path']))
+        {
+            $try = unlink(PUBLIC_PATH. $find['path']);
+        }
+
+        $try = $this->MediaEntity->remove($id);
+        return $try;
+    }
 }

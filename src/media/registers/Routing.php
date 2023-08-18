@@ -13,10 +13,12 @@ class Routing
                 'fnc' => [
                     'get' => 'media.media.list',
                     'post' => 'media.media.list',
+                    'delete' => 'media.media.delete',
                 ],
                 'permission' => [
                     'get' => ['media_manager', 'media_read'],
                     'post' => ['media_manager', 'media_read'],
+                    'delete' => ['media_manager', 'media_delete'],
                 ],
             ],
             'admin/media/upload' => [
