@@ -30,12 +30,14 @@ class MediaModel extends Base
         { 
             $file = [
                 'name' => $data['file']['name'][$i],
-                'full_paths' => $data['file']['full_paths'][$i],
+                'full_path' => $data['file']['full_path'][$i],
                 'type' => $data['file']['type'][$i],
                 'tmp_name' => $data['file']['tmp_name'][$i],
                 'error' => $data['file']['error'][$i],
                 'size' => $data['file']['size'][$i],
             ];
+
+            $files[] = $file;
         }
 
         foreach($files as $file)
@@ -82,7 +84,7 @@ class MediaModel extends Base
                 'targetDir' => $path_attachment
             ]);
     
-            if ($path_attachment)
+            if (!$path_attachment)
             {
                 $this->error = "Can't create folder media";
                 return false;
