@@ -161,7 +161,11 @@ class MediaModel extends Base
 
         $start  = ($page - 1) * $limit;
         $result = $this->MediaEntity->list($start, $limit, $where, 'created_at desc');
+        $total = $this->MediaEntity->getListTotal();
         
-        return $result;
+        return [
+            'list' => $result,
+            'total' => $total,
+        ];
     }
 }

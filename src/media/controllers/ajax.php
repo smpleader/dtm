@@ -36,9 +36,12 @@ class ajax extends ControllerMVVM
         $page = $this->request->post->get('page', 1, 'int');
         $limit = 20;
 
-        $list = $this->MediaModel->search($search, $page, $limit);
-
+        $result = $this->MediaModel->search($search, $page, $limit);
+        $list = $result['list'];
+        $total = $result['total'];
+        $total_page = ceil($total / 20);
         $this->set('list', $list ? $list : []);
+        $this->set('total_page', $total_page);
         $this->set('status', 'done');
         $this->app->set('format', 'json');
         return;

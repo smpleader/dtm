@@ -33,13 +33,20 @@
                         </li>
                     </ul>
                     <div class="tab-content" id="mediaTabContent">
-                        <div class="tab-pane fade show active" id="media-libraries" role="tabpanel" aria-labelledby="libraries-tab">
+                        <div style="overflow-x: hidden !important;" class="tab-pane h-100 overflow-auto fade show active" id="media-libraries" role="tabpanel" aria-labelledby="libraries-tab">
                             <div class="d-flex mt-2">
                                 <input placeholder="Search..." style="max-width:300px;" type="text" class="form-control me-2" id="media-search">
                                 <button id="btn-search-media" class="btn btn-outline-success">Search</button>
                             </div>
-                            <div class="list">
-
+                            <div class="container-fluid">
+                                <div class="list row mt-3">
+                                
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <h4 class="text-center">
+                                    <a href="" class="pe-none" id="loadmore-media">Load More</a>
+                                </h4>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="media-upload" role="tabpanel" aria-labelledby="media-upload-tab">
@@ -56,12 +63,19 @@
         </div>
     </div>
     <script>
-        function loadMedia()
+        function loadMedia(refresh = false)
         {
+            if (refresh)
+            {
+                page_media = 1;
+                $('#media-libraries .list').html('');
+            }
+
             var search = $('#media-search').val();
             var form = new FormData();
             form.append('search', search);
             form.append('page', page_media);
+            $('#loadmore-media').addClass('pe-none');
             $.ajax({
                 url: `<?php echo $this->url('admin/media/list'); ?>`,
                 type: 'POST',
@@ -69,13 +83,35 @@
                 contentType: false,
                 processData: false,
                 success: function(result) {
-                    if (result.status != 'done') {
+                    var content = '';
+                    $('#loadmore-media').removeClass('pe-none');
+                    if (result.status == 'done') {
+                        result.list.forEach(item => {
+                            content += `
+                            <div class="col-lg-4 col-md-6 col-12">
+                                <div class="card mt-0 border shadow-none d-flex flex-column justify-content-center" style="width: auto;">
+                                    <a href="/${item.path}" target="_blank" class="h-100 my-2 px-2 mx-auto" style="">
+                                        <img style="height: 120px; max-width: 100%;" src="/${item.path}">
+                                    </a>
+                                    <div class="card-body text-center">
+                                        <p class="card-text fw-bold m-0">${item.name}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+                        });
+                        $('#media-libraries .list').append(content);
+                        if (result.total_page > page_media)
+                        {
+                            $('#loadmore-media').removeClass('d-none');
+                        }
+                        else{
+                            $('#loadmore-media').addClass('d-none');
+                        }
+                    }
+                    else{
                         alert(result.message);
-                        return;
                     }
 
-                    $("#upload_files").val(null);
-                    alert(result.message);
                     return;
                 },
                 error : function(result){
@@ -92,12 +128,13 @@
         $(document).ready(function() {
             $('#btn-search-media').on('click', function(e){
                 e.preventDefault();
-                loadMedia();
+                loadMedia(true);
             });
 
             $('.open-media-popup').on('click', function(e) {
                 e.preventDefault();
                 $('#mediaPopup').modal('show');
+                loadMedia(true);
             })
 
             $('#upload-image-button').on('click', function(e){
@@ -127,7 +164,7 @@
                     },
                     error : function(result){
                         $('#upload-image-button').removeAttr('disabled');
-                        alert('Upload Failed');
+                        alert('Can`t Upload File');
                         return;
                     }
                 });
