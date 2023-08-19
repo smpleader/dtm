@@ -53,7 +53,7 @@
                         <div class="tab-pane fade" id="media-upload" role="tabpanel" aria-labelledby="media-upload-tab">
                             <div class="row align-items-center justify-content-center">
                                 <div class="col-lg-4 mt-5 col-md-6 col-12 text-center">
-                                    <input multiple type="file" id="upload_files" class="form-control" required multiple name="file[]">
+                                    <input multiple type="file" id="upload_files" class="form-control" multiple name="file[]">
                                     <button class="mt-2 btn btn-outline-success" id="upload-image-button">Upload</button>
                                 </div>
                             </div>
@@ -120,7 +120,6 @@
                         alert(result.message);
                     }
                     
-                    $('#media-libraries .list').html(content);
                     loadEventMedia();
 
                     return;
@@ -148,6 +147,11 @@
         var page_media = 1;
 
         $(document).ready(function() {
+            $('#loadmore-media').on('click', function(e){
+                e.preventDefault();
+                page_media++;
+                loadMedia();
+            })
             $('#select-media-item').on('click', function(){
                 var path = $('#path-select-item').val();
                 var id = $('#field-media-id').val();
