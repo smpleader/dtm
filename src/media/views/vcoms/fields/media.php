@@ -1,5 +1,7 @@
 <?php if ($this->field->showLabel) : ?>
-    <img class="img-fluid mb-2" id="preview-<?php echo $this->field->id ?>" src="<?php echo $this->url($this->field->value); ?>" alt="">
+    <div>
+        <img class="img-fluid mb-2" id="preview-<?php echo $this->field->id ?>" src="<?php echo $this->url($this->field->value); ?>" alt="">
+    </div>
     <label for="<?php echo $this->field->name ?>"><?php echo $this->field->label ?></label>
 <?php endif; ?>
 <div class="d-flex mt-1 align-items-center">
