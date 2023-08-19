@@ -59,6 +59,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal-footer border-top-0">
+                    <input type="hidden" id="path-select-item">
+                    <input type="hidden" id="field-media-id">
+                    <button type="button" id="select-media-item" class="btn btn-primary">Select</button>
+                </div>
             </div>
         </div>
     </div>
@@ -88,13 +93,15 @@
                     if (result.status == 'done') {
                         result.list.forEach(item => {
                             content += `
-                            <div class="col-lg-4 col-md-6 col-12">
-                                <div data-path="${item.path}" class="card pe-auto item-media mt-0 border shadow-none d-flex flex-column justify-content-center" style="width: auto;">
-                                    <a href="/" target="_blank" class="h-100 my-2 px-2 mx-auto" style="">
-                                        <img style="height: 120px; max-width: 100%;" src="/${item.path}">
-                                    </a>
-                                    <div class="card-body text-center">
-                                        <p class="card-text fw-bold m-0">${item.name}</p>
+                            <div class="col-lg-4 col-md-6 col-12 mb-4">
+                                <div data-path="${item.path}"  class="item-media cursor-pointer card border shadow-none h-100 m-0">
+                                    <div class="mt-0 d-flex flex-column justify-content-center" style="width: auto;">
+                                        <div class="text-center mt-2">
+                                            <img style="height: 120px; max-width: 100%;" src="/${item.path}">
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <p class="card-text fw-bold m-0">${item.name}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>`;
@@ -111,6 +118,9 @@
                     else{
                         alert(result.message);
                     }
+                    
+                    $('#media-libraries .list').html(content);
+                    loadEventMedia();
 
                     return;
                 },
@@ -119,22 +129,32 @@
                     return;
                 }
             });
-            loadEventMedia();
-            content = '';
-            list = [];
-            $('#media-libraries .list').html(content);
         }
 
         function loadEventMedia()
         {
-            $('.item-media').off('click').on('click', function(){
+            $('#select-media-item').attr('disabled', 'disabled');
+            
+            $('.item-media').on('click', function(){
                 $('.item-media').removeClass('active');
                 $(this).addClass('active');
+                var path = $(this).data('path');
+                
+                $('#path-select-item').val(path);
+                $('#select-media-item').removeAttr('disabled');
             });
         }
         var page_media = 1;
 
         $(document).ready(function() {
+            $('#select-media-item').on('click', function(){
+                var path = $('#path-select-item').val();
+                var id = $('#field-media-id').val();
+
+                $(`#${id}`).val(path);
+                $('#mediaPopup').modal('hide');
+            })
+
             $('#btn-search-media').on('click', function(e){
                 e.preventDefault();
                 loadMedia(true);
@@ -142,6 +162,8 @@
 
             $('.open-media-popup').on('click', function(e) {
                 e.preventDefault();
+                var id = $(this).data('id');
+                $('#field-media-id').val(id);
                 $('#mediaPopup').modal('show');
                 loadMedia(true);
             })
