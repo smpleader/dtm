@@ -89,8 +89,8 @@
                         result.list.forEach(item => {
                             content += `
                             <div class="col-lg-4 col-md-6 col-12">
-                                <div class="card mt-0 border shadow-none d-flex flex-column justify-content-center" style="width: auto;">
-                                    <a href="/${item.path}" target="_blank" class="h-100 my-2 px-2 mx-auto" style="">
+                                <div data-path="${item.path}" class="card pe-auto item-media mt-0 border shadow-none d-flex flex-column justify-content-center" style="width: auto;">
+                                    <a href="/" target="_blank" class="h-100 my-2 px-2 mx-auto" style="">
                                         <img style="height: 120px; max-width: 100%;" src="/${item.path}">
                                     </a>
                                     <div class="card-body text-center">
@@ -119,9 +119,18 @@
                     return;
                 }
             });
+            loadEventMedia();
             content = '';
             list = [];
             $('#media-libraries .list').html(content);
+        }
+
+        function loadEventMedia()
+        {
+            $('.item-media').off('click').on('click', function(){
+                $('.item-media').removeClass('active');
+                $(this).addClass('active');
+            });
         }
         var page_media = 1;
 
