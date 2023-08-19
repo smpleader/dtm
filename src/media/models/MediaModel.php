@@ -94,7 +94,7 @@ class MediaModel extends Base
             $tmp_name = $file['name'];
             while(file_exists($path_attachment. '/' . $file['name']))
             {
-                $file['name'] = 'media/attachments/' . date('Y/m/d'). '/'. $index. "_". $tmp_name;
+                $file['name'] = $index. "_". $tmp_name;
                 $index ++;
             }
             if( false === $uploader->upload($file) )
@@ -103,7 +103,7 @@ class MediaModel extends Base
                 return false;
             }
 
-            return $file['name'];
+            return 'media/attachments/' . date('Y/m/d'). '/'. $file['name'];
         }
 
         return false;
