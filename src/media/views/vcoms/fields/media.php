@@ -7,7 +7,7 @@
         <button class="btn text-nowrap btn-outline-success open-media-popup" data-id="<?php echo $this->field->id ?>"><i class="me-2 fa-solid fa-camera"></i>Media</button>
     </div>
     <div class="ms-2">
-        <input type="hidden" name="<?php echo $this->field->name ?>" id="<?php echo $this->field->id ?>">
+        <input type="hidden" name="<?php echo $this->field->name ?>" id="<?php echo $this->field->id ?>" value="<?php echo $this->field->value ?>">
         <span id="value-<?php echo $this->field->id ?>">
             <?php echo basename($this->field->value); ?>
         </span>
