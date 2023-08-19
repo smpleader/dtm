@@ -97,7 +97,7 @@
                                 <div data-path="${item.path}"  class="item-media cursor-pointer card border shadow-none h-100 m-0">
                                     <div class="mt-0 d-flex flex-column justify-content-center" style="width: auto;">
                                         <div class="text-center mt-2">
-                                            <img style="height: 120px; max-width: 100%;" src="/${item.path}">
+                                            <img style="height: 120px; max-width: 90%;" src="/${item.path}">
                                         </div>
                                         <div class="card-body text-center">
                                             <p class="card-text fw-bold m-0">${item.name}</p>
@@ -150,8 +150,11 @@
             $('#select-media-item').on('click', function(){
                 var path = $('#path-select-item').val();
                 var id = $('#field-media-id').val();
+                var parts = path.split('/');
+                var filename = parts[parts.length - 1];
 
                 $(`#${id}`).val(path);
+                $(`#value-${id}`).text(filename);
                 $('#mediaPopup').modal('hide');
             })
 
