@@ -1,9 +1,10 @@
 <?php if ($this->field->showLabel) : ?>
+    <img class="img-fluid mb-2" id="preview-<?php echo $this->field->id ?>" src="<?php echo $this->url($this->field->value); ?>" alt="">
     <label for="<?php echo $this->field->name ?>"><?php echo $this->field->label ?></label>
 <?php endif; ?>
 <div class="d-flex mt-1 align-items-center">
     <div>
-        <button class="btn btn-outline-success open-media-popup" data-id="<?php echo $this->field->id ?>"><i class="me-2 fa-solid fa-camera"></i>Media</button>
+        <button class="btn text-nowrap btn-outline-success open-media-popup" data-id="<?php echo $this->field->id ?>"><i class="me-2 fa-solid fa-camera"></i>Media</button>
     </div>
     <div class="ms-2">
         <input type="hidden" name="<?php echo $this->field->name ?>" id="<?php echo $this->field->id ?>">
@@ -155,6 +156,7 @@
 
                 $(`#${id}`).val(path);
                 $(`#value-${id}`).text(filename);
+                $(`#preview-${id}`).attr('src', '/' + path);
                 $('#mediaPopup').modal('hide');
             })
 
