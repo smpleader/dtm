@@ -65,6 +65,7 @@
                 <div class="modal-footer border-top-0">
                     <input type="hidden" id="path-select-item">
                     <input type="hidden" id="field-media-id">
+                    <button type="button" id="clear-media-item" class="btn btn-secondary">Clear</button>
                     <button type="button" id="select-media-item" class="btn btn-primary">Select</button>
                 </div>
             </div>
@@ -165,6 +166,14 @@
                 $(`#preview-${id}`).attr('src', '/' + path);
                 $('#mediaPopup').modal('hide');
             })
+
+            $('#clear-media-item').on('click', function(){
+                var id = $('#field-media-id').val();
+                $(`#${id}`).val('');
+                $(`#value-${id}`).text('');
+                $(`#preview-${id}`).attr('src', '');
+                $('#mediaPopup').modal('hide');
+            });
 
             $('#btn-search-media').on('click', function(e){
                 e.preventDefault();
