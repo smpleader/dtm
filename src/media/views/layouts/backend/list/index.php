@@ -12,22 +12,9 @@
 							<form action="<?php echo $this->link_list ?>" method="POST" id="formList">
 								<input type="hidden" value="<?php echo $this->token ?>" name="token">
             					<input type="hidden" value="DELETE" name="_method">
-								<table id="datatables-buttons" class="table table-striped border-top border-1" style="width:100%">
-									<thead>
-										<tr>
-											<th width="10px">
-												<input type="checkbox" id="select_all">
-											</th>
-											<th>Name</th>
-											<th>Type</th>
-											<th>Created at</th>
-									</thead>
-									<tbody>
-										<?php while($this->list->hasRow()) echo $this->render('backend.list.row', []); ?>
-									</tbody>
-								<?php
-								?>
-								</table>
+								<div class="row">
+									<?php while($this->list->hasRow()) echo $this->render('backend.list.row', []); ?>
+								</div>
 							</form>
 							<div class="row g-3 align-items-center">
 								<?php echo $this->renderWidget('core::pagination'); ?>

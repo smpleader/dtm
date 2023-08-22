@@ -44,7 +44,7 @@ class AdminMedia extends ViewModel
         }
 
         $start  = ($page - 1) * $limit;
-        $sort = $sort ? $sort : 'name asc';
+        $sort = $sort ? $sort : 'id desc';
 
         $result = $this->MediaEntity->list($start, $limit, $where, $sort);
         $total = $this->MediaEntity->getListTotal();
@@ -86,7 +86,7 @@ class AdminMedia extends ViewModel
         if (null === $this->_filter) :
             $data = [
                 'search' => $this->state('search', '', '', 'post', 'media.search'),
-                'limit' => $this->state('limit', 20, 'int', 'post', 'media.limit'),
+                'limit' => $this->state('limit', 18, 'int', 'post', 'media.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'media.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);
@@ -121,10 +121,10 @@ class AdminMedia extends ViewModel
             'limit' => [
                 'option',
                 'formClass' => 'form-select',
-                'default' => 20,
+                'default' => 18,
                 'options' => [
-                    ['text' => '20', 'value' => 20],
-                    ['text' => '50', 'value' => 50],
+                    ['text' => '18', 'value' => 18],
+                    ['text' => '60', 'value' => 60],
                     ['text' => 'All', 'value' => 0],
                 ],
                 'showLabel' => false
@@ -132,8 +132,10 @@ class AdminMedia extends ViewModel
             'sort' => [
                 'option',
                 'formClass' => 'form-select',
-                'default' => 'name asc',
+                'default' => 'id desc',
                 'options' => [
+                    ['text' => 'id ascending', 'value' => 'id asc'],
+                    ['text' => 'id descending', 'value' => 'id desc'],
                     ['text' => 'name ascending', 'value' => 'name asc'],
                     ['text' => 'name descending', 'value' => 'name desc'],
                 ],
