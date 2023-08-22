@@ -42,6 +42,7 @@ class ajax extends ControllerMVVM
         $total_page = ceil($total / $limit);
         $this->set('list', $list ? $list : []);
         $this->set('total_page', $total_page);
+        $this->set('total_media', $total);
         $this->set('status', 'done');
         $this->app->set('format', 'json');
         return;

@@ -43,13 +43,17 @@
                             </div>
                             <div class="container-fluid">
                                 <div class="list row mt-3">
-                                
                                 </div>
-                            </div>
-                            <div class="footer">
-                                <h4 class="text-center">
-                                    <a href="" class="pe-none" id="loadmore-media">Load More</a>
-                                </h4>
+                                <div class="row">
+                                    <div class="col-12 footer">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="pagination-infor">
+                                            </div>
+                                            <ul class="pagination d-flex justify-content-end mg-0 mb-0">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="media-upload" role="tabpanel" aria-labelledby="media-upload-tab">
@@ -72,10 +76,8 @@
         </div>
     </div>
     <script>
-        function loadMedia(refresh = false)
-        {
-            if (refresh)
-            {
+        function loadMedia(refresh = false) {
+            if (refresh) {
                 page_media = 1;
                 $('#media-libraries .list').html('');
             }
@@ -110,16 +112,11 @@
                                 </div>
                             </div>`;
                         });
-                        $('#media-libraries .list').append(content);
-                        if (result.total_page > page_media)
-                        {
-                            $('#loadmore-media').removeClass('d-none');
-                        }
-                        else{
-                            $('#loadmore-media').addClass('d-none');
-                        }
-                    }
-                    else{
+                        $('#media-libraries .list').html(content);
+                        $('#mediaTabContent').scrollTo(0);
+
+                        loadPaginationMedia(result.total_page, page_media, result.total_media);
+                    } else {
                         alert(result.message);
                     }
                     
@@ -127,41 +124,95 @@
 
                     return;
                 },
-                error : function(result){
+                error: function(result) {
                     alert('Can`t load media libraries');
                     return;
                 }
             });
         }
 
-        function loadEventMedia()
-        {
-            $('#select-media-item').attr('disabled', 'disabled');
+        function loadPaginationMedia(total_page, current_page, total_media){
+            var pagination = `<li class="page-item ${current_page == 1 ? 'disabled' : '' } m-0 first-page">
+                    <a class="page-link" data-page="1">First</a>
+                </li>
+                <li class="page-item ${current_page == 1 ? 'disabled' : '' } m-0 previous-page">
+                    <a class="page-link" data-page="${current_page - 1}">Previous</a>
+                </li>`;
+            var pages = [];
+            if (total_page > 4) {
+                if (current_page == 1) {
+                    pages = [1, 2, 3, 0, total_page];
+                } else if (current_page == 2 && total_page > 5) {
+                    pages = [1, 2, 3, 4, 0, total_page];
+                } else if (current_page == 2 && total_page == 5) {
+                    pages = [1, 2, 3, 4, total_page];
+                } else if (current_page == 3 && total_page == 5) {
+                    pages = [1, 2, 3, 4, total_page];
+                } else if (current_page == 3 && total_page > 5) {
+                    pages = [1, 2, 3, 4, 0, total_page];
+                } else if (current_page == (total_page - 2)) {
+                    pages = [1, 0, current_page - 1, current_page, total_page];
+                } else if (current_page == (total_page - 1)) {
+                    pages = [1, 0, current_page - 1, current_page, total_page];
+                } else if (current_page == total_page) {
+                    pages = [1, 0, current_page - 1, current_page];
+                } else {
+                    pages = [1, 0, current_page - 1, current_page, current_page + 1, 0, total_page];
+                }
+            } else {
+                for (let index = 0; index < total_page; index++) {
+                    pages.push(index+1);
+                }
+            }      
+            pages.forEach(function(item, index){
+                pagination += `<li class="page-item ${item == current_page ? 'active' : ''} ${!item ? 'disabled' : ''}">
+                    <a class="page-link " data-page="${item}">
+                        ${item}
+                    </a>
+                </li>`;
+            }); 
             
-            $('.item-media').on('click', function(){
+            pagination += `<li class="page-item next-page ${current_page == total_page ? 'disabeld' : ''}">
+                    <a class="page-link" data-page="${current_page - 1}">Next</a>
+                </li>
+                <li class="page-item last-page">
+                    <a class="page-link" data-page="${total_page}">Last</a>
+                </li>`;
+            $('#mediaPopup .pagination').html(pagination);
+
+            var result = `Showing ${(current_page - 1) * 20 + 1} to ${current_page * 20 > total_media ? total_media : (current_page * 20) } of ${total_media} entries`;
+            $('#mediaPopup .pagination-infor').html(result);
+        }
+
+        function loadEventMedia() {
+            $('#select-media-item').attr('disabled', 'disabled');
+
+            $('.item-media').off('click').on('click', function() {
                 $('.item-media').removeClass('active');
                 $(this).addClass('active');
                 var path = $(this).data('path');
-                
+
                 $('#path-select-item').val(path);
                 $('#select-media-item').removeAttr('disabled');
             });
+
+            $('#mediaPopup .pagination .page-link').on('click', function() {
+                var page = $(this).data('page');
+                page_media = parseInt(page);
+                console.log(page_media);
+                loadMedia();
+            })
         }
         var page_media = 1;
 
         $(document).ready(function() {
-            $('#libraries-tab').on('show.bs.tab', function(){
+            $('#libraries-tab').on('show.bs.tab', function() {
                 $('#mediaPopup .modal-footer').removeClass('d-none');
             });
-            $('#libraries-tab').on('hide.bs.tab', function(){
+            $('#libraries-tab').on('hide.bs.tab', function() {
                 $('#mediaPopup .modal-footer').addClass('d-none');
             });
-            $('#loadmore-media').on('click', function(e){
-                e.preventDefault();
-                page_media++;
-                loadMedia();
-            })
-            $('#select-media-item').on('click', function(){
+            $('#select-media-item').on('click', function() {
                 var path = $('#path-select-item').val();
                 var id = $('#field-media-id').val();
                 var parts = path.split('/');
@@ -173,7 +224,7 @@
                 $('#mediaPopup').modal('hide');
             })
 
-            $('#clear-media-item').on('click', function(){
+            $('#clear-media-item').on('click', function() {
                 var id = $('#field-media-id').val();
                 $(`#${id}`).val('');
                 $(`#value-${id}`).text('');
@@ -181,7 +232,7 @@
                 $('#mediaPopup').modal('hide');
             });
 
-            $('#btn-search-media').on('click', function(e){
+            $('#btn-search-media').on('click', function(e) {
                 e.preventDefault();
                 loadMedia(true);
             });
@@ -194,7 +245,7 @@
                 loadMedia(true);
             })
 
-            $('#upload-image-button').on('click', function(e){
+            $('#upload-image-button').on('click', function(e) {
                 e.preventDefault();
                 var form = new FormData();
                 $('#upload-image-button').attr('disabled', 'disabled');
@@ -214,12 +265,12 @@
                             alert(result.message);
                             return;
                         }
-                        
+
                         $("#upload_files").val(null);
                         alert(result.message);
                         return;
                     },
-                    error : function(result){
+                    error: function(result) {
                         $('#upload-image-button').removeAttr('disabled');
                         alert('Can`t Upload File');
                         return;
