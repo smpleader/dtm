@@ -68,11 +68,16 @@ define('MEDIA_TINYMCE', 'on');
                                 <div class="list row mt-3">
                                 
                                 </div>
-                            </div>
-                            <div class="footer">
-                                <h4 class="text-center">
-                                    <a href="" class="pe-none" id="tinymce-loadmore-media">Load More</a>
-                                </h4>
+                                <div class="row">
+                                    <div class="col-12 footer">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="pagination-infor">
+                                            </div>
+                                            <ul class="pagination d-flex justify-content-end mg-0 mb-0">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tinymce-media-upload-tab" role="tabpanel" aria-labelledby="tinymce-media-upload">
@@ -92,19 +97,19 @@ define('MEDIA_TINYMCE', 'on');
         </div>
     </div>
     <script>
+        var page_tinymce = 1;
         function loadTinymceMedia(refresh = false)
         {
             if (refresh)
             {
-                page_media = 1;
+                page_tinymce = 1;
                 $('#tinymce-media-libraries .list').html('');
             }
 
             var search = $('#tinymce-media-search').val();
             var form = new FormData();
             form.append('search', search);
-            form.append('page', page_media);
-            $('#tinymce-loadmore-media').addClass('pe-none');
+            form.append('page', page_tinymce);
             $.ajax({
                 url: `<?php echo $this->url('admin/media/list'); ?>`,
                 type: 'POST',
@@ -113,7 +118,6 @@ define('MEDIA_TINYMCE', 'on');
                 processData: false,
                 success: function(result) {
                     var content = '';
-                    $('#tinymce-loadmore-media').removeClass('pe-none');
                     if (result.status == 'done') {
                         result.list.forEach(item => {
                             content += `
@@ -130,14 +134,9 @@ define('MEDIA_TINYMCE', 'on');
                                 </div>
                             </div>`;
                         });
-                        $('#tinymce-media-libraries .list').append(content);
-                        if (result.total_page > page_media)
-                        {
-                            $('#tinymce-loadmore-media').removeClass('d-none');
-                        }
-                        else{
-                            $('#tinymce-loadmore-media').addClass('d-none');
-                        }
+                        $('#tinymce-media-libraries .list').html(content);
+                        loadPaginationTinymce(result.total_page, page_tinymce, result.total_media);
+
                     }
                     else{
                         alert(result.message);
@@ -152,6 +151,59 @@ define('MEDIA_TINYMCE', 'on');
                     return;
                 }
             });
+        }
+
+        function loadPaginationTinymce(total_page, current_page, total_media){
+            var pagination = `<li class="page-item ${current_page == 1 ? 'disabled' : '' } m-0 first-page">
+                    <a class="page-link" data-page="1">First</a>
+                </li>
+                <li class="page-item ${current_page == 1 ? 'disabled' : '' } m-0 previous-page">
+                    <a class="page-link" data-page="${current_page - 1}">Previous</a>
+                </li>`;
+            var pages = [];
+            if (total_page > 4) {
+                if (current_page == 1) {
+                    pages = [1, 2, 3, 0, total_page];
+                } else if (current_page == 2 && total_page > 5) {
+                    pages = [1, 2, 3, 4, 0, total_page];
+                } else if (current_page == 2 && total_page == 5) {
+                    pages = [1, 2, 3, 4, total_page];
+                } else if (current_page == 3 && total_page == 5) {
+                    pages = [1, 2, 3, 4, total_page];
+                } else if (current_page == 3 && total_page > 5) {
+                    pages = [1, 2, 3, 4, 0, total_page];
+                } else if (current_page == (total_page - 2)) {
+                    pages = [1, 0, current_page - 1, current_page, total_page];
+                } else if (current_page == (total_page - 1)) {
+                    pages = [1, 0, current_page - 1, current_page, total_page];
+                } else if (current_page == total_page) {
+                    pages = [1, 0, current_page - 1, current_page];
+                } else {
+                    pages = [1, 0, current_page - 1, current_page, current_page + 1, 0, total_page];
+                }
+            } else {
+                for (let index = 0; index < total_page; index++) {
+                    pages.push(index+1);
+                }
+            }      
+            pages.forEach(function(item, index){
+                pagination += `<li class="page-item ${item == current_page ? 'active' : ''} ${!item ? 'disabled' : ''}">
+                    <a class="page-link " data-page="${item}">
+                        ${item}
+                    </a>
+                </li>`;
+            }); 
+            
+            pagination += `<li class="page-item next-page ${current_page == total_page ? 'disabeld' : ''}">
+                    <a class="page-link" data-page="${current_page - 1}">Next</a>
+                </li>
+                <li class="page-item last-page">
+                    <a class="page-link" data-page="${total_page}">Last</a>
+                </li>`;
+            $('#tinymceMedia .pagination').html(pagination);
+
+            var result = `Showing ${(current_page - 1) * 18 + 1} to ${current_page * 18 > total_media ? total_media : (current_page * 18) } of ${total_media} entries`;
+            $('#tinymceMedia .pagination-infor').html(result);
         }
 
         function loadEventTinymceMedia()
@@ -169,8 +221,14 @@ define('MEDIA_TINYMCE', 'on');
                 
                 $('#select-media-tinymce').removeAttr('disabled');
             });
+
+            $('#tinymceMedia .pagination .page-link').on('click', function() {
+                var page = $(this).data('page');
+                page_tinymce = parseInt(page);
+                loadTinymceMedia();
+            })
         }
-        var page_media = 1;
+        var page_tinymce = 1;
 
         $(document).ready(function() {
             $('#tinymce-libraries-tab').on('show.bs.tab', function(){
@@ -179,11 +237,7 @@ define('MEDIA_TINYMCE', 'on');
             $('#tinymce-libraries-tab').on('hide.bs.tab', function(){
                 $('#tinymceMedia .modal-footer').addClass('d-none');
             });
-            $('#tinymce-loadmore-media').on('click', function(e){
-                e.preventDefault();
-                page_media++;
-                loadTinymceMedia();
-            })
+            
             $('#select-media-tinymce').on('click', function(){
                 var images = [];
                 $('#tinymceMedia .item-media.active').each(function(index){

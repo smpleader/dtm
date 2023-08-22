@@ -113,7 +113,6 @@
                             </div>`;
                         });
                         $('#media-libraries .list').html(content);
-                        $('#mediaTabContent').scrollTo(0);
 
                         loadPaginationMedia(result.total_page, page_media, result.total_media);
                     } else {
@@ -180,7 +179,7 @@
                 </li>`;
             $('#mediaPopup .pagination').html(pagination);
 
-            var result = `Showing ${(current_page - 1) * 20 + 1} to ${current_page * 20 > total_media ? total_media : (current_page * 20) } of ${total_media} entries`;
+            var result = `Showing ${(current_page - 1) * 18 + 1} to ${current_page * 18 > total_media ? total_media : (current_page * 18) } of ${total_media} entries`;
             $('#mediaPopup .pagination-infor').html(result);
         }
 
@@ -199,7 +198,6 @@
             $('#mediaPopup .pagination .page-link').on('click', function() {
                 var page = $(this).data('page');
                 page_media = parseInt(page);
-                console.log(page_media);
                 loadMedia();
             })
         }
