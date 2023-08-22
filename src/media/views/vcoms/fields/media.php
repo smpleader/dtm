@@ -166,7 +166,7 @@
             pages.forEach(function(item, index){
                 pagination += `<li class="page-item ${item == current_page ? 'active' : ''} ${!item ? 'disabled' : ''}">
                     <a class="page-link " data-page="${item}">
-                        ${item}
+                        ${item > 0 ? item : '...'}
                     </a>
                 </li>`;
             }); 
