@@ -150,6 +150,12 @@
         var page_media = 1;
 
         $(document).ready(function() {
+            $('#libraries-tab').on('show.bs.tab', function(){
+                $('#mediaPopup .modal-footer').removeClass('d-none');
+            });
+            $('#libraries-tab').on('hide.bs.tab', function(){
+                $('#mediaPopup .modal-footer').addClass('d-none');
+            });
             $('#loadmore-media').on('click', function(e){
                 e.preventDefault();
                 page_media++;

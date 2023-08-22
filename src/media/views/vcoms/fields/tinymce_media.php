@@ -173,6 +173,12 @@ define('MEDIA_TINYMCE', 'on');
         var page_media = 1;
 
         $(document).ready(function() {
+            $('#tinymce-libraries-tab').on('show.bs.tab', function(){
+                $('#tinymceMedia .modal-footer').removeClass('d-none');
+            });
+            $('#tinymce-libraries-tab').on('hide.bs.tab', function(){
+                $('#tinymceMedia .modal-footer').addClass('d-none');
+            });
             $('#tinymce-loadmore-media').on('click', function(e){
                 e.preventDefault();
                 page_media++;
