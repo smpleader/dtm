@@ -15,7 +15,6 @@ class Menu
 
         $allow_user = $permission ? $permission->checkPermission(['user_manager', 'user_read']) : true;
         $allow_usergroup = $permission ? $permission->checkPermission(['usergroup_manager', 'usergroup_read']) : true;
-        $allow_profile = $permission ? $permission->checkPermission(['user_manager', 'user_profile']) : true;
         
         $menu_user = [];
         if ($allow_user || $allow_usergroup)
@@ -55,16 +54,13 @@ class Menu
             $menu[] = $menu_user;
         }
 
-        if ($allow_profile)
-        {
-            $active = strpos($path_current, 'profile') !== false ? 'active' : '';
-            $menu[] = [
-                'link' => $router->url('profile'),
-                'title' => 'Profile', 
-                'icon' => '<i class="fa-solid fa-user"></i>', 
-                'class' => $active,
-            ];
-        }
+        $active = strpos($path_current, 'profile') !== false ? 'active' : '';
+        $menu[] = [
+            'link' => $router->url('profile'),
+            'title' => 'Profile', 
+            'icon' => '<i class="fa-solid fa-user"></i>', 
+            'class' => $active,
+        ];
         
         $menu[] = [
             'link' => $router->url('logout'),

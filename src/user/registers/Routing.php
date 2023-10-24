@@ -37,10 +37,6 @@ class Routing
                     'get' => 'user.user.profile',
                     'post' => 'user.user.saveProfile',
                 ],
-                'permission' => [
-                    'get' => ['user_manager', 'user_profile'],
-                    'post' => ['user_manager', 'user_profile'],
-                ],
             ],
             'user' => [
                 'fnc' => [
