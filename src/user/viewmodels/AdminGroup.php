@@ -84,8 +84,8 @@ class AdminGroup extends ViewModel
             'access' => ['option',
                 'showLabel' => false,
                 'placeholder' => 'Select Right Access',
-                'type' => 'multiselect',
-                'formClass' => 'form-select',
+                'type' => 'checkbox',
+                'formClass' => 'checkbox-col-3',
                 'options' => $option
             ],
             'status' => ['option',
