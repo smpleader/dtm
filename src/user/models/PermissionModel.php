@@ -22,6 +22,19 @@ class PermissionModel extends Base
         return $this->get('access');
     }
 
+    public function getAccessGroup()
+    {
+        $access = [];
+        $result = $this->app->plgLoad('permission', 'registerAccess', null, true);
+        
+        foreach($result as $key => $item)
+        {
+            $access[$key] = $item['result'];
+        }
+
+        return $access;
+    }
+
     public function checkPermission($access = null)
     {
         if (!$access)

@@ -55,17 +55,22 @@ class AdminGroup extends ViewModel
 
     public function getFormFields($id)
     {
-        $key_access = [];
+        $access = [];
         if ($this->container->exists('PermissionModel'))
         {
-            $key_access = $this->container->get('PermissionModel')->getAccess();
+            $access = $this->container->get('PermissionModel')->getAccessGroup();
         }
+
+        uasort($access, function($a, $b) {return
+            (count($a) < count($b)) ? 1 : 0;}
+        );
+        
         $option = [];
-        foreach ($key_access as $key)
+        foreach ($access as $key => $value)
         {
             $option[] = [
                 'text' => $key,
-                'value' => $key,
+                'value' => $value,
             ];
         }
 
@@ -84,8 +89,9 @@ class AdminGroup extends ViewModel
             'access' => ['option',
                 'showLabel' => false,
                 'placeholder' => 'Select Right Access',
-                'type' => 'multiselect',
-                'formClass' => 'form-select',
+                'type' => 'checkbox_group',
+                'layout' => 'user::fields.checkbox_group',
+                'formClass' => 'checkbox-col-3',
                 'options' => $option
             ],
             'status' => ['option',
