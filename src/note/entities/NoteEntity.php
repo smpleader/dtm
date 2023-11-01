@@ -17,7 +17,7 @@ class NoteEntity extends Entity
 {
     use EntityHasStatus;
 
-    protected $table = '#__note';
+    protected $table = '#__notes';
     protected $pk = 'id';
 
     public function getFields()
