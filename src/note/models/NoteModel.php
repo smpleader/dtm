@@ -44,16 +44,20 @@ class NoteModel extends Base
         return $try;
     }
 
-    public function searchAjax($search, $ignore)
+    public function searchAjax($search, $ignore, $type)
     {
         $where = [];
         if ($search)
         {
-            $where[] = "(`data` LIKE '%" . $search . "%')";
             $where[] = "(`notice` LIKE '%" . $search . "%')";
             $where[] = "(`title` LIKE '%" . $search . "%')";
 
             $where = ['('. implode(" OR ", $where). ')'];
+        }
+
+        if ($type)
+        {
+            $where[] = "(`type` LIKE '" . $type . "')";
         }
 
         if ($ignore)
