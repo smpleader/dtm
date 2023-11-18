@@ -48,6 +48,11 @@ class AdminNotes extends ViewModel
 
         $page = $this->state('page', 1, 'int', 'get', 'note.page');
         if ($page <= 0) $page = 1;
+        $method = $this->request->getMethod();
+        if ($method == 'POST')
+        {
+            $page = 1;
+        }
 
         $where = [];
         $title = 'Note Manager';
