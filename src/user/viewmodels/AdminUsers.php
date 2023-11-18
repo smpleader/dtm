@@ -47,6 +47,7 @@ class AdminUsers extends ViewModel
         if ($method == 'POST')
         {
             $page = 1;
+            $this->session->set('user.page', 1);
         }
         
         $where = [];

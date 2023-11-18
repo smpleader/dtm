@@ -49,6 +49,7 @@ class AdminGroups extends ViewModel
         if ($method == 'POST')
         {
             $page = 1;
+            $this->session->set('usergroup.page', 1);
         }
         
         $where = [];

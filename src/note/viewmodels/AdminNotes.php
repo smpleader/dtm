@@ -46,12 +46,13 @@ class AdminNotes extends ViewModel
         $search = trim($filter->getField('search')->value);
         $mode = $this->app->get('filter', '');
 
-        $page = $this->state('page', 1, 'int', 'get', 'note.page');
+        $page = $this->state('page', 1, 'int', 'get', $mode ? $mode.'.page' : 'note.page');
         if ($page <= 0) $page = 1;
         $method = $this->request->getMethod();
         if ($method == 'POST')
         {
             $page = 1;
+            $this->session->set($mode ? $mode.'.page' : 'note.page', 1);
         }
 
         $where = [];

@@ -47,6 +47,7 @@ class AdminTags extends ViewModel
         if ($method == 'POST')
         {
             $page = 1;
+            $this->session->set('tag.page', 1);
         }
         
         $where = [];
