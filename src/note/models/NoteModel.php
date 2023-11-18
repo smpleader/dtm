@@ -64,6 +64,7 @@ class NoteModel extends Base
         {
             $where[] = 'id NOT IN('.$ignore.')';
         }
+        $where[] = '(status NOT Like -1)';
 
         $result = $this->NoteEntity->list(0, 0, $where, '`title` asc');
         $result = $result ? $result : [];
