@@ -45,7 +45,12 @@ class AdminGroups extends ViewModel
         $page = $this->state('page', 1, 'int', 'get', 'usergroup.page');
 
         if ($page <= 0) $page = 1;
-
+        $method = $this->request->getMethod();
+        if ($method == 'POST')
+        {
+            $page = 1;
+        }
+        
         $where = [];
         if( !empty($search) )
         {
