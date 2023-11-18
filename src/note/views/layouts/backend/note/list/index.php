@@ -48,7 +48,7 @@
 </div>
 
 <div class="modal fade" id="noteNewModal" aria-labelledby="noteNewModalTitle" role="dialog">
-	<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-dialog modal-dialog-centered modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="noteNewModalTitle">Create Note</h4>
