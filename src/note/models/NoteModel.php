@@ -37,7 +37,32 @@ class NoteModel extends Base
     {
         if (!$id)
         {
+            $this->error = 'Invalid Id Note';
             return false;
+        }
+
+        $note = $this->NoteEntity->findByPK($id);
+        if (!$note)
+        {
+            $this->error = 'Invalid Note';
+            return false;
+        }
+
+        $type = $this->getTypes();
+        if (isset($type[$note['type']]['model']) && $type[$note['type']]['model'])
+        {
+            $container = $this->app->getContainer();
+            $model = $type[$note['type']]['model'];
+
+            if ($container->exists($model) && method_exists($this->$model, 'remove'))
+            {
+                $try = $this->$model->remove($id);
+                if (!$try)
+                {
+                    $this->error = $this->$model->getError();
+                    return false;
+                }
+            }
         }
 
         $try = $this->NoteEntity->remove($id);

@@ -27,6 +27,7 @@ class note extends ControllerMVVM
         $ids = $this->validateID();
 
         $count = 0;
+        $error_msg = '';
         if( is_array($ids))
         {
             foreach($ids as $id)
@@ -36,6 +37,10 @@ class note extends ControllerMVVM
                 {
                     $count++;
                 }
+                else
+                {
+                    $error_msg = $this->NoteModel->getError();
+                }
             }
         }
         elseif( is_numeric($ids) )
@@ -44,10 +49,14 @@ class note extends ControllerMVVM
             {
                 $count++;
             }
+            else
+            {
+                $error_msg = $this->NoteModel->getError();
+            }
         }
 
 
-        $this->session->set('flashMsg', $count.' deleted record(s)');
+        $this->session->set('flashMsg', $error_msg ? $error_msg : $count.' deleted record(s)');
         return $this->app->redirect(
             $this->router->url('my-notes'),
         );
