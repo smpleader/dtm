@@ -205,14 +205,16 @@ class AdminNotes extends ViewModel
     protected $_filter;
     public function filter()
     {
+        $mode = $this->app->get('filter', '');
+        $mode = $mode ? $mode : 'notes';
         if (null === $this->_filter) :
             $data = [
-                'search' => $this->state('search', '', '', 'post', 'note.search'),
-                'tags' => $this->state('tags', [], 'array', 'post', 'note.tags'),
-                'note_type' => $this->state('note_type', [], 'array', 'post', 'note.note_type'),
-                'author' => $this->state('author', [], 'array', 'post', 'note.author'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'note.limit'),
-                'sort' => $this->state('sort', '', '', 'post', 'note.sort')
+                'search' => $this->state('search', '', '', 'post', $mode. '.search'),
+                'tags' => $this->state('tags', [], 'array', 'post', $mode. '.tags'),
+                'note_type' => $this->state('note_type', [], 'array', 'post', $mode. '.note_type'),
+                'author' => $this->state('author', [], 'array', 'post', $mode. '.author'),
+                'limit' => $this->state('limit', 10, 'int', 'post', $mode. '.limit'),
+                'sort' => $this->state('sort', '', '', 'post', $mode. '.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);
 
