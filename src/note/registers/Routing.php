@@ -44,6 +44,7 @@ class Routing
                 'fnc' => [
                     'get' => 'note.note.trash',
                     'post' => 'note.note.trash',
+                    'put' => 'note.note.restore',
                 ],
                 'filter' => 'my-note',
             ],
