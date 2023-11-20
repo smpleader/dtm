@@ -120,7 +120,7 @@ class NoteEntity extends Entity
         $row = [];
         $data = (array) $data;
         $fields = $this->getFields();
-        $skips = isset($data['id']) && $data['id'] ? ['created_at', 'created_by', 'locked_at', 'locked_by'] : ['id'];
+        $skips = isset($data['id']) && $data['id'] ? ['created_at', 'created_by', 'locked_at', 'locked_by', 'deleted_at'] : ['id'];
         foreach ($fields as $key => $field)
         {
             if (!in_array($key, $skips))

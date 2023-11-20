@@ -4,6 +4,15 @@
             <div class="pe-2 pb-2">
                 <div class="row">
                     <div class="col-auto">
+                        <a href="<?php echo $this->link_back ?>" data-bs-placement="top" title="Back" data-bs-toggle="tooltip" class="btn border border-1" type="button">
+                            Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="pe-2 pb-2">
+                <div class="row">
+                    <div class="col-auto">
                         <button id="undo_selected" data-bs-placement="top" title="Restore Note" data-bs-toggle="tooltip" class="btn border border-1" type="button">
                             <i class="fa-solid fa-rotate-left"></i>
                         </button>
