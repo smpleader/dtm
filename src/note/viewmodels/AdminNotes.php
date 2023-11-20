@@ -129,7 +129,7 @@ class AdminNotes extends ViewModel
             $where[] = '`type` IN ('. $note_type . ')';
         }
 
-        $where[] = 'status <> -1';
+        $where[] = 'status > -1';
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'title asc';
         $result = $this->NoteEntity->list($start, $limit, $where, $sort);
