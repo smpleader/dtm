@@ -110,4 +110,11 @@ class note extends ControllerMVVM
         $this->set('message' , '');
         return;
     }
+
+    public function trash()
+    {
+        $this->app->set('page', 'backend');
+        $this->app->set('format', 'html');
+        $this->app->set('layout', 'backend.note.trash');
+    }
 }
