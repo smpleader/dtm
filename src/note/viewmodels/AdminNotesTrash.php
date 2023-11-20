@@ -46,7 +46,7 @@ class AdminNotesTrash extends ViewModel
         $search = trim($filter->getField('search')->value);
         $mode = $this->app->get('filter', '');
 
-        $page = $this->state('page', 1, 'int', 'get', $mode ? $mode.'.page' : 'note.page');
+        $page = $this->state('page', 1, 'int', 'get', $mode ? $mode.'_trash.page' : 'note_trash.page');
         if ($page <= 0) $page = 1;
         $method = $this->request->getMethod();
         if ($method == 'POST')
@@ -200,12 +200,12 @@ class AdminNotesTrash extends ViewModel
         $mode = $mode ? $mode : 'notes';
         if (null === $this->_filter) :
             $data = [
-                'search' => $this->state('search', '', '', 'post', $mode. '.search'),
-                'tags' => $this->state('tags', [], 'array', 'post', $mode. '.tags'),
-                'note_type' => $this->state('note_type', [], 'array', 'post', $mode. '.note_type'),
-                'author' => $this->state('author', [], 'array', 'post', $mode. '.author'),
-                'limit' => $this->state('limit', 10, 'int', 'post', $mode. '.limit'),
-                'sort' => $this->state('sort', '', '', 'post', $mode. '.sort')
+                'search' => $this->state('search', '', '', 'post', $mode. '_trash.search'),
+                'tags' => $this->state('tags', [], 'array', 'post', $mode. '_trash.tags'),
+                'note_type' => $this->state('note_type', [], 'array', 'post', $mode. '_trash.note_type'),
+                'author' => $this->state('author', [], 'array', 'post', $mode. '_trash.author'),
+                'limit' => $this->state('limit', 10, 'int', 'post', $mode. '_trash.limit'),
+                'sort' => $this->state('sort', '', '', 'post', $mode. '_trash.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);
 

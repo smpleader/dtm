@@ -30,6 +30,17 @@
                 </div>
             </div>
             <?php endif; ?>
+            <?php if((in_array('note_manager', $this->asset) || in_array('note_create', $this->asset) || $this->mode == 'my-note') && ($this->mode != 'share-note')) : ?>
+            <div class="pe-2 pb-2">
+                <div class="row">
+                    <div class="col-auto">
+                        <a href="<?php echo $this->link_list .'/trash' ?>" data-bs-placement="top" title="Trash Note" data-bs-toggle="tooltip" class="btn border border-1" type="button">
+                            <i class="fa-solid fa-recycle"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
             <div class="pe-2 pb-2">
                 <?php $this->ui->field('search');  ?>
             </div>
