@@ -23,9 +23,7 @@
 											<th>Tags</th>
 											<th>Author</th>
 											<th>Created At</th>
-											<?php if($this->mode != 'share-note'): ?>
-											<th>Action</th>
-											<?php endif; ?>
+											<th>Deleted At</th>
 										</tr>
 									</thead>
 									<tbody>

@@ -1,6 +1,15 @@
 <form id="filter_form" class="row pe-0 pb-2" action="<?php echo $this->link_list ?>" method="POST">
     <div class="col-lg-10 col-sm-12">
         <div class="input-group input-group-navbar">
+            <div class="pe-2 pb-2">
+                <div class="row">
+                    <div class="col-auto">
+                        <button id="undo_selected" data-bs-placement="top" title="Restore Note" data-bs-toggle="tooltip" class="btn border border-1" type="button">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <?php if((in_array('note_manager', $this->asset) && $this->mode != 'my-note')) : ?>
             <div class="pe-2 pb-2">
                 <div class="row">
