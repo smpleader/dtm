@@ -75,7 +75,7 @@ class NoteEntity extends Entity
                 ],
                 'deleted_at' => [
                     'type' => 'datetime',
-                    'default' => 'NOW()',
+                    'null' => 'YES',
                 ],
                 'notice' => [
                     'type' => 'text',
