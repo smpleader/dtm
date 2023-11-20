@@ -43,7 +43,13 @@ class AdminTags extends ViewModel
         $search = trim($filter->getField('search')->value);
         $page = $this->state('page', 1, 'int', 'get', 'tag.page');
         if ($page <= 0) $page = 1;
-
+        $method = $this->request->getMethod();
+        if ($method == 'POST')
+        {
+            $page = 1;
+            $this->session->set('tag.page', 1);
+        }
+        
         $where = [];
 
         if (!empty($search)) {

@@ -20,12 +20,31 @@ class Routing
                     'get' => ['note_manager'],
                 ],
             ],
+            'notes/trash' => [
+                'fnc' => [
+                    'get' => 'note.note.trash',
+                    'post' => 'note.note.trash',
+                    'put' => 'note.note.restore',
+                    'delete' => 'note.note.hardDelete',
+                ],
+                'permission' => [
+                    'get' => ['note_manager'],
+                ],
+            ],
             'my-notes' => [
                 'fnc' => [
                     'get' => 'note.note.list',
                     'post' => 'note.note.list',
                     'put' => 'note.note.update',
                     'delete' => 'note.note.delete',
+                ],
+                'filter' => 'my-note',
+            ],
+            'my-notes/trash' => [
+                'fnc' => [
+                    'get' => 'note.note.trash',
+                    'post' => 'note.note.trash',
+                    'put' => 'note.note.restore',
                 ],
                 'filter' => 'my-note',
             ],

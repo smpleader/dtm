@@ -42,7 +42,7 @@ class Menu
             $menu[0]['childs'][] = [
                 'link' => $router->url('notes'),
                 'title' => 'Note Manager', 
-                'class' => strpos($path_current, 'notes') !== false && trim($path_current) == '/notes' ? 'active' : '',
+                'class' => strpos($path_current, 'notes') !== false && (trim($path_current) == '/notes' || trim($path_current) == '/notes/trash') ? 'active' : '',
             ];
         }
 

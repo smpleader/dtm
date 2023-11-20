@@ -33,11 +33,44 @@ class NoteModel extends Base
         return $noteTypes;
     }
 
-    public function remove($id)
+    public function remove($id, $hard_delete = false  )
     {
         if (!$id)
         {
+            $this->error = 'Invalid Id Note';
             return false;
+        }
+
+        $note = $this->NoteEntity->findByPK($id);
+        if (!$note)
+        {
+            $this->error = 'Invalid Note';
+            return false;
+        }
+
+        $type = $this->getTypes();
+        if (isset($type[$note['type']]['model']) && $type[$note['type']]['model'])
+        {
+            $container = $this->app->getContainer();
+            $model = $type[$note['type']]['model'];
+
+            if ($container->exists($model) && method_exists($this->$model, 'remove'))
+            {
+                $try = $this->$model->remove($id, $hard_delete);
+                if (!$try)
+                {
+                    $this->error = $this->$model->getError();
+                    return false;
+                }
+            }
+        }
+
+        if(!$hard_delete)
+        {
+            $note['status'] = -2;
+            $note['deleted_at'] = date('Y-m-d H:i:s');
+            $try = $this->NoteEntity->update($note);
+            return $try;
         }
 
         $try = $this->NoteEntity->remove($id);
@@ -64,9 +97,49 @@ class NoteModel extends Base
         {
             $where[] = 'id NOT IN('.$ignore.')';
         }
+        $where[] = '(status > -1)';
 
         $result = $this->NoteEntity->list(0, 0, $where, '`title` asc');
         $result = $result ? $result : [];
         return $result;
     }
+
+    public function restore($id)
+    {
+        if (!$id)
+        {
+            $this->error = 'Invalid Id Note';
+            return false;
+        }
+
+        $note = $this->NoteEntity->findByPK($id);
+        if (!$note)
+        {
+            $this->error = 'Invalid Note';
+            return false;
+        }
+
+        $type = $this->getTypes();
+        if (isset($type[$note['type']]['model']) && $type[$note['type']]['model'])
+        {
+            $container = $this->app->getContainer();
+            $model = $type[$note['type']]['model'];
+
+            if ($container->exists($model) && method_exists($this->$model, 'restore'))
+            {
+                $try = $this->$model->restore($id);
+                if (!$try)
+                {
+                    $this->error = $this->$model->getError();
+                    return false;
+                }
+            }
+        }
+
+        $note['status'] = $note['type'] != 'alias' ? 0 : -1;
+        $note['deleted_at'] = null;
+        $try = $this->NoteEntity->update($note);
+        return $try;
+    }
+
 }

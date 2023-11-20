@@ -43,7 +43,13 @@ class AdminUsers extends ViewModel
         $filter_group = $filter->getField('group')->value;
         $page = $this->state('page', 1, 'int', 'get', 'user.page');
         if ($page <= 0) $page = 1;
-
+        $method = $this->request->getMethod();
+        if ($method == 'POST')
+        {
+            $page = 1;
+            $this->session->set('user.page', 1);
+        }
+        
         $where = [];
         
 

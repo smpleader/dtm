@@ -67,6 +67,11 @@ class NoteDispatch extends Base
             // TODO: use NoteEntity
             $notetype = $row['type']; 
 
+            if ($row['status'] == -2)
+            {
+                $this->app->raiseError('Invalid Request');
+            }
+
             // check permission
             $asset = $this->PermissionModel->getAccessByUser();
             $permission = $this->PermissionShareModel->checkPermission($row['share_user_group']);

@@ -1,42 +1,31 @@
 <form id="filter_form" class="row pe-0 pb-2" action="<?php echo $this->link_list ?>" method="POST">
     <div class="col-lg-10 col-sm-12">
         <div class="input-group input-group-navbar">
-            <?php if(in_array('note_manager', $this->asset) || in_array('note_create', $this->asset) || $this->mode == 'my-note') : ?>
             <div class="pe-2 pb-2">
                 <div class="row">
                     <div class="col-auto">
-                        <?php if($this->mode != 'share-note'): ?>
-                        <a href="#" class="align-middle btn border border-1"
-                            type="button"
-                            data-bs-placement="top" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#noteNewModal"
-                        >
-                            <i class="fa-solid fa-plus"></i>
+                        <a href="<?php echo $this->link_back ?>" data-bs-placement="top" title="Back" data-bs-toggle="tooltip" class="btn border border-1" type="button">
+                            Back
                         </a>
-                        <?php endif; ?>
                     </div>
                 </div>
             </div>
-            <?php endif; ?>
-            <?php if((in_array('note_manager', $this->asset) || in_array('note_create', $this->asset) || $this->mode == 'my-note') && ($this->mode != 'share-note')) : ?>
             <div class="pe-2 pb-2">
                 <div class="row">
                     <div class="col-auto">
-                        <button id="delete_selected" data-bs-placement="top" title="Delete Selected" data-bs-toggle="tooltip" class="btn border border-1" type="button">
-                            <i class="fa-solid fa-trash"></i>
+                        <button id="undo_selected" data-bs-placement="top" title="Restore Note" data-bs-toggle="tooltip" class="btn border border-1" type="button">
+                            <i class="fa-solid fa-rotate-left"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            <?php endif; ?>
-            <?php if((in_array('note_manager', $this->asset) || in_array('note_create', $this->asset) || $this->mode == 'my-note') && ($this->mode != 'share-note')) : ?>
+            <?php if((in_array('note_manager', $this->asset) && $this->mode != 'my-note')) : ?>
             <div class="pe-2 pb-2">
                 <div class="row">
                     <div class="col-auto">
-                        <a href="<?php echo $this->link_list .'/trash' ?>" data-bs-placement="top" title="Trash Note" data-bs-toggle="tooltip" class="btn border border-1" type="button">
-                            <i class="fa-solid fa-recycle"></i>
-                        </a>
+                        <button id="delete_selected" data-bs-placement="top" title="Hard Delete" data-bs-toggle="tooltip" class="btn border border-1" type="button">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
                     </div>
                 </div>
             </div>
