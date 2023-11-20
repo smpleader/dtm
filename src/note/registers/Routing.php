@@ -24,7 +24,7 @@ class Routing
                 'fnc' => [
                     'get' => 'note.note.trash',
                     'post' => 'note.note.trash',
-                    'delete' => 'note.note.delete',
+                    'delete' => 'note.note.hardDelete',
                 ],
                 'permission' => [
                     'get' => ['note_manager'],
@@ -43,7 +43,6 @@ class Routing
                 'fnc' => [
                     'get' => 'note.note.trash',
                     'post' => 'note.note.trash',
-                    'delete' => 'note.note.delete',
                 ],
                 'filter' => 'my-note',
             ],

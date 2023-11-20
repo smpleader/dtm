@@ -25,6 +25,8 @@ class note extends ControllerMVVM
     public function delete()
     {
         $ids = $this->validateID();
+        $mode = $this->app->get('filter');
+        $link = $mode == 'my-note' ? 'my-notes' : 'notes';
 
         $count = 0;
         $error_msg = '';
@@ -58,7 +60,7 @@ class note extends ControllerMVVM
 
         $this->session->set('flashMsg', $error_msg ? $error_msg : $count.' deleted record(s)');
         return $this->app->redirect(
-            $this->router->url('my-notes'),
+            $this->router->url($link),
         );
     }
 
@@ -116,5 +118,44 @@ class note extends ControllerMVVM
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
         $this->app->set('layout', 'backend.note.trash');
+    }
+
+    public function hardDelete()
+    {
+        $ids = $this->validateID();
+        $count = 0;
+        $error_msg = '';
+        if( is_array($ids))
+        {
+            foreach($ids as $id)
+            {
+                //Delete file in source
+                if( $this->NoteModel->remove( $id, true ) )
+                {
+                    $count++;
+                }
+                else
+                {
+                    $error_msg = $this->NoteModel->getError();
+                }
+            }
+        }
+        elseif( is_numeric($ids) )
+        {
+            if( $this->NoteModel->remove($ids, true ) )
+            {
+                $count++;
+            }
+            else
+            {
+                $error_msg = $this->NoteModel->getError();
+            }
+        }
+
+
+        $this->session->set('flashMsg', $error_msg ? $error_msg : $count.' deleted record(s)');
+        return $this->app->redirect(
+            $this->router->url('notes/trash'),
+        );
     }
 }
