@@ -73,6 +73,10 @@ class NoteEntity extends Entity
                     'type' => 'int',
                     'option' => 'unsigned',
                 ],
+                'deleted_at' => [
+                    'type' => 'datetime',
+                    'default' => 'NOW()',
+                ],
                 'notice' => [
                     'type' => 'text',
                     'default' => ''
