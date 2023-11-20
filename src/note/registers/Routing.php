@@ -24,6 +24,7 @@ class Routing
                 'fnc' => [
                     'get' => 'note.note.trash',
                     'post' => 'note.note.trash',
+                    'put' => 'note.note.restore',
                     'delete' => 'note.note.hardDelete',
                 ],
                 'permission' => [

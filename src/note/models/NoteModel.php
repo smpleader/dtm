@@ -103,4 +103,43 @@ class NoteModel extends Base
         $result = $result ? $result : [];
         return $result;
     }
+
+    public function restore($id)
+    {
+        if (!$id)
+        {
+            $this->error = 'Invalid Id Note';
+            return false;
+        }
+
+        $note = $this->NoteEntity->findByPK($id);
+        if (!$note)
+        {
+            $this->error = 'Invalid Note';
+            return false;
+        }
+
+        $type = $this->getTypes();
+        if (isset($type[$note['type']]['model']) && $type[$note['type']]['model'])
+        {
+            $container = $this->app->getContainer();
+            $model = $type[$note['type']]['model'];
+
+            if ($container->exists($model) && method_exists($this->$model, 'restore'))
+            {
+                $try = $this->$model->restore($id);
+                if (!$try)
+                {
+                    $this->error = $this->$model->getError();
+                    return false;
+                }
+            }
+        }
+
+        $note['status'] = $note['type'] != 'alias' ? 0 : -1;
+        $note['deleted_at'] = null;
+        $try = $this->NoteEntity->update($note);
+        return $try;
+    }
+
 }

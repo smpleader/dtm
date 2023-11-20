@@ -158,4 +158,46 @@ class note extends ControllerMVVM
             $this->router->url('notes/trash'),
         );
     }
+
+    public function restore()
+    {
+        $ids = $this->validateID();
+        $mode = $this->app->get('filter');
+        $link = $mode == 'my-note' ? 'my-notes/trash' : 'notes/trash';
+        $count = 0;
+        $error_msg = '';
+        if( is_array($ids))
+        {
+            foreach($ids as $id)
+            {
+                //Delete file in source
+                if( $this->NoteModel->restore( $id) )
+                {
+                    $count++;
+                }
+                else
+                {
+                    $error_msg = $this->NoteModel->getError();
+                    break;
+                }
+            }
+        }
+        elseif( is_numeric($ids) )
+        {
+            if( $this->NoteModel->restore($ids) )
+            {
+                $count++;
+            }
+            else
+            {
+                $error_msg = $this->NoteModel->getError();
+            }
+        }
+
+
+        $this->session->set('flashMsg', $error_msg ? $error_msg : $count.' restore record(s)');
+        return $this->app->redirect(
+            $this->router->url($link),
+        );
+    }
 }

@@ -46,6 +46,27 @@
                 return false;
             }
         });
+        $('#undo_selected').click(function(){
+            var count = 0;
+            $('input[name="ids[]"]:checked').each(function() {
+                count++;
+            });
+            if (!count)
+            {
+                alert('Please select the record before restore!')
+                return false;
+            }
+            var result = confirm("You are going to restore " + count + " record(s). Are you sure ?");
+            if (result) {
+                $('#formList input[name=_method]').val('PUT');
+                $('#formList').submit();
+            }
+            else
+            {
+                return false;
+            }
+        });
+
         $('#sort').on("change", function (e) {
             $('#filter_form').submit()
         });
