@@ -39,6 +39,7 @@
             }
             var result = confirm("You are going to delete " + count + " record(s). Are you sure ?");
             if (result) {
+                $('#formList').attr('action', '<?php echo $this->link_mynote;?>');
                 $('#formList').submit();
             }
             else

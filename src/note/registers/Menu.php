@@ -14,7 +14,7 @@ class Menu
         $allow = $permission ? $permission->checkPermission(['note_manager']) : true;
         $path_current = $router->get('actualPath');
 
-        $active = strpos($path_current, 'note') !== false ? 'active' : '';
+        $active = strpos($path_current, 'note') !== false || strpos($path_current, 'my-filter/my-shares') !== false ? 'active' : '';
         $menu = [
             [
                 'link' => '',
@@ -26,15 +26,15 @@ class Menu
         ];
 
         $menu[0]['childs'][] = [
-            'link' => $router->url('my-notes'),
+            'link' => $router->url('my-filter/my-notes'),
             'title' => 'My Note', 
-            'class' => strpos($path_current, 'my-notes') !== false ? 'active' : '',
+            'class' => strpos($path_current, 'my-filter/my-notes') !== false ? 'active' : '',
         ];
 
         $menu[0]['childs'][] = [
-            'link' => $router->url('share-notes'),
-            'title' => 'Shared Note', 
-            'class' => strpos($path_current, 'share-notes') !== false ? 'active' : '',
+            'link' => $router->url('my-filter/my-shares'),
+            'title' => 'My Shares', 
+            'class' => strpos($path_current, 'my-filter/my-shares') !== false ? 'active' : '',
         ];
        
         if($allow)

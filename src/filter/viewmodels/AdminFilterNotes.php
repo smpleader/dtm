@@ -51,6 +51,7 @@ class AdminFilterNotes extends ViewModel
             $filter = [
                 'id' => $filter_id,
                 'name' => $filter_id == -1 ? 'My Notes' : 'My Shares',
+                'filter_link' => $filter_id == -1 ? 'my-notes' : 'my-shares',
             ];
             $where = array_merge($where, $this->FilterModel->getFilterWhere($filter));
         }
@@ -108,7 +109,7 @@ class AdminFilterNotes extends ViewModel
             $where[] = '`type` IN ('. $note_type . ')';
         }
 
-        $where[] = 'status <> -1';
+        $where[] = 'status > -1';
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'title asc';
         $result = $this->NoteEntity->list($start, $limit, $where, $sort);
@@ -166,7 +167,9 @@ class AdminFilterNotes extends ViewModel
             'sort' => $sort,
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
-            'link_list' =>  $this->router->url('my-filter/'. urlencode(strtolower($filter['name']))),
+            'link_list' =>  $this->router->url('my-filter/'. strtolower($filter['filter_link'])),
+            'link_note_trash' => $this->router->url('my-notes/trash'),
+            'link_mynote' => $this->router->url('my-notes'),
             'link_tag' => $this->router->url('tag/search'),
             'title_page' => $title,
             'link_form' => $this->router->url('note/edit'),

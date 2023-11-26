@@ -175,7 +175,7 @@ class AdminNotesTrash extends ViewModel
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
             'link_list' =>  $this->router->url( $mode == 'my-note' ? 'my-notes/trash' : 'notes/trash') ,
-            'link_back' =>  $this->router->url( $mode == 'my-note' ? 'my-notes' : 'notes') ,
+            'link_back' =>  $this->router->url( $mode == 'my-note' ? 'my-filter/my-notes' : 'notes') ,
             'link_tag' => $this->router->url('tag/search'),
             'title_page' => $title,
             'link_form' => $this->router->url('note/edit'),

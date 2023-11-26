@@ -26,7 +26,7 @@ class note extends ControllerMVVM
     {
         $ids = $this->validateID();
         $mode = $this->app->get('filter');
-        $link = $mode == 'my-note' ? 'my-notes' : 'notes';
+        $link = $mode == 'my-note' ? 'my-filter/my-notes' : 'notes';
 
         $count = 0;
         $error_msg = '';
