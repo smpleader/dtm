@@ -23,6 +23,9 @@
 											<th>Tags</th>
 											<th>Author</th>
 											<th>Created At</th>
+    										<?php if($this->filter_id == -1): ?>
+											<th>Action</th>
+											<?php endif;?>
 										</tr>
 									</thead>
 									<tbody>

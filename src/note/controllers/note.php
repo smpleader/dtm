@@ -17,6 +17,7 @@ class note extends ControllerMVVM
 {
     public function list()
     {
+        $this->session->set('link_back_note', 'notes');
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
         $this->app->set('layout', 'backend.note.list');
@@ -163,7 +164,7 @@ class note extends ControllerMVVM
     {
         $ids = $this->validateID();
         $mode = $this->app->get('filter');
-        $link = $mode == 'my-note' ? 'my-notes/trash' : 'notes/trash';
+        $link = $mode == 'my-note' ? 'my-filter/my-notes' : 'notes/trash';
         $count = 0;
         $error_msg = '';
         if( is_array($ids))
