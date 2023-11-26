@@ -154,7 +154,7 @@ class FilterModel extends Base
         
         if ($slug == 'my-notes' || $slug == 'my-shares')
         {
-            return true;
+            return ['id' => $slug == 'my-notes' ? -1 : -2];
         }
 
         $slug = strtolower(urldecode($slug));
@@ -241,8 +241,28 @@ class FilterModel extends Base
         {
             return [];
         }
-
         $where = [];
+
+        if ($filter['id'] == -1)
+        {
+            $where = ['created_by LIKE '. $this->user->get('id')];
+            return $where;
+        }
+
+        if ($filter['id'] == -2)
+        {
+            $tmp = ['(share_user LIKE "%('. $this->user->get('id') .')%")'];
+            $groups = $this->UserEntity->getGroups($this->user->get('id'));
+            foreach($groups as $group)
+            {
+                $tmp[] = "(`share_user_group` LIKE '%(" . $group['group_id'] . ")%')";
+            }
+
+            $where = ['('. implode(" OR ", $tmp) . ')'];
+            $where[] = 'created_by NOT LIKE '. $this->user->get('id');
+            
+            return $where;
+        }
         $tmp_tags = [];
         foreach($filter['tags'] as $tag)
         {

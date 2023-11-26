@@ -37,13 +37,22 @@ class AdminFilterNotes extends ViewModel
         $search = trim($filter->getField('search')->value);
 
         $where = [];
-        if ($filter_id)
+        if ($filter_id && $filter_id != '-1' && $filter_id != '-2')
         {
+            
             $filter = $this->FilterModel->getDetail($filter_id);
             if ($filter)
             {
                 $where = array_merge($where, $this->FilterModel->getFilterWhere($filter));
             }
+        }
+        else
+        {
+            $filter = [
+                'id' => $filter_id,
+                'name' => $filter_id == -1 ? 'My Notes' : 'My Shares',
+            ];
+            $where = array_merge($where, $this->FilterModel->getFilterWhere($filter));
         }
 
         $page = $this->state('page', 1, 'int', 'get', 'filter_'. $filter_id.'.page');
@@ -151,6 +160,7 @@ class AdminFilterNotes extends ViewModel
             'types' => $types,
             'data_tags' => $data_tags,
             'page' => $page,
+            'filter_id' => $filter['id'],
             'start' => $start,
             'filter_tags' => json_encode($filter_tags),
             'sort' => $sort,
