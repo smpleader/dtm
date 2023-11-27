@@ -68,6 +68,7 @@ class FilterModel extends Base
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
+        $data['ignore_creator'] = $data['ignore_creator'] ? $this->convertArray($data['ignore_creator']) : '';
         $data['permission'] = $data['permission'] ? $this->convertArray($data['permission']) : '';
         $filter = $this->FilterEntity->bind($data);
 
@@ -96,6 +97,7 @@ class FilterModel extends Base
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
+        $data['ignore_creator'] = $data['ignore_creator'] ? $this->convertArray($data['ignore_creator']) : '';
         $data['permission'] = $data['permission'] ? $this->convertArray($data['permission']) : '';
         $filter = $this->FilterEntity->bind($data);
 
@@ -133,6 +135,7 @@ class FilterModel extends Base
 
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags'], false) : [];
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator'], false) : [];
+        $data['ignore_creator'] = $data['ignore_creator'] ? $this->convertArray($data['ignore_creator'], false) : [];
         $data['permission'] = $data['permission'] ? $this->convertArray($data['permission'], false) : [];
 
         if ($data['shortcut_id'])
@@ -238,26 +241,6 @@ class FilterModel extends Base
         }
         $where = [];
 
-        if ($filter['id'] == -1)
-        {
-            $where = ['created_by LIKE '. $this->user->get('id')];
-            return $where;
-        }
-
-        if ($filter['id'] == -2)
-        {
-            $tmp = ['(share_user LIKE "%('. $this->user->get('id') .')%")'];
-            $groups = $this->UserEntity->getGroups($this->user->get('id'));
-            foreach($groups as $group)
-            {
-                $tmp[] = "(`share_user_group` LIKE '%(" . $group['group_id'] . ")%')";
-            }
-
-            $where = ['('. implode(" OR ", $tmp) . ')'];
-            $where[] = 'created_by NOT LIKE '. $this->user->get('id');
-            
-            return $where;
-        }
         $tmp_tags = [];
         foreach($filter['tags'] as $tag)
         {
@@ -290,6 +273,16 @@ class FilterModel extends Base
         if ($creator)
         {
             $where[] = '('. implode(' OR ', $creator) .')';
+        }
+
+        $ignore_creator = [];
+        foreach($filter['ignore_creator'] as $user)
+        {
+            $ignore_creator[] = 'created_by NOT LIKE '. $user;
+        }
+        if ($ignore_creator)
+        {
+            $where[] = '('. implode(' OR ', $ignore_creator) .')';
         }
 
         if ($filter['start_date'])

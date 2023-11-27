@@ -37,6 +37,9 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
                     <?php $this->ui->field('creator'); ?>
                 </div>
                 <div class="mb-3">
+                    <?php $this->ui->field('ignore_creator'); ?>
+                </div>
+                <div class="mb-3">
                     <?php $this->ui->field('permission'); ?>
                 </div>
                 <div class="row mb-3">
