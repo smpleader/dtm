@@ -1,14 +1,4 @@
 <?php
-
-/**
- * SPT software - ViewModel
- * 
- * @project: https://github.com/smpleader/spt
- * @author: Pham Minh - smpleader
- * @description: A simple View Model
- * 
- */
-
 namespace DTM\note\viewmodels;
 
 use SPT\Web\Gui\Form;
