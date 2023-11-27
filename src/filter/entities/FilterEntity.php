@@ -92,7 +92,7 @@ class FilterEntity extends Entity
             return false;
         }
 
-        $where = ['name Like "'. $data['name'] .'"'];
+        $where = ['name Like "'. $data['name'] .'"', 'user_id LIKE '. $data['user_id']];
         if(isset($data['id']))
         {
             $where[] = 'id <> '. $data['id'];
