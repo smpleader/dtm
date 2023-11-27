@@ -52,6 +52,9 @@ class FilterEntity extends Entity
                 'creator' => [
                     'type' => 'text',
                 ],
+                'ignore_creator' => [
+                    'type' => 'text',
+                ],
                 'permission' => [
                     'type' => 'text',
                 ],
