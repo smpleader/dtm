@@ -37,7 +37,7 @@ class AdminFilterNotes extends ViewModel
         $search = trim($filter->getField('search')->value);
 
         $where = [];
-        if ($filter_id && $filter_id != '-1' && $filter_id != '-2')
+        if ($filter_id)
         {
             
             $filter = $this->FilterModel->getDetail($filter_id);
@@ -45,15 +45,6 @@ class AdminFilterNotes extends ViewModel
             {
                 $where = array_merge($where, $this->FilterModel->getFilterWhere($filter));
             }
-        }
-        else
-        {
-            $filter = [
-                'id' => $filter_id,
-                'name' => $filter_id == -1 ? 'My Notes' : 'My Shares',
-                'filter_link' => $filter_id == -1 ? 'my-notes' : 'my-shares',
-            ];
-            $where = array_merge($where, $this->FilterModel->getFilterWhere($filter));
         }
 
         $page = $this->state('page', 1, 'int', 'get', 'filter_'. $filter_id.'.page');

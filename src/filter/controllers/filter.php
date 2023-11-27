@@ -164,7 +164,6 @@ class filter extends ControllerMVVM
     {
         $urlVars = $this->request->get('urlVars');
         $filter_name = $urlVars && $urlVars['filter_name'] ? $urlVars['filter_name'] : '';
-        $this->session->set('link_back_note', 'my-filter/my-notes');
         
         $check = $this->FilterModel->checkFilterName($filter_name);
         

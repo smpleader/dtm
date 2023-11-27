@@ -152,11 +152,6 @@ class FilterModel extends Base
             return false;
         }
         
-        if ($slug == 'my-notes' || $slug == 'my-shares')
-        {
-            return ['id' => $slug == 'my-notes' ? -1 : -2];
-        }
-
         $slug = strtolower(urldecode($slug));
         $where = ['LOWER(filter_link) LIKE "'.$slug.'"'];
         $where[] = ['user_id' => $this->user->get('id')];
