@@ -1,13 +1,4 @@
 <?php
-/**
- * SPT software - note controller
- *
- * @project: https://github.com/smpleader/spt
- * @author: Pham Minh - smpleader
- * @description: Just a basic controller
- *
- */
-
 namespace DTM\note\controllers;
 
 use SPT\Response;
