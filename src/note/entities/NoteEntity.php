@@ -1,13 +1,4 @@
 <?php
-/**
- * SPT software - Entity
- * 
- * @project: https://github.com/smpleader/spt
- * @author: Pham Minh - smpleader
- * @description: Just a basic entity
- * 
- */
-
 namespace DTM\note\entities;
 
 use SPT\Storage\DB\Entity;
@@ -120,7 +111,7 @@ class NoteEntity extends Entity
         $row = [];
         $data = (array) $data;
         $fields = $this->getFields();
-        $skips = isset($data['id']) && $data['id'] ? ['created_at', 'created_by', 'locked_at', 'locked_by', 'deleted_at'] : ['id'];
+        $skips = isset($data['id']) && $data['id'] ? ['created_at', 'created_by', 'locked_at', 'locked_by', 'deleted_at'] : ['id', 'deleted_at'];
         foreach ($fields as $key => $field)
         {
             if (!in_array($key, $skips))
