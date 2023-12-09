@@ -74,13 +74,13 @@ class NoteDispatch extends Base
 
             // check permission
             $asset = $this->PermissionModel->getAccessByUser();
-            $permission = $this->PermissionShareModel->checkPermission($row['share_user_group']);
+            $permission = $this->PermissionShareModel->checkPermission($row['assign_user_group']);
             $allowShare = $this->app->get('allowShare', true);
 
             if (!in_array('note_manager', $asset) && $row['created_by'] != $this->user->get('id'))
             {
-                $share_users = $this->ShareUserModel->convert($row['share_user'], false);
-                if((!in_array($this->user->get('id'), $share_users) && !$permission) || !$allowShare)
+                $assign_users = $this->ShareUserModel->convert($row['assign_user'], false);
+                if((!in_array($this->user->get('id'), $assign_users) && !$permission) || !$allowShare)
                 {
                     $this->app->raiseError('You do not have access!', 403);
                 }
