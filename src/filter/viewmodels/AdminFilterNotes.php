@@ -260,7 +260,7 @@ class AdminFilterNotes extends ViewModel
                 'formClass' => 'form-select',
                 'options' => $options,
                 'showLabel' => false,
-                'placeholder' => 'Type'
+                'placeholder' => 'Note Type'
             ],
             'author' => [
                 'option',
