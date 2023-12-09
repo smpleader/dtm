@@ -180,7 +180,7 @@ class AdminCollection extends ViewModel
             ],
             'assignment' => ['option',
                 'type' => 'multiple_optgroup',
-                'layout' => 'filter::fields.multiple_optgroup',
+                'layout' => 'collection::fields.multiple_optgroup',
                 'formClass' => 'form-select',
                 'default' => 'note',
                 'options' => $option_permission,
