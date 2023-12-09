@@ -89,7 +89,7 @@ class FilterEntity extends Entity
             return false;
         }
 
-        if (!isset($data['name']) || !$data['name'] || !$data || $data['name'] == 'my-notes' || $data['name'] == 'my-shares')
+        if (!isset($data['name']) || !$data['name'])
         {
             $this->error = 'Name is required! ';
             return false;

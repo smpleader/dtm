@@ -311,4 +311,65 @@ class FilterModel extends Base
 
         return $where;
     }
+
+    public function generateUserFilter($user_id)
+    {
+        if (!$user_id)
+        {
+            return false;
+        }
+
+        // Create my note filter
+        $try = $this->add([
+            'user_id' => $user_id,
+            'shortcut_id' => 0,
+            'name' => 'My Notes',
+            'select_object' => '',
+            'start_date' => '',
+            'end_date' => '',
+            'tags' => [],
+            'creator' => [$user_id],
+            'ignore_creator' => [],
+            'permission' => [],
+            'shortcut_name' => 'My Notes',
+            'shortcut_link' => '',
+            'shortcut_group' => '',
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => $user_id,
+            'modified_at' => date('Y-m-d H:i:s'),
+            'modified_by' => $user_id,
+        ]);
+
+        if (!$try)
+        {
+            return false;
+        }
+
+        $try = $this->add([
+            'user_id' => $user_id,
+            'shortcut_id' => 0,
+            'name' => 'My Shares',
+            'select_object' => '',
+            'start_date' => '',
+            'end_date' => '',
+            'tags' => [],
+            'creator' => [],
+            'ignore_creator' => [$user_id],
+            'permission' => [],
+            'shortcut_name' => 'My Shares',
+            'shortcut_link' => '',
+            'shortcut_group' => '',
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => $user_id,
+            'modified_at' => date('Y-m-d H:i:s'),
+            'modified_by' => $user_id,
+        ]);
+
+        if (!$try)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
