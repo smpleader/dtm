@@ -45,8 +45,8 @@ class AdminCollections extends ViewModel
 
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'name asc';
-        $result = $this->FilterEntity->list($start, $limit, $where, $sort);
-        $total = $this->FilterEntity->getListTotal();
+        $result = $this->CollectionEntity->list($start, $limit, $where, $sort);
+        $total = $this->CollectionEntity->getListTotal();
         
         if (!$result) {
             $result = [];

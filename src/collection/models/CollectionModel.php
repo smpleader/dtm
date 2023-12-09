@@ -15,14 +15,14 @@ class CollectionModel extends Base
             return false;
         }
 
-        $find = $this->FilterEntity->findByPK($id);
+        $find = $this->CollectionEntity->findByPK($id);
         if (!$find)
         {
             $this->error = 'Invalid Filter';
             return false;
         }
 
-        $try = $this->FilterEntity->remove($id);
+        $try = $this->CollectionEntity->remove($id);
         if ($try)
         {
             // remove Shortcut
@@ -70,19 +70,19 @@ class CollectionModel extends Base
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
-        $filter = $this->FilterEntity->bind($data);
+        $filter = $this->CollectionEntity->bind($data);
 
         if (!$filter || !isset($filter['readyNew']) || !$filter['readyNew'])
         {
-            $this->error = $this->FilterEntity->getError();
+            $this->error = $this->CollectionEntity->getError();
             return false;
         }
 
-        $newId =  $this->FilterEntity->add($filter);
+        $newId =  $this->CollectionEntity->add($filter);
 
         if (!$newId)
         {
-            $this->error = $this->FilterEntity->getError();
+            $this->error = $this->CollectionEntity->getError();
             return false;
         }
 
@@ -102,18 +102,18 @@ class CollectionModel extends Base
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
-        $filter = $this->FilterEntity->bind($data);
+        $filter = $this->CollectionEntity->bind($data);
 
         if (!$filter || !isset($filter['readyUpdate']) || !$filter['readyUpdate'])
         {
-            $this->error = $this->FilterEntity->getError();
+            $this->error = $this->CollectionEntity->getError();
             return false;
         }
 
-        $try = $this->FilterEntity->update($filter);
+        $try = $this->CollectionEntity->update($filter);
         if (!$try)
         {
-            $this->error = $this->FilterEntity->getError();
+            $this->error = $this->CollectionEntity->getError();
             return false;
         }
 
@@ -132,7 +132,7 @@ class CollectionModel extends Base
             return [];
         }
 
-        $data = $this->FilterEntity->findByPK($id);
+        $data = $this->CollectionEntity->findByPK($id);
         if ($data)
         {
             $data['start_date'] = $data['start_date'] ? date('Y-m-d', strtotime($data['start_date'])) : '';
@@ -163,7 +163,7 @@ class CollectionModel extends Base
         $slug = strtolower(urldecode($slug));
         $where = ['LOWER(filter_link) LIKE "'.$slug.'"'];
         $where[] = ['user_id' => $this->user->get('id')];
-        $findOne = $this->FilterEntity->findOne($where);
+        $findOne = $this->CollectionEntity->findOne($where);
         
         if($findOne)
         {
@@ -217,9 +217,9 @@ class CollectionModel extends Base
 
             if ($try)
             {
-                $data = $this->FilterEntity->bind($data);
+                $data = $this->CollectionEntity->bind($data);
                 $data['shortcut_id'] = $try;
-                $this->FilterEntity->update($data);
+                $this->CollectionEntity->update($data);
             }
 
             return $try;
@@ -229,9 +229,9 @@ class CollectionModel extends Base
             $try = $this->ShortcutModel->remove($shortcut['id']);
             if($try)
             {
-                $data = $this->FilterEntity->bind($data);
+                $data = $this->CollectionEntity->bind($data);
                 $data['shortcut_id'] = 0;
-                $this->FilterEntity->update($data);
+                $this->CollectionEntity->update($data);
             }
             return $try;
         }
