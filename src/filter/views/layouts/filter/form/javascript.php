@@ -14,6 +14,7 @@
 
         $("#tags").select2({
             matcher: matchCustom,
+            tags: true,
             ajax: {
                 url: "<?php echo $this->link_tag ?>",
                 dataType: 'json',

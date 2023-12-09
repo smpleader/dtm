@@ -55,6 +55,11 @@ class AdminFilter extends ViewModel
                 $tag = $this->TagEntity->findByPK($tag_id);
                 if ($tag)
                 {
+                    if ($tag['parent_id'])
+                    {
+                        $parent = $this->TagEntity->findByPK($tag['parent_id']);
+                        $tag['name'] = $parent ? $parent['name'].':'. $tag['name'] : $tag['name'];
+                    }
                     $tags[] = $tag;
                 }
             }

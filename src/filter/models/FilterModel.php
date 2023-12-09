@@ -65,6 +65,7 @@ class FilterModel extends Base
 
     public function add($data, $shortcut = true)
     {
+        $data['tags'] = $data['tags'] ? $this->convertTag($data['tags']) : [];
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
@@ -96,6 +97,7 @@ class FilterModel extends Base
 
     public function update($data, $shortcut = true)
     {
+        $data['tags'] = $data['tags'] ? $this->convertTag($data['tags']) : [];
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
@@ -349,5 +351,70 @@ class FilterModel extends Base
         }
 
         return true;
+    }
+
+    public function convertTag($tags)
+    {
+        if(!$tags || !is_array($tags))
+        {
+            return '';
+        }
+
+        $list = [];
+        foreach($tags as $item)
+        {
+            $tmp = $this->TagEntity->findByPK($item);
+            if($tmp)
+            {
+                $list[] = $item;
+            }
+            else
+            {
+                $tag_tmp = explode(':', $item);
+                if(count($tag_tmp) > 1 && $tag_tmp[1])
+                {
+                    $parent = $this->TagEntity->findOne(['name' => trim($tag_tmp[0])]);
+                    if(!$parent)
+                    {
+                        $parent = $this->TagModel->add([
+                            'name' => trim($tag_tmp[0]),
+                            'description' => '',
+                            'parent_id' => 0,
+                        ]);
+                    }
+                    else
+                    {
+                        $parent = $parent['id'];
+                    }
+
+                    $child = $this->TagEntity->findOne(['name' => trim($tag_tmp[1])]);
+                    if(!$child)
+                    {
+                        $child = $this->TagModel->add([
+                            'name' => trim($tag_tmp[1]),
+                            'description' => '',
+                            'parent_id' => $parent,
+                        ]);
+                    }
+                    else
+                    {
+                        $child = $child['id'];
+                    }
+                    
+                    $list[] = $child;
+                }
+                elseif($tag_tmp[0])
+                {
+                    $try = $this->TagModel->add([
+                        'name' => trim($tag_tmp[0]),
+                        'description' => '',
+                        'parent_id' => 0,
+                    ]);
+                    $list[] = $try;
+                }
+            }
+        }
+
+        return $list;
     }
 }
