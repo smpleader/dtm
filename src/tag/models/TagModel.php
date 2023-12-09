@@ -93,7 +93,7 @@ class TagModel extends Base
                 $tmp = $this->TagEntity->findByPK($item['parent_id']);
                 if ($tmp)
                 {
-                    $item['name'] = $tmp['name']. ' > '. $item['name'];
+                    $item['name'] = $tmp['name']. ' : '. $item['name'];
                 }
             }
         }
