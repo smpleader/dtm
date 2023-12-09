@@ -258,7 +258,7 @@ class FilterModel extends Base
         $assignment_tmp = [];
         foreach($filter['assignment'] as $assignment)
         {
-            $field = strpos($assignment, 'user') !== false ? 'assign_user' : 'assign_user_group';
+            $field = strpos($assignment, 'user') !== false ? 'assignee' : 'assign_user_group';
             $assignment = explode('-', $assignment);
             $id = end($assignment);
             $assignment_tmp[] = $field.' LIKE "%('. $id .')%"';

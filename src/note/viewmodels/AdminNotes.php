@@ -59,7 +59,7 @@ class AdminNotes extends ViewModel
         {
             $where[] = 'created_by Not LIKE '. $this->user->get('id');
             $where_permission = [];
-            $where_permission[] = "(`assign_user` LIKE '%(" . $this->user->get('id') . ")%')";
+            $where_permission[] = "(`assignee` LIKE '%(" . $this->user->get('id') . ")%')";
 
             $groups = $this->UserEntity->getGroups($this->user->get('id'));
             foreach($groups as $group)

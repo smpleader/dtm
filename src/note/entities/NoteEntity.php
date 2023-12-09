@@ -32,7 +32,7 @@ class NoteEntity extends Entity
                     'type' => 'varchar',
                     'limit' => 245,
                 ],
-                'assign_user' => [
+                'assignee' => [
                     'type' => 'text',
                     'null' => 'YES',
                 ],

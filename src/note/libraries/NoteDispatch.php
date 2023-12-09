@@ -79,8 +79,8 @@ class NoteDispatch extends Base
 
             if (!in_array('note_manager', $asset) && $row['created_by'] != $this->user->get('id'))
             {
-                $assign_users = $this->ShareUserModel->convert($row['assign_user'], false);
-                if((!in_array($this->user->get('id'), $assign_users) && !$permission) || !$allowShare)
+                $assignees = $this->ShareUserModel->convert($row['assignee'], false);
+                if((!in_array($this->user->get('id'), $assignees) && !$permission) || !$allowShare)
                 {
                     $this->app->raiseError('You do not have access!', 403);
                 }
