@@ -307,6 +307,7 @@ class FilterModel extends Base
         if(!in_array('note_manager', $asset))
         {
             $tmp = ['(share_user LIKE "%('. $this->user->get('id') .')%")'];
+            $tmp[] = '(created_by LIKE '. $this->user->get('id').')';
             $groups = $this->UserEntity->getGroups($this->user->get('id'));
             foreach($groups as $group)
             {
