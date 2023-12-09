@@ -1,11 +1,9 @@
 <form id="filter_form" class="row pe-0 pb-2" action="<?php echo $this->link_list ?>" method="POST">
     <div class="col-lg-10 col-sm-12">
         <div class="input-group input-group-navbar">
-            <?php if($this->filter_id == -1) : ?>
             <div class="pe-2 pb-2">
                 <div class="row">
                     <div class="col-auto">
-                        <?php if($this->mode != 'share-note'): ?>
                         <a href="#" class="align-middle btn border border-1"
                             type="button"
                             data-bs-placement="top" 
@@ -14,7 +12,6 @@
                         >
                             <i class="fa-solid fa-plus"></i>
                         </a>
-                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -27,16 +24,6 @@
                     </div>
                 </div>
             </div>
-            <div class="pe-2 pb-2">
-                <div class="row">
-                    <div class="col-auto">
-                        <a href="<?php echo $this->link_note_trash ?>" data-bs-placement="top" title="Trash Note" data-bs-toggle="tooltip" class="btn border border-1" type="button">
-                            <i class="fa-solid fa-recycle"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
             <div class="pe-2 pb-2">
                 <?php $this->ui->field('search');  ?>
             </div>

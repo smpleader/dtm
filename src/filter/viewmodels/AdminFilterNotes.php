@@ -28,6 +28,10 @@ class AdminFilterNotes extends ViewModel
             $this->session->set('filter_'. $filter_id.'.author', []);
             $this->session->set('filter_'. $filter_id.'.note_type', []);
         }
+
+        $urlVars = $this->request->get('urlVars');
+        $filter_name = $urlVars && $urlVars['filter_name'] ? $urlVars['filter_name'] : '';
+
         $filter = $this->filter()['form'];
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
@@ -140,7 +144,7 @@ class AdminFilterNotes extends ViewModel
         foreach($noteTypes as $type => $t)
         {
             $types[] = [
-                    'link' => $this->router->url('new-note/'. $type ),
+                    'link' => $this->router->url('new-note/'. $type .'?filter='.$filter_name ),
                     'title' => $t['title'] 
                 ];
         }
