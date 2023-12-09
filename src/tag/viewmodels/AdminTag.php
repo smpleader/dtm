@@ -96,6 +96,13 @@ class AdminTag extends ViewModel
         $data = isset($viewData['data']) ? $viewData['data'] : [];
         $tags = isset($data['tags']) ? $data['tags'] : '';
 
+        $filter_name = $this->request->get->get('filter', '');
+        if($filter_name)
+        {
+            $filter = $this->FilterModel->checkFilterName($filter_name);
+            $tags = !$filter ? $tags : $filter['tags'];
+        }
+
         $tags = $this->TagModel->convert($tags, false);
         if ($tags)
         {
