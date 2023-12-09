@@ -181,6 +181,7 @@ class FilterModel extends Base
             return false;
         }
 
+        $data['id'] = $filter_id;
         $shortcut = false;
         if ($filter_id)
         {
