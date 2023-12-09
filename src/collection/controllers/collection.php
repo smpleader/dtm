@@ -1,23 +1,23 @@
 <?php
-namespace DTM\filter\controllers;
+namespace DTM\collection\controllers;
 
 use SPT\Response;
 use SPT\Web\ControllerMVVM;
 
-class filter extends ControllerMVVM
+class collection extends ControllerMVVM
 {
     public function list()
     {
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
-        $this->app->set('layout', 'filter.list');
+        $this->app->set('layout', 'collection.list');
     }
 
     public function detail()
     {
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
-        $this->app->set('layout', 'filter.form');
+        $this->app->set('layout', 'collection.form');
     }
 
     public function add()
@@ -42,9 +42,9 @@ class filter extends ControllerMVVM
             'modified_by' => $this->user->get('id'),
         ];
 
-        $try = $this->FilterModel->add($data);
+        $try = $this->CollectionModel->add($data);
 
-        $message = $try ? 'Create Successfully!' : 'Error: '. $this->FilterModel->getError();
+        $message = $try ? 'Create Successfully!' : 'Error: '. $this->CollectionModel->getError();
 
         $this->session->set('flashMsg', $message);
         if (!$try)
@@ -87,8 +87,8 @@ class filter extends ControllerMVVM
                 'modified_by' => $this->user->get('id'),
             ];
             
-            $try = $this->FilterModel->update($data);
-            $message = $try ? 'Update Successfully!' : 'Error: '. $this->FilterModel->getError();
+            $try = $this->CollectionModel->update($data);
+            $message = $try ? 'Update Successfully!' : 'Error: '. $this->CollectionModel->getError();
             
             $this->session->set('flashMsg', $message);
             if (!$try)
@@ -120,7 +120,7 @@ class filter extends ControllerMVVM
             foreach($ids as $id)
             {
                 //Delete file in source
-                if( $this->FilterModel->remove( $id ) )
+                if( $this->CollectionModel->remove( $id ) )
                 {
                     $count++;
                 }
@@ -128,7 +128,7 @@ class filter extends ControllerMVVM
         }
         elseif( is_numeric($ids) )
         {
-            if( $this->FilterModel->remove($ids ) )
+            if( $this->CollectionModel->remove($ids ) )
             {
                 $count++;
             }
@@ -165,7 +165,7 @@ class filter extends ControllerMVVM
         $urlVars = $this->request->get('urlVars');
         $filter_name = $urlVars && $urlVars['filter_name'] ? $urlVars['filter_name'] : '';
         
-        $check = $this->FilterModel->checkFilterName($filter_name);
+        $check = $this->CollectionModel->checkFilterName($filter_name);
         
         if (!$check)
         {

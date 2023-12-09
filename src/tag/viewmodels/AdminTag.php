@@ -99,7 +99,7 @@ class AdminTag extends ViewModel
         $filter_name = $this->request->get->get('filter', '');
         if($filter_name)
         {
-            $filter = $this->FilterModel->checkFilterName($filter_name);
+            $filter = $this->CollectionModel->checkFilterName($filter_name);
             $tags = !$filter ? $tags : $filter['tags'];
         }
 

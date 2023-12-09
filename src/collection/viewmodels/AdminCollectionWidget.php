@@ -1,11 +1,11 @@
 <?php
-namespace DTM\filter\viewmodels;
+namespace DTM\collection\viewmodels;
 
 use SPT\Web\Gui\Form;
 use SPT\Web\Gui\Listing;
 use SPT\Web\ViewModel;
 
-class AdminFilterWidget extends ViewModel
+class AdminCollectionWidget extends ViewModel
 {
     public static function register()
     {

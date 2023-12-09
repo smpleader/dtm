@@ -47,7 +47,7 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
                         <input name="shortcut_link" type="text" 
                             id="shortcut_link" 
                             placeholder="Shortcut Link" 
-                            value="<?php echo $this->data ? $this->url('my-filter/'. $this->data['filter_link']) : ''; ?>" 
+                            value="<?php echo $this->data ? $this->url('collection/'. $this->data['filter_link']) : ''; ?>" 
                             class="form-control" disabled="">
                     </div>
                     <div class="col-4">
@@ -61,4 +61,4 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
     </form>
 </div>
 
-<?php echo $this->render('filter.form.javascript'); ?>
+<?php echo $this->render('collection.form.javascript'); ?>

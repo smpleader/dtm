@@ -1,19 +1,19 @@
 <?php
-namespace DTM\filter\viewmodels;
+namespace DTM\collection\viewmodels;
 
 use SPT\Web\Gui\Form;
 use SPT\Web\Gui\Listing;
 use SPT\Web\ViewModel;
 
-class AdminFilters extends ViewModel
+class AdminCollections extends ViewModel
 {
     public static function register()
     {
         return [
             'layout'=>[
-                'filter.list',
-                'filter.list.row',
-                'filter.list.filter'
+                'collection.list',
+                'collection.list.row',
+                'collection.list.filter'
             ],
         ];
     }
@@ -45,8 +45,8 @@ class AdminFilters extends ViewModel
 
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'name asc';
-        $result = $this->FilterEntity->list($start, $limit, $where, $sort);
-        $total = $this->FilterEntity->getListTotal();
+        $result = $this->CollectionEntity->list($start, $limit, $where, $sort);
+        $total = $this->CollectionEntity->getListTotal();
         
         if (!$result) {
             $result = [];

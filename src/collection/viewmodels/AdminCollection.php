@@ -1,16 +1,16 @@
 <?php
-namespace DTM\filter\viewmodels;
+namespace DTM\collection\viewmodels;
 
 use SPT\Web\ViewModel;
 use SPT\Web\Gui\Form;
 
-class AdminFilter extends ViewModel
+class AdminCollection extends ViewModel
 {
     public static function register()
     {
         return [
             'layout' => [
-                'filter.form',
+                'collection.form',
             ]
         ];
     }
@@ -20,7 +20,7 @@ class AdminFilter extends ViewModel
         $urlVars = $this->request->get('urlVars');
         $id = $urlVars && isset($urlVars['id']) ? (int) $urlVars['id'] : 0;
 
-        $data = $this->FilterModel->getDetail($id);
+        $data = $this->CollectionModel->getDetail($id);
         return $data;
     }
 
