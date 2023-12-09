@@ -31,7 +31,7 @@ class AdminFilter extends ViewModel
         $form = new Form($this->getFormFields(), $data);
         $button_header = [
             [
-                'link' => $this->router->url('my-filters'),
+                'link' => $this->router->url('collections'),
                 'class' => 'btn btn-outline-secondary me-2',
                 'title' => 'Cancel',
             ],
@@ -66,11 +66,11 @@ class AdminFilter extends ViewModel
             'data' => $data,
             'tags' => $tags,
             'button_header' => $button_header,
-            'title_page' => 'My Filter Form',
+            'title_page' => 'Collection Form',
             'url' => $this->router->url(),
             'link_tag' => $this->router->url('tag/search'),
-            'link_list' => $this->router->url('my-filters'),
-            'link_form' => $this->router->url('my-filter/edit'),
+            'link_list' => $this->router->url('collections'),
+            'link_form' => $this->router->url('collection/edit'),
         ];
         
     }

@@ -193,7 +193,7 @@ class FilterModel extends Base
         {
             $try = $this->ShortcutModel->update([
                 'name' => $data['shortcut_name'],
-                'link' => $this->router->url('my-filter/'.$data['filter_link']),
+                'link' => $this->router->url('collection/'.$data['filter_link']),
                 'group' => $data['shortcut_group'],
                 'user_id' => $data['user_id'],
                 'id' => $shortcut['id'],
@@ -207,7 +207,7 @@ class FilterModel extends Base
         {
             $try = $this->ShortcutModel->add([
                 'name' => $data['shortcut_name'],
-                'link' => $this->router->url('my-filter/'.$data['filter_link']),
+                'link' => $this->router->url('collection/'.$data['filter_link']),
                 'group' => $data['shortcut_group'],
                 'user_id' => $data['user_id'],
                 'created_at' => date('Y-m-d H:i:s'),

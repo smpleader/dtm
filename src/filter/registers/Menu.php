@@ -12,10 +12,10 @@ class Menu
         $router = $container->get('router');
         $path_current = $router->get('actualPath');
 
-        $active = strpos($path_current, '/my-filters') !== false ? 'active' : '';
+        $active = strpos($path_current, '/collections') !== false ? 'active' : '';
         $menu = [[
-            'link' => $router->url('my-filters'), 
-            'title' => 'My Filters', 
+            'link' => $router->url('collections'), 
+            'title' => 'Collections', 
             'icon' => '<i class="fa-solid fa-filter"></i>',
             'class' => $active,
         ]];

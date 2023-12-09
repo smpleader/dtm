@@ -51,13 +51,13 @@ class filter extends ControllerMVVM
         if (!$try)
         {
             return $this->app->redirect(
-                $this->router->url('my-filter/edit/0')
+                $this->router->url('collection/edit/0')
             );
         }
         else
         {
             return $this->app->redirect(
-                $this->router->url($save_close ? 'my-filters' : 'my-filter/edit/'. $try)
+                $this->router->url($save_close ? 'collections' : 'collection/edit/'. $try)
             );
         }
     }
@@ -96,20 +96,20 @@ class filter extends ControllerMVVM
             if (!$try)
             {
                 return $this->app->redirect(
-                    $this->router->url('my-filter/edit/'. $id)
+                    $this->router->url('collection/edit/'. $id)
                 );
             }
             else
             {
                 return $this->app->redirect(
-                    $this->router->url($save_close ? 'my-filters' : 'my-filter/edit/'. $id)
+                    $this->router->url($save_close ? 'collections' : 'collection/edit/'. $id)
                 );
             }
         }
 
         $this->session->set('flashMsg', 'Error: Invalid Task!');
         return $this->app->redirect(
-            $this->router->url('my-filters')
+            $this->router->url('collections')
         );
     }
 
@@ -139,7 +139,7 @@ class filter extends ControllerMVVM
 
         $this->session->set('flashMsg', $count.' deleted record(s)');
         return $this->app->redirect(
-            $this->router->url('my-filters'), 
+            $this->router->url('collections'), 
         );
     }
 
@@ -155,7 +155,7 @@ class filter extends ControllerMVVM
 
             $this->session->set('flashMsg', 'Invalid Filter');
             return $this->app->redirect(
-                $this->router->url('my-filters'),
+                $this->router->url('collections'),
             );
         }
 
@@ -173,7 +173,7 @@ class filter extends ControllerMVVM
         {
             $this->app->raiseError('Invalid request');
         }
-        $this->session->set('link_back_note', 'my-filter/'. $filter_name);
+        $this->session->set('link_back_note', 'collection/'. $filter_name);
 
         $this->app->set('filter_id', $check['id']);
 

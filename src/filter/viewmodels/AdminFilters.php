@@ -66,10 +66,10 @@ class AdminFilters extends ViewModel
             'sort' => $sort,
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
-            'link_list' =>  $this->router->url('my-filters'),
-            'title_page' => 'My Filters',
-            'link_form' => $this->router->url('my-filter/edit'),
-            'link_view' => $this->router->url('my-filter'),
+            'link_list' =>  $this->router->url('collections'),
+            'title_page' => 'Collections',
+            'link_form' => $this->router->url('collection/edit'),
+            'link_view' => $this->router->url('collection'),
             'token' => $this->token->value(),
         ];
     }

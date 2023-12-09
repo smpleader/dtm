@@ -162,7 +162,7 @@ class AdminFilterNotes extends ViewModel
             'sort' => $sort,
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
-            'link_list' =>  $this->router->url('my-filter/'. strtolower($filter['filter_link'])),
+            'link_list' =>  $this->router->url('collection/'. strtolower($filter['filter_link'])),
             'link_note_trash' => $this->router->url('my-notes/trash'),
             'link_mynote' => $this->router->url('my-notes'),
             'link_tag' => $this->router->url('tag/search'),

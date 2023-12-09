@@ -9,7 +9,7 @@ class Routing
     public static function registerEndpoints()
     {
         return [
-            'my-filters' => [
+            'collections' => [
                 'fnc' => [
                     'get' => 'filter.filter.list',
                     'post' => 'filter.filter.list',
@@ -17,7 +17,7 @@ class Routing
                     'delete' => 'filter.filter.delete'
                 ],
             ],
-            'my-filter/edit' => [
+            'collection/edit' => [
                 'fnc' => [
                     'get' => 'filter.filter.detail',
                     'post' => 'filter.filter.add',
@@ -26,7 +26,7 @@ class Routing
                 ],
                 'parameters' => ['id'],
             ],
-            'my-filter' => [
+            'collection' => [
                 'fnc' => [
                     'get' => 'filter.filter.filter',
                     'post' => 'filter.filter.filter',
