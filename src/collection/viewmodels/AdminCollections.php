@@ -1,19 +1,19 @@
 <?php
-namespace DTM\filter\viewmodels;
+namespace DTM\collection\viewmodels;
 
 use SPT\Web\Gui\Form;
 use SPT\Web\Gui\Listing;
 use SPT\Web\ViewModel;
 
-class AdminFilters extends ViewModel
+class AdminCollections extends ViewModel
 {
     public static function register()
     {
         return [
             'layout'=>[
-                'filter.list',
-                'filter.list.row',
-                'filter.list.filter'
+                'collection.list',
+                'collection.list.row',
+                'collection.list.filter'
             ],
         ];
     }

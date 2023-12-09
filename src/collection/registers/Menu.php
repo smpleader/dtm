@@ -1,5 +1,5 @@
 <?php
-namespace DTM\filter\registers;
+namespace DTM\collection\registers;
 
 use SPT\Application\IApp;
 use SPT\Support\Loader;

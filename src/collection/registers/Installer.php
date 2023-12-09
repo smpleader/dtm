@@ -1,5 +1,5 @@
 <?php
-namespace DTM\filter\registers;
+namespace DTM\collection\registers;
 
 use SPT\Application\IApp;
 
@@ -12,7 +12,7 @@ class Installer
     
     public static function name()
     {
-        return 'Plugin note';
+        return 'Plugin collection';
     }
 
     public static function detail()

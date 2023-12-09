@@ -1,10 +1,10 @@
 <?php
-namespace DTM\filter\models;
+namespace DTM\collection\models;
 
 use SPT\Container\Client as Base;
 use SPT\Traits\ErrorString;
 
-class FilterModel extends Base
+class CollectionModel extends Base
 { 
     use ErrorString; 
 

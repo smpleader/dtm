@@ -1,11 +1,11 @@
 <?php
-namespace DTM\filter\viewmodels;
+namespace DTM\collection\viewmodels;
 
 use SPT\Web\Gui\Form;
 use SPT\Web\Gui\Listing;
 use SPT\Web\ViewModel;
 
-class AdminFilterNotes extends ViewModel
+class AdminCollectionNotes extends ViewModel
 {
     public static function register()
     {
@@ -44,10 +44,10 @@ class AdminFilterNotes extends ViewModel
         if ($filter_id)
         {
             
-            $filter = $this->FilterModel->getDetail($filter_id);
+            $filter = $this->CollectionModel->getDetail($filter_id);
             if ($filter)
             {
-                $where = array_merge($where, $this->FilterModel->getFilterWhere($filter));
+                $where = array_merge($where, $this->CollectionModel->getFilterWhere($filter));
             }
         }
 

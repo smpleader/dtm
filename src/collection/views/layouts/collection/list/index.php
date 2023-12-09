@@ -7,7 +7,7 @@
 					<div class="card border-0 shadow-none">
 						<div class="card-body">
 							<div class="row align-items-center">
-								<?php echo $this->render('filter.list.filter', []); ?>
+								<?php echo $this->render('collection.list.filter', []); ?>
 							</div>
 							<form action="<?php echo $this->link_list ?>" method="POST" id="formList">
 								<input type="hidden" value="<?php echo $this->token ?>" name="token">
@@ -24,7 +24,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php while ($this->list->hasRow()) echo $this->render('filter.list.row', []); ?>
+										<?php while ($this->list->hasRow()) echo $this->render('collection.list.row', []); ?>
 									</tbody>
 									<?php
 									?>
@@ -45,4 +45,4 @@
     <input type="hidden" value="<?php echo $this->token ?>" name="token">
     <input type="hidden" value="DELETE" name="_method">
 </form>
-<?php echo $this->render('filter.list.javascript', []); ?>
+<?php echo $this->render('collection.list.javascript', []); ?>

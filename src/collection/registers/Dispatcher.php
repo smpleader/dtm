@@ -1,5 +1,5 @@
 <?php
-namespace DTM\filter\registers;
+namespace DTM\collection\registers;
 
 use SPT\Application\IApp;
 
@@ -13,7 +13,7 @@ class Dispatcher
         $fName = $app->get('function');
         // prepare note
 
-        $controller = 'DTM\filter\controllers\\'. $cName;
+        $controller = 'DTM\collection\controllers\\'. $cName;
         if(!class_exists($controller))
         {
             $app->raiseError('Invalid controller '. $cName);

@@ -1,14 +1,14 @@
 <?php
-namespace DTM\filter\entities;
+namespace DTM\collection\entities;
 
 use SPT\Storage\DB\Entity;
 use SPT\Traits\EntityHasStatus;
 
-class FilterEntity extends Entity
+class CollectionEntity extends Entity
 {
     use EntityHasStatus;
 
-    protected $table = '#__filter';
+    protected $table = '#__collections';
     protected $pk = 'id';
 
     public function getFields()
