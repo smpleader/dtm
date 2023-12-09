@@ -55,7 +55,7 @@ class FilterEntity extends Entity
                 'ignore_creator' => [
                     'type' => 'text',
                 ],
-                'permission' => [
+                'assignment' => [
                     'type' => 'text',
                 ],
                 'created_at' => [

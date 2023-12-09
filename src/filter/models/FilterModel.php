@@ -68,8 +68,7 @@ class FilterModel extends Base
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
-        $data['ignore_creator'] = $data['ignore_creator'] ? $this->convertArray($data['ignore_creator']) : '';
-        $data['permission'] = $data['permission'] ? $this->convertArray($data['permission']) : '';
+        $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
         $filter = $this->FilterEntity->bind($data);
 
         if (!$filter || !isset($filter['readyNew']) || !$filter['readyNew'])
@@ -100,8 +99,7 @@ class FilterModel extends Base
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
-        $data['ignore_creator'] = $data['ignore_creator'] ? $this->convertArray($data['ignore_creator']) : '';
-        $data['permission'] = $data['permission'] ? $this->convertArray($data['permission']) : '';
+        $data['assigmnent'] = $data['assigmnent'] ? $this->convertArray($data['assigmnent']) : '';
         $filter = $this->FilterEntity->bind($data);
 
         if (!$filter || !isset($filter['readyUpdate']) || !$filter['readyUpdate'])
@@ -141,8 +139,7 @@ class FilterModel extends Base
 
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags'], false) : [];
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator'], false) : [];
-        $data['ignore_creator'] = $data['ignore_creator'] ? $this->convertArray($data['ignore_creator'], false) : [];
-        $data['permission'] = $data['permission'] ? $this->convertArray($data['permission'], false) : [];
+        $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment'], false) : [];
 
         if ($data['shortcut_id'])
         {
@@ -258,18 +255,18 @@ class FilterModel extends Base
             $where[] = '('. implode(' OR ', $tmp_tags) .')';
         }
 
-        $permission_tmp = [];
-        foreach($filter['permission'] as $permission)
+        $assignment_tmp = [];
+        foreach($filter['assignment'] as $assignment)
         {
-            $field = strpos($permission, 'user') !== false ? 'share_user' : 'share_user_group';
-            $permission = explode('-', $permission);
-            $id = end($permission);
-            $permission_tmp[] = $field.' LIKE "%('. $id .')%"';
+            $field = strpos($assignment, 'user') !== false ? 'share_user' : 'share_user_group';
+            $assignment = explode('-', $assignment);
+            $id = end($assignment);
+            $assignment_tmp[] = $field.' LIKE "%('. $id .')%"';
         }
 
-        if ($permission_tmp)
+        if ($assignment_tmp)
         {
-            $where[] = '('. implode(' OR ', $permission_tmp) .')';
+            $where[] = '('. implode(' OR ', $assignment_tmp) .')';
         }
 
         $creator = [];
@@ -280,16 +277,6 @@ class FilterModel extends Base
         if ($creator)
         {
             $where[] = '('. implode(' OR ', $creator) .')';
-        }
-
-        $ignore_creator = [];
-        foreach($filter['ignore_creator'] as $user)
-        {
-            $ignore_creator[] = 'created_by NOT LIKE '. $user;
-        }
-        if ($ignore_creator)
-        {
-            $where[] = '('. implode(' OR ', $ignore_creator) .')';
         }
 
         if ($filter['start_date'])
@@ -338,7 +325,7 @@ class FilterModel extends Base
             'tags' => [],
             'creator' => [$user_id],
             'ignore_creator' => [],
-            'permission' => [],
+            'assignment' => [],
             'shortcut_name' => 'My Notes',
             'shortcut_link' => '',
             'shortcut_group' => '',
@@ -363,7 +350,7 @@ class FilterModel extends Base
             'tags' => [],
             'creator' => [],
             'ignore_creator' => [$user_id],
-            'permission' => [],
+            'assignment' => [],
             'shortcut_name' => 'My Shares',
             'shortcut_link' => '',
             'shortcut_group' => '',
