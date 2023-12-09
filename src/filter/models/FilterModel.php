@@ -289,25 +289,10 @@ class FilterModel extends Base
             $where[] = 'created_at <= "'. $filter['end_date'].'"';
         }
 
-        // filter with permission user login
-        $asset = $this->PermissionModel->getAccessByUser();
-        if(!in_array('note_manager', $asset))
-        {
-            $tmp = ['(share_user LIKE "%('. $this->user->get('id') .')%")'];
-            $tmp[] = '(created_by LIKE '. $this->user->get('id').')';
-            $groups = $this->UserEntity->getGroups($this->user->get('id'));
-            foreach($groups as $group)
-            {
-                $tmp[] = "(`share_user_group` LIKE '%(" . $group['group_id'] . ")%')";
-            }
-
-            $where[] = '('. implode(" OR ", $tmp) . ')';
-        }
-
         return $where;
     }
 
-    public function generateUserFilter($user_id)
+    public function initCollection($user_id)
     {
         if (!$user_id)
         {
@@ -324,8 +309,7 @@ class FilterModel extends Base
             'end_date' => '',
             'tags' => [],
             'creator' => [$user_id],
-            'ignore_creator' => [],
-            'assignment' => [],
+            'assignment' => ['user-'. $user_id],
             'shortcut_name' => 'My Notes',
             'shortcut_link' => '',
             'shortcut_group' => '',
@@ -349,8 +333,7 @@ class FilterModel extends Base
             'end_date' => '',
             'tags' => [],
             'creator' => [],
-            'ignore_creator' => [$user_id],
-            'assignment' => [],
+            'assignment' => ['user-'. $user_id],
             'shortcut_name' => 'My Shares',
             'shortcut_link' => '',
             'shortcut_group' => '',

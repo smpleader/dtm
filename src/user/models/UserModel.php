@@ -89,7 +89,7 @@ class UserModel extends Base
         $container = $this->app->getContainer();
         if ($container->exists('FilterModel'))
         {
-            $try = $this->FilterModel->generateUserFilter($newId);
+            $try = $this->FilterModel->initCollection($newId);
         }
 
         return $newId;
