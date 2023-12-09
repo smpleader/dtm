@@ -18,7 +18,8 @@ class note extends ControllerMVVM
     {
         $ids = $this->validateID();
         $mode = $this->app->get('filter');
-        $link = $mode == 'my-note' ? 'my-filter/my-notes' : 'notes';
+        $link_back_note = $this->session->get('link_back_note', '');
+        $link = $link_back_note ? $link_back_note : 'notes';
 
         $count = 0;
         $error_msg = '';
@@ -155,7 +156,8 @@ class note extends ControllerMVVM
     {
         $ids = $this->validateID();
         $mode = $this->app->get('filter');
-        $link = $mode == 'my-note' ? 'my-filter/my-notes' : 'notes/trash';
+        $link_back_note = $this->session->get('link_back_note', '');
+        $link = $link_back_note ? $link_back_note : 'notes/trash';
         $count = 0;
         $error_msg = '';
         if( is_array($ids))

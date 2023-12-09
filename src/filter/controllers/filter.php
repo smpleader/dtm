@@ -173,6 +173,7 @@ class filter extends ControllerMVVM
         {
             $this->app->raiseError('Invalid request');
         }
+        $this->session->set('link_back_note', 'my-filter/'. $filter_name);
 
         $this->app->set('filter_id', $check['id']);
 
