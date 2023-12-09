@@ -21,7 +21,7 @@ class Menu
             $menu = [
                 [
                     'link' => $router->url('notes'),
-                    'title' => 'Note Manager',
+                    'title' => 'Notes',
                     'icon' => '<i class="fa-solid fa-clipboard"></i>',
                     'class' => $active,
                     'childs' => [],

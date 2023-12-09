@@ -6,7 +6,7 @@ use SPT\Support\Loader;
 
 class Menu
 {
-    public static function registerItem( IApp $app )
+    public static function registerShortcut( IApp $app )
     {
         $container = $app->getContainer();
         $router = $container->get('router');
@@ -35,16 +35,6 @@ class Menu
                 $child_menu = [];
                 foreach($shortcut['childs'] as $item)
                 {
-                    // Todo: active item menu when open shortcut link
-                    // if(trim($path_current, '/') == trim(str_replace($router->url(), '' ,$item['link']), '/'))
-                    // {
-                    //     $active = 'active';
-                    //     $active_group = true;
-                    // }
-                    // else
-                    // {
-                    //     $active = '';
-                    // }
                     $active = '';
 
                     $child_menu[] = [
