@@ -194,10 +194,10 @@ class FilterModel extends Base
                 'name' => $data['shortcut_name'],
                 'link' => $this->router->url('my-filter/'.$data['filter_link']),
                 'group' => $data['shortcut_group'],
-                'user_id' => $this->user->get('id'),
+                'user_id' => $data['user_id'],
                 'id' => $shortcut['id'],
                 'modified_at' => date('Y-m-d H:i:s'),
-                'modified_by' => $this->user->get('id'),
+                'modified_by' => $data['user_id'],
             ]);
 
             return $try;
@@ -208,11 +208,11 @@ class FilterModel extends Base
                 'name' => $data['shortcut_name'],
                 'link' => $this->router->url('my-filter/'.$data['filter_link']),
                 'group' => $data['shortcut_group'],
-                'user_id' => $this->user->get('id'),
+                'user_id' => $data['user_id'],
                 'created_at' => date('Y-m-d H:i:s'),
-                'created_by' => $this->user->get('id'),
+                'created_by' => $data['user_id'],
                 'modified_at' => date('Y-m-d H:i:s'),
-                'modified_by' => $this->user->get('id'),
+                'modified_by' => $data['user_id'],
             ]);
 
             if ($try)
