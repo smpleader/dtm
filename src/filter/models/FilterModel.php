@@ -99,7 +99,7 @@ class FilterModel extends Base
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
-        $data['assigmnent'] = $data['assigmnent'] ? $this->convertArray($data['assigmnent']) : '';
+        $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
         $filter = $this->FilterEntity->bind($data);
 
         if (!$filter || !isset($filter['readyUpdate']) || !$filter['readyUpdate'])
@@ -309,7 +309,7 @@ class FilterModel extends Base
             'end_date' => '',
             'tags' => [],
             'creator' => [$user_id],
-            'assignment' => ['user-'. $user_id],
+            'assignment' => [],
             'shortcut_name' => 'My Notes',
             'shortcut_link' => '',
             'shortcut_group' => '',
