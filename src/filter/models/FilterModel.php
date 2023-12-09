@@ -63,7 +63,7 @@ class FilterModel extends Base
         return $slug;
     }
 
-    public function add($data)
+    public function add($data, $shortcut = true)
     {
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
@@ -86,13 +86,16 @@ class FilterModel extends Base
             return false;
         }
 
-        // create shortcut
-        $this->updateShortcut($data, $newId);
+        if($shortcut)
+        {
+            // create shortcut
+            $this->updateShortcut($data, $newId);
+        }
 
         return $newId;
     }
 
-    public function update($data)
+    public function update($data, $shortcut = true)
     {
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
@@ -114,7 +117,10 @@ class FilterModel extends Base
             return false;
         }
 
-        $shortcut = $this->updateShortcut($data, $data['id']);
+        if($shortcut)
+        {
+            $shortcut = $this->updateShortcut($data, $data['id']);
+        }
         
         return $try;
     }
