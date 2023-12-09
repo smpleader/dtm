@@ -32,11 +32,11 @@ class NoteEntity extends Entity
                     'type' => 'varchar',
                     'limit' => 245,
                 ],
-                'share_user' => [
+                'assignee' => [
                     'type' => 'text',
                     'null' => 'YES',
                 ],
-                'share_user_group' => [
+                'assign_user_group' => [
                     'type' => 'text',
                     'null' => 'YES',
                 ],

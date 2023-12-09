@@ -59,12 +59,12 @@ class AdminNotes extends ViewModel
         {
             $where[] = 'created_by Not LIKE '. $this->user->get('id');
             $where_permission = [];
-            $where_permission[] = "(`share_user` LIKE '%(" . $this->user->get('id') . ")%')";
+            $where_permission[] = "(`assignee` LIKE '%(" . $this->user->get('id') . ")%')";
 
             $groups = $this->UserEntity->getGroups($this->user->get('id'));
             foreach($groups as $group)
             {
-                $where_permission[] = "(`share_user_group` LIKE '%(" . $group['group_id'] . ")%')";
+                $where_permission[] = "(`assign_user_group` LIKE '%(" . $group['group_id'] . ")%')";
             }
 
             $where[] = '('. implode(" OR ", $where_permission) . ')';
@@ -275,7 +275,7 @@ class AdminNotes extends ViewModel
                 'formClass' => 'form-select',
                 'options' => $options,
                 'showLabel' => false,
-                'placeholder' => 'Type'
+                'placeholder' => 'Note Type'
             ],
             'author' => [
                 'option',

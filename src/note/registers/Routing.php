@@ -48,15 +48,6 @@ class Routing
                 ],
                 'filter' => 'my-note',
             ],
-            'share-notes' => [
-                'fnc' => [
-                    'get' => 'note.note.list',
-                    'post' => 'note.note.list',
-                    'put' => 'note.note.update',
-                    'delete' => 'note.note.delete',
-                ],
-                'filter' => 'share-note',
-            ],
             'note/detail' => [
                 'fnc' => [
                     'get' => 'note.note.detail',

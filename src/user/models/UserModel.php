@@ -86,6 +86,12 @@ class UserModel extends Base
             return false;
         }
 
+        $container = $this->app->getContainer();
+        if ($container->exists('FilterModel'))
+        {
+            $try = $this->FilterModel->initCollection($newId);
+        }
+
         return $newId;
     }
 
