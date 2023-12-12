@@ -106,7 +106,7 @@ class AdminTag extends ViewModel
         $tags = $this->TagModel->convert($tags, false);
         if ($tags)
         {
-            $where = ['id IN ('. implode(',', $tags) .')'];
+            $where = ['#__tags.id IN ('. implode(',', $tags) .')'];
             $tags = $this->TagEntity->list(0, 0, $where);
         }
         else
