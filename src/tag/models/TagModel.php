@@ -77,7 +77,15 @@ class TagModel extends Base
 
         if( !empty($search) )
         {
-            $where[] = "(`name` LIKE '%".$search."%' )";
+            $search = explode(':', $search);
+            if (count($search) > 1)
+            {
+                $where[] = "(#__tags.name LIKE '%".$search[1]."%' AND parent_tag.name LIKE '%".$search[0]."%')";
+            }
+            else
+            {
+                $where[] = "(#__tags.name LIKE '%".$search[0]."%' OR parent_tag.name LIKE '%".$search[0]."%')";
+            }
         }
 
         if ($ignores && is_array($ignores))
