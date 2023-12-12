@@ -100,7 +100,10 @@ class AdminTag extends ViewModel
         if($filter_name)
         {
             $filter = $this->CollectionModel->checkFilterName($filter_name);
-            $tags = !$filter ? $tags : $filter['tags'];
+            if($filter)
+            {
+                $tags = $filter['tags'] && $filter['filters'] ? $filter['tags']. ',' . $filter['filters'] : ($filter['filters'] ? $filter['filters'] : $filter['tags']);
+            }
         }
 
         $tags = $this->TagModel->convert($tags, false);

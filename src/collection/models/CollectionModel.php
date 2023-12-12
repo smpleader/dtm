@@ -262,6 +262,41 @@ class CollectionModel extends Base
             $where[] = '('. implode(' OR ', $tmp_tags) .')';
         }
 
+        $filters = isset($collection['filters']) ? $collection['filters'] : [];
+        foreach($filters as $item)
+        {
+            $child_tags = $this->TagEntity->list(0,0,['#__tags.parent_id LIKE '. $item]);
+            $search = $filter->getField('parent_tag_'. $item)->value;
+
+            if($search)
+            {
+                $tmp_tags = [];
+                foreach($search as $tag)
+                {
+                    $tmp_tags[] = 'tags LIKE "%('. $tag .')%"';
+                }
+                if ($tmp_tags)
+                {
+                    $where[] = '('. implode(' OR ', $tmp_tags) .')';
+                }
+            }else{
+                $tmp_tags = [];
+                $tmp_tags[] = 'tags LIKE "%('. $item .')%"';
+                if($child_tags)
+                {
+                    foreach($child_tags as $tag)
+                    {
+                        $tmp_tags[] = 'tags LIKE "%('. $tag['id'] .')%"';
+                    }
+                }
+
+                if ($tmp_tags)
+                {
+                    $where[] = '('. implode(' OR ', $tmp_tags) .')';
+                }
+            }
+        }
+
         $assignment_tmp = [];
         foreach($collection['assignment'] as $assignment)
         {
