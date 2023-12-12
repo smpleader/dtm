@@ -71,9 +71,9 @@ class TagModel extends Base
         return $try;
     }
 
-    public function search($search, $ignores)
+    public function search($search, $ignores, $where = [])
     {
-        $where = [];
+        $where = is_array($where) ? $where : [];
 
         if( !empty($search) )
         {
