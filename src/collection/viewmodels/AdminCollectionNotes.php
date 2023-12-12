@@ -122,14 +122,14 @@ class AdminCollectionNotes extends ViewModel
         foreach ($result as &$item) {
             if (!empty($item['tags'])) {
                 $t1 = $where = [];
-                $where[] = "(`id` IN (" . $item['tags'] . ") )";
-                $t2 = $this->TagEntity->list(0, 0, $where, '', '`name`');
+                $where[] = "(#__tags.id IN (" . $item['tags'] . ") )";
+                $t2 = $this->TagEntity->list(0, 0, $where, '');
                 if ($t2) {
                     foreach ($t2 as $i) {
-                        $t1[] = $i['name'];
+                        $t1[] = $i['parent_name'] ? $i['parent_name'] .':'.$i['name'] : $i['name'];
                     }
                 }
-                $data_tags[$item['id']] = implode(',', $t1);
+                $data_tags[$item['id']] = implode(', ', $t1);
             }
 
             $item['type'] = $item['type'] ? $item['type'] : 'html';
