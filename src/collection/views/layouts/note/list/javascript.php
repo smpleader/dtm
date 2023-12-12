@@ -8,6 +8,9 @@
         $('#tags').val(null).trigger('change');
         $('#note_type').val(null).trigger('change');
         $('#author').val(null).trigger('change');
+        <?php foreach($this->collection['filters'] as $parent_id) : ?>
+            $('#<?php echo 'parent_tag_'. $parent_id ?>').val(null).trigger('change');
+        <?php endforeach; ?>
         document.getElementById("input_clear_filter").value = 1;
         document.getElementById('filter_form').submit();
     };

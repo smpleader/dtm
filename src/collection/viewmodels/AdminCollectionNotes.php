@@ -21,22 +21,29 @@ class AdminCollectionNotes extends ViewModel
     public function list()
     {
         $filter_id = $this->app->get('filter_id', '');
-        $clear_filter = $this->request->post->get('clear_filter', '', 'string');
-        if ($clear_filter)
-        {
-            $this->session->set('filter_'. $filter_id.'.tags', []);
-            $this->session->set('filter_'. $filter_id.'.author', []);
-            $this->session->set('filter_'. $filter_id.'.note_type', []);
-        }
-
         $urlVars = $this->request->get('urlVars');
         $filter_name = $urlVars && $urlVars['filter_name'] ? $urlVars['filter_name'] : '';
 
         $where = [];
         if ($filter_id)
         {
-            
             $collection = $this->CollectionModel->getDetail($filter_id);
+        }
+
+        $clear_filter = $this->request->post->get('clear_filter', '', 'string');
+        if ($clear_filter)
+        {
+            $this->session->set('filter_'. $filter_id.'.tags', []);
+            $this->session->set('filter_'. $filter_id.'.author', []);
+            $this->session->set('filter_'. $filter_id.'.note_type', []);
+            if($collection)
+            {
+                $filters = isset($collection['filters']) ? $collection['filters'] : [];
+                foreach($filters as $item)
+                {
+                    $this->session->set('parent_tag_'. $item. '_'. $filter_id.'.search', []);
+                }
+            }
         }
 
         $filter = $this->filter($collection)['form'];
@@ -199,6 +206,16 @@ class AdminCollectionNotes extends ViewModel
                 'limit' => $this->state('limit', 10, 'int', 'post', 'filter_'.$filter_id.'.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'filter_'.$filter_id.'.sort')
             ];
+
+            if($collection)
+            {
+                $filters = isset($collection['filters']) ? $collection['filters'] : [];
+                foreach($filters as $item)
+                {
+                    $data['parent_tag_'. $item] = $this->state('parent_tag_'. $item, '', '', 'post', 'parent_tag_'. $item. '_'.$filter_id.'.search');
+                }
+            }
+
             $filter = new Form($this->getFilterFields($collection), $data);
 
             $this->_filter = $filter;
@@ -310,7 +327,7 @@ class AdminCollectionNotes extends ViewModel
                 foreach($list_tags as $tag)
                 {
                     $options[] = [
-                        'text' => $tag['name'],
+                        'text' => $parent['name'] .':'. $tag['name'],
                         'value' => $tag['id']
                     ];
                 }
