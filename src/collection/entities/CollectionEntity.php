@@ -46,6 +46,9 @@ class CollectionEntity extends Entity
                     'default' => 'NOW()',
                     'null' => 'YES'
                 ],
+                'filters' => [
+                    'type' => 'text',
+                ],
                 'tags' => [
                     'type' => 'text',
                 ],

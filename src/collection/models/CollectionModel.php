@@ -67,6 +67,8 @@ class CollectionModel extends Base
     {
         $data['tags'] = $data['tags'] ? $this->convertTag($data['tags']) : [];
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
+        $data['filters'] = $data['filters'] ? $this->convertTag($data['filters'], false) : [];
+        $data['filters'] = $data['filters'] ? $this->convertArray($data['filters']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
@@ -99,6 +101,8 @@ class CollectionModel extends Base
     {
         $data['tags'] = $data['tags'] ? $this->convertTag($data['tags']) : [];
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
+        $data['filters'] = $data['filters'] ? $this->convertTag($data['filters'], false) : [];
+        $data['filters'] = $data['filters'] ? $this->convertArray($data['filters']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
@@ -140,6 +144,7 @@ class CollectionModel extends Base
         }
 
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags'], false) : [];
+        $data['filters'] = $data['filters'] ? $this->convertArray($data['filters'], false) : [];
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator'], false) : [];
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment'], false) : [];
 
@@ -353,7 +358,7 @@ class CollectionModel extends Base
         return true;
     }
 
-    public function convertTag($tags)
+    public function convertTag($tags, $allow_parent = true)
     {
         if(!$tags || !is_array($tags))
         {
@@ -371,7 +376,7 @@ class CollectionModel extends Base
             else
             {
                 $tag_tmp = explode(':', $item);
-                if(count($tag_tmp) > 1 && $tag_tmp[1])
+                if(count($tag_tmp) > 1 && $tag_tmp[1] && $allow_parent)
                 {
                     $parent = $this->TagEntity->findOne(['name' => trim($tag_tmp[0])]);
                     if(!$parent)

@@ -30,6 +30,7 @@ class collection extends ControllerMVVM
             'select_object' => $this->request->post->get('select_object', '', 'string'),
             'start_date' => $this->request->post->get('start_date', '', 'string'),
             'end_date' => $this->request->post->get('end_date', '', 'string'),
+            'filters' => $this->request->post->get('filters', [], 'array'),
             'tags' => $this->request->post->get('tags', [], 'array'),
             'creator' => $this->request->post->get('creator', [], 'array'),
             'assignment' => $this->request->post->get('assignment', [], 'array'),
@@ -75,6 +76,7 @@ class collection extends ControllerMVVM
                 'select_object' => $this->request->post->get('select_object', '', 'string'),
                 'start_date' => $this->request->post->get('start_date', null, 'string'),
                 'end_date' => $this->request->post->get('end_date', null, 'string'),
+                'filters' => $this->request->post->get('filters', [], 'array'),
                 'tags' => $this->request->post->get('tags', [], 'array'),
                 'creator' => $this->request->post->get('creator', [], 'array'),
                 'assignment' => $this->request->post->get('assignment', [], 'array'),
@@ -178,5 +180,18 @@ class collection extends ControllerMVVM
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
         $this->app->set('layout', 'note.list');
+    }
+
+    public function getFilters()
+    {
+        $search = trim($this->request->get->get('search', '', 'string'));
+
+        $data = $this->TagModel->search($search, [], ['(#__tags.parent_id <= 0 || #__tags.parent_id IS NULL)']);
+
+        $this->app->set('format', 'json');
+        $this->set('status' , 'success');
+        $this->set('data' , $data);
+        $this->set('message' , '');
+        return;
     }
 }

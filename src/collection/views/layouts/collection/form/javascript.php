@@ -12,6 +12,42 @@
             $('#button_save').click();
         });
 
+        $("#filters").select2({
+            matcher: matchCustom,
+            tags: true,
+            ajax: {
+                url: "<?php echo $this->link_filters ?>",
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults: function(data, params) {
+                    let items = [];
+                    if (data.data.length > 0) {
+                        data.data.forEach(function(item) {
+                            items.push({
+                                id: item.id,
+                                text: item.name
+                            })
+                        })
+                    }
+
+                    return {
+                        results: items,
+                        pagination: {
+                            more: false
+                        }
+                    };
+                },
+                cache: true
+            },
+            placeholder: '',
+            minimumInputLength: 1,
+        });
+
         $("#tags").select2({
             matcher: matchCustom,
             tags: true,
