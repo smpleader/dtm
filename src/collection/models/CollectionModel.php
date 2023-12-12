@@ -244,16 +244,16 @@ class CollectionModel extends Base
         return true;
     }
 
-    public function getFilterWhere($filter)
+    public function getFilterWhere($collection, $filter)
     {
-        if (!$filter || !$filter['id'])
+        if (!$collection || !$collection['id'])
         {
             return [];
         }
         $where = [];
 
         $tmp_tags = [];
-        foreach($filter['tags'] as $tag)
+        foreach($collection['tags'] as $tag)
         {
             $tmp_tags[] = 'tags LIKE "%('. $tag .')%"';
         }
@@ -263,7 +263,7 @@ class CollectionModel extends Base
         }
 
         $assignment_tmp = [];
-        foreach($filter['assignment'] as $assignment)
+        foreach($collection['assignment'] as $assignment)
         {
             $field = strpos($assignment, 'user') !== false ? 'assignee' : 'assign_user_group';
             $assignment = explode('-', $assignment);
@@ -277,7 +277,7 @@ class CollectionModel extends Base
         }
 
         $creator = [];
-        foreach($filter['creator'] as $user)
+        foreach($collection['creator'] as $user)
         {
             $creator[] = 'created_by LIKE '. $user;
         }
@@ -286,14 +286,14 @@ class CollectionModel extends Base
             $where[] = '('. implode(' OR ', $creator) .')';
         }
 
-        if ($filter['start_date'])
+        if ($collection['start_date'])
         {
-            $where[] = 'created_at >= "'. $filter['start_date'].'"';
+            $where[] = 'created_at >= "'. $collection['start_date'].'"';
         }
 
-        if ($filter['end_date'])
+        if ($collection['end_date'])
         {
-            $where[] = 'created_at <= "'. $filter['end_date'].'"';
+            $where[] = 'created_at <= "'. $collection['end_date'].'"';
         }
 
         return $where;
