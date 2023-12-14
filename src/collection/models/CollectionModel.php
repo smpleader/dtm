@@ -172,7 +172,19 @@ class CollectionModel extends Base
         
         $slug = strtolower(urldecode($slug));
         $where = ['LOWER(filter_link) LIKE "'.$slug.'"'];
-        $where[] = ['user_id' => $this->user->get('id')];
+        
+        // where for shares collection
+        $where_shares = [];
+        $groups = $this->UserEntity->getGroups($this->user->get('id'));
+        foreach($groups as $group)
+        {
+            $where_shares[] = 'shares LIKE "%(group-'. $group .')%"';
+        }
+
+        $where_shares[] = 'shares LIKE "%(user-'. $this->user->get('id') .')%"';
+        $where_shares[] = 'user_id LIKE '. $this->user->get('id');
+
+        $where[] = '('. implode(" OR ", $where_shares). ')';
         $findOne = $this->CollectionEntity->findOne($where);
         
         if($findOne)
