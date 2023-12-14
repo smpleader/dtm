@@ -61,6 +61,9 @@ class CollectionEntity extends Entity
                 'assignment' => [
                     'type' => 'text',
                 ],
+                'shares' => [
+                    'type' => 'text',
+                ],
                 'created_at' => [
                     'type' => 'datetime',
                     'default' => 'NOW()',
