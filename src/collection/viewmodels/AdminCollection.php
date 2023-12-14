@@ -64,6 +64,7 @@ class AdminCollection extends ViewModel
                 }
             }
         }
+        $tags = [];
         if ($data && $data['tags'])
         {
             foreach($data['tags'] as $tag_id)

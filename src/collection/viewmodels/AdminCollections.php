@@ -37,12 +37,23 @@ class AdminCollections extends ViewModel
         $where = [];
         $title = 'My Filters';
 
-        $where[] = 'user_id = '. $this->user->get('id');
         if($search)
         {
             $where[] = 'name  LIKE "%'. $search. '%"';
         }
 
+        $where_shares = [];
+        $groups = $this->UserEntity->getGroups($this->user->get('id'));
+        foreach($groups as $group)
+        {
+            $where_shares[] = 'shares LIKE "%(group-'. $group .')%"';
+        }
+
+        $where_shares[] = 'shares LIKE "%(user-'. $this->user->get('id') .')%"';
+        $where_shares[] = 'user_id LIKE '. $this->user->get('id');
+
+        $where[] = '('. implode(" OR ", $where_shares). ')';
+        
         $start  = ($page - 1) * $limit;
         $sort = $sort ? $sort : 'name asc';
         $result = $this->CollectionEntity->list($start, $limit, $where, $sort);
@@ -53,6 +64,15 @@ class AdminCollections extends ViewModel
             $total = 0;
             if (!empty($search)) {
                 $this->session->set('flashMsg', 'Filter not found');
+            }
+        }
+
+        foreach($result as &$item)
+        {
+            if($item['created_by'] != $this->user->get('id'))
+            {
+                $user = $this->UserEntity->findByPK($item['created_by']);
+                $item['shared_by'] = $user['name'];
             }
         }
 

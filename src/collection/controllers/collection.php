@@ -15,6 +15,24 @@ class collection extends ControllerMVVM
 
     public function detail()
     {
+        $id = $this->validateID(); 
+        if($id)
+        {
+            $collection = $this->CollectionModel->getDetail($id);
+            if (!$collection)
+            {
+                return $this->app->redirect(
+                    $this->router->url('collections')
+                );
+            }
+
+            if ($collection['created_by'] != $this->user->get('id'))
+            {
+                return $this->app->redirect(
+                    $this->router->url('collections')
+                );
+            }
+        }
         $this->app->set('page', 'backend');
         $this->app->set('format', 'html');
         $this->app->set('layout', 'collection.form');
