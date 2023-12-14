@@ -123,6 +123,8 @@ class CollectionModel extends Base
             return false;
         }
 
+        $this->shareCollection($data['id']);
+
         if($shortcut)
         {
             $shortcut = $this->updateShortcut($data, $data['id']);
@@ -459,5 +461,75 @@ class CollectionModel extends Base
         }
 
         return $list;
+    }
+
+    public function shareCollection($id)
+    {
+        if(!$id)
+        {
+            return false;
+        }
+
+        $collection = $this->getDetail($id);
+        if (!$collection)
+        {
+            return false;
+        }
+
+        if ($collection['shares'] && $collection['shortcut_id'])
+        {
+            $shortcut = $this->ShortcutEntity->findByPK($collection['shortcut_id']);
+            if(!$shortcut)
+            {
+                return false;
+            }
+
+            $users = [];
+            $groups = [];
+            foreach($collection['shares'] as $item)
+            {
+                if(strpos($item, 'user-') !== false)
+                {
+                    $users[] = str_replace('user-', '', $item);
+                }
+
+                if(strpos($item, 'group-') !== false)
+                {
+                    $groups[] = str_replace('group-', '', $item);
+                }
+            }
+
+            foreach($groups as $group)
+            {
+                $list = $this->UserGroupEntity->list(0,0,['group_id' => $group]);
+                foreach($list as $item)
+                {
+                    if (!in_array($item['user_id'], $users))
+                    {
+                        $users[] = $item['user_id'];
+                    }
+                }
+            }
+
+            foreach($users as $item)
+            {
+                $check = $this->ShortcutEntity->findOne(['user_id' => $item, 'link' => $shortcut['link']]);
+                if (!$check)
+                {
+                    $try = $this->ShortcutEntity->add([
+                        'name' => $shortcut['name'],
+                        'link' => $shortcut['link'],
+                        'group' => $shortcut['group'],
+                        'user_id' => $item,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'created_by' => $this->user->get('id'),
+                        'modified_at' => date('Y-m-d H:i:s'),
+                        'modified_by' => $this->user->get('id'),
+                    ]);
+                }
+            }
+        }
+
+        return true;
     }
 }
