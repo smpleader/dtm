@@ -67,9 +67,12 @@ class CollectionModel extends Base
     {
         $data['tags'] = $data['tags'] ? $this->convertTag($data['tags']) : [];
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
+        $data['filters'] = $data['filters'] ? $this->convertTag($data['filters'], false) : [];
+        $data['filters'] = $data['filters'] ? $this->convertArray($data['filters']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
+        $data['shares'] = $data['shares'] ? $this->convertArray($data['shares']) : '';
         $filter = $this->CollectionEntity->bind($data);
 
         if (!$filter || !isset($filter['readyNew']) || !$filter['readyNew'])
@@ -99,9 +102,12 @@ class CollectionModel extends Base
     {
         $data['tags'] = $data['tags'] ? $this->convertTag($data['tags']) : [];
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
+        $data['filters'] = $data['filters'] ? $this->convertTag($data['filters'], false) : [];
+        $data['filters'] = $data['filters'] ? $this->convertArray($data['filters']) : '';
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
+        $data['shares'] = $data['shares'] ? $this->convertArray($data['shares']) : '';
         $filter = $this->CollectionEntity->bind($data);
 
         if (!$filter || !isset($filter['readyUpdate']) || !$filter['readyUpdate'])
@@ -116,6 +122,8 @@ class CollectionModel extends Base
             $this->error = $this->CollectionEntity->getError();
             return false;
         }
+
+        $this->shareCollection($data['id']);
 
         if($shortcut)
         {
@@ -140,8 +148,10 @@ class CollectionModel extends Base
         }
 
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags'], false) : [];
+        $data['filters'] = $data['filters'] ? $this->convertArray($data['filters'], false) : [];
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator'], false) : [];
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment'], false) : [];
+        $data['shares'] = $data['shares'] ? $this->convertArray($data['shares'], false) : [];
 
         if ($data['shortcut_id'])
         {
@@ -162,7 +172,19 @@ class CollectionModel extends Base
         
         $slug = strtolower(urldecode($slug));
         $where = ['LOWER(filter_link) LIKE "'.$slug.'"'];
-        $where[] = ['user_id' => $this->user->get('id')];
+        
+        // where for shares collection
+        $where_shares = [];
+        $groups = $this->UserEntity->getGroups($this->user->get('id'));
+        foreach($groups as $group)
+        {
+            $where_shares[] = 'shares LIKE "%(group-'. $group .')%"';
+        }
+
+        $where_shares[] = 'shares LIKE "%(user-'. $this->user->get('id') .')%"';
+        $where_shares[] = 'user_id LIKE '. $this->user->get('id');
+
+        $where[] = '('. implode(" OR ", $where_shares). ')';
         $findOne = $this->CollectionEntity->findOne($where);
         
         if($findOne)
@@ -239,16 +261,16 @@ class CollectionModel extends Base
         return true;
     }
 
-    public function getFilterWhere($filter)
+    public function getFilterWhere($collection, $filter)
     {
-        if (!$filter || !$filter['id'])
+        if (!$collection || !$collection['id'])
         {
             return [];
         }
         $where = [];
 
         $tmp_tags = [];
-        foreach($filter['tags'] as $tag)
+        foreach($collection['tags'] as $tag)
         {
             $tmp_tags[] = 'tags LIKE "%('. $tag .')%"';
         }
@@ -257,8 +279,43 @@ class CollectionModel extends Base
             $where[] = '('. implode(' OR ', $tmp_tags) .')';
         }
 
+        $filters = isset($collection['filters']) ? $collection['filters'] : [];
+        foreach($filters as $item)
+        {
+            $child_tags = $this->TagEntity->list(0,0,['#__tags.parent_id LIKE '. $item]);
+            $search = $filter->getField('parent_tag_'. $item)->value;
+
+            if($search)
+            {
+                $tmp_tags = [];
+                foreach($search as $tag)
+                {
+                    $tmp_tags[] = 'tags LIKE "%('. $tag .')%"';
+                }
+                if ($tmp_tags)
+                {
+                    $where[] = '('. implode(' OR ', $tmp_tags) .')';
+                }
+            }else{
+                $tmp_tags = [];
+                $tmp_tags[] = 'tags LIKE "%('. $item .')%"';
+                if($child_tags)
+                {
+                    foreach($child_tags as $tag)
+                    {
+                        $tmp_tags[] = 'tags LIKE "%('. $tag['id'] .')%"';
+                    }
+                }
+
+                if ($tmp_tags)
+                {
+                    $where[] = '('. implode(' OR ', $tmp_tags) .')';
+                }
+            }
+        }
+
         $assignment_tmp = [];
-        foreach($filter['assignment'] as $assignment)
+        foreach($collection['assignment'] as $assignment)
         {
             $field = strpos($assignment, 'user') !== false ? 'assignee' : 'assign_user_group';
             $assignment = explode('-', $assignment);
@@ -272,7 +329,7 @@ class CollectionModel extends Base
         }
 
         $creator = [];
-        foreach($filter['creator'] as $user)
+        foreach($collection['creator'] as $user)
         {
             $creator[] = 'created_by LIKE '. $user;
         }
@@ -281,14 +338,14 @@ class CollectionModel extends Base
             $where[] = '('. implode(' OR ', $creator) .')';
         }
 
-        if ($filter['start_date'])
+        if ($collection['start_date'])
         {
-            $where[] = 'created_at >= "'. $filter['start_date'].'"';
+            $where[] = 'created_at >= "'. $collection['start_date'].'"';
         }
 
-        if ($filter['end_date'])
+        if ($collection['end_date'])
         {
-            $where[] = 'created_at <= "'. $filter['end_date'].'"';
+            $where[] = 'created_at <= "'. $collection['end_date'].'"';
         }
 
         return $where;
@@ -353,7 +410,7 @@ class CollectionModel extends Base
         return true;
     }
 
-    public function convertTag($tags)
+    public function convertTag($tags, $allow_parent = true)
     {
         if(!$tags || !is_array($tags))
         {
@@ -371,7 +428,7 @@ class CollectionModel extends Base
             else
             {
                 $tag_tmp = explode(':', $item);
-                if(count($tag_tmp) > 1 && $tag_tmp[1])
+                if(count($tag_tmp) > 1 && $tag_tmp[1] && $allow_parent)
                 {
                     $parent = $this->TagEntity->findOne(['name' => trim($tag_tmp[0])]);
                     if(!$parent)
@@ -416,5 +473,75 @@ class CollectionModel extends Base
         }
 
         return $list;
+    }
+
+    public function shareCollection($id)
+    {
+        if(!$id)
+        {
+            return false;
+        }
+
+        $collection = $this->getDetail($id);
+        if (!$collection)
+        {
+            return false;
+        }
+
+        if ($collection['shares'] && $collection['shortcut_id'])
+        {
+            $shortcut = $this->ShortcutEntity->findByPK($collection['shortcut_id']);
+            if(!$shortcut)
+            {
+                return false;
+            }
+
+            $users = [];
+            $groups = [];
+            foreach($collection['shares'] as $item)
+            {
+                if(strpos($item, 'user-') !== false)
+                {
+                    $users[] = str_replace('user-', '', $item);
+                }
+
+                if(strpos($item, 'group-') !== false)
+                {
+                    $groups[] = str_replace('group-', '', $item);
+                }
+            }
+
+            foreach($groups as $group)
+            {
+                $list = $this->UserGroupEntity->list(0,0,['group_id' => $group]);
+                foreach($list as $item)
+                {
+                    if (!in_array($item['user_id'], $users))
+                    {
+                        $users[] = $item['user_id'];
+                    }
+                }
+            }
+
+            foreach($users as $item)
+            {
+                $check = $this->ShortcutEntity->findOne(['user_id' => $item, 'link' => $shortcut['link']]);
+                if (!$check)
+                {
+                    $try = $this->ShortcutEntity->add([
+                        'name' => $shortcut['name'],
+                        'link' => $shortcut['link'],
+                        'group' => $shortcut['group'],
+                        'user_id' => $item,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'created_by' => $this->user->get('id'),
+                        'modified_at' => date('Y-m-d H:i:s'),
+                        'modified_by' => $this->user->get('id'),
+                    ]);
+                }
+            }
+        }
+
+        return true;
     }
 }

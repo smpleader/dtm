@@ -47,6 +47,23 @@ class AdminCollection extends ViewModel
             ],
         ];
 
+        $filters = [];
+        if ($data && $data['filters'])
+        {
+            foreach($data['filters'] as $tag_id)
+            {
+                $tag = $this->TagEntity->findByPK($tag_id);
+                if ($tag)
+                {
+                    if ($tag['parent_id'])
+                    {
+                        $parent = $this->TagEntity->findByPK($tag['parent_id']);
+                        $tag['name'] = $parent ? $parent['name'].':'. $tag['name'] : $tag['name'];
+                    }
+                    $filters[] = $tag;
+                }
+            }
+        }
         $tags = [];
         if ($data && $data['tags'])
         {
@@ -70,10 +87,12 @@ class AdminCollection extends ViewModel
             'form' => $form,
             'data' => $data,
             'tags' => $tags,
+            'filters' => $filters,
             'button_header' => $button_header,
             'title_page' => 'Collection Form',
             'url' => $this->router->url(),
             'link_tag' => $this->router->url('tag/search'),
+            'link_filters' => $this->router->url('collection/filters'),
             'link_list' => $this->router->url('collections'),
             'link_form' => $this->router->url('collection/edit'),
         ];
@@ -180,7 +199,14 @@ class AdminCollection extends ViewModel
             ],
             'assignment' => ['option',
                 'type' => 'multiple_optgroup',
-                'layout' => 'filter::fields.multiple_optgroup',
+                'layout' => 'collection::fields.multiple_optgroup',
+                'formClass' => 'form-select',
+                'default' => 'note',
+                'options' => $option_permission,
+            ],
+            'shares' => ['option',
+                'type' => 'multiple_optgroup',
+                'layout' => 'collection::fields.multiple_optgroup',
                 'formClass' => 'form-select',
                 'default' => 'note',
                 'options' => $option_permission,

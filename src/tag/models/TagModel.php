@@ -71,13 +71,21 @@ class TagModel extends Base
         return $try;
     }
 
-    public function search($search, $ignores)
+    public function search($search, $ignores, $where = [])
     {
-        $where = [];
+        $where = is_array($where) ? $where : [];
 
         if( !empty($search) )
         {
-            $where[] = "(`name` LIKE '%".$search."%' )";
+            $search = explode(':', $search);
+            if (count($search) > 1)
+            {
+                $where[] = "(#__tags.name LIKE '%".$search[1]."%' AND parent_tag.name LIKE '%".$search[0]."%')";
+            }
+            else
+            {
+                $where[] = "(#__tags.name LIKE '%".$search[0]."%' OR parent_tag.name LIKE '%".$search[0]."%')";
+            }
         }
 
         if ($ignores && is_array($ignores))

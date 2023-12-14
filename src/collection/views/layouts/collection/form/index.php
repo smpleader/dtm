@@ -25,6 +25,16 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
                 </div>
                 <div class="mb-3">
                     <div>
+                        <label class="form-label" for="filters">Filters</label>
+                        <select class="selectpicker d-block form-select" multiple name="filters[]" id="filters"  >
+                            <?php foreach($this->filters as $filter) : ?>
+                                <option selected value="<?php echo $filter['id'] ?>"><?php echo $filter['name'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div>
                         <label class="form-label" for="tags">Tags</label>
                         <select class="selectpicker d-block form-select" multiple name="tags[]" id="tags"  >
                             <?php foreach($this->tags as $tag) : ?>
@@ -38,6 +48,9 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
                 </div>
                 <div class="mb-3">
                     <?php $this->ui->field('assignment'); ?>
+                </div>
+                <div class="mb-3">
+                    <?php $this->ui->field('shares'); ?>
                 </div>
                 <div class="row mb-3">
                     <div class="col-4">
