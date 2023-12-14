@@ -49,6 +49,9 @@ $this->theme->add($this->url . 'assets/js/select2.full.min.js', '', 'bootstrap-s
                 <div class="mb-3">
                     <?php $this->ui->field('assignment'); ?>
                 </div>
+                <div class="mb-3">
+                    <?php $this->ui->field('shares'); ?>
+                </div>
                 <div class="row mb-3">
                     <div class="col-4">
                         <?php $this->ui->field('shortcut_name'); ?>

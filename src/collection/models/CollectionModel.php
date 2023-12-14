@@ -72,6 +72,7 @@ class CollectionModel extends Base
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
+        $data['shares'] = $data['shares'] ? $this->convertArray($data['shares']) : '';
         $filter = $this->CollectionEntity->bind($data);
 
         if (!$filter || !isset($filter['readyNew']) || !$filter['readyNew'])
@@ -106,6 +107,7 @@ class CollectionModel extends Base
         $data['filter_link'] = $this->createSlug($data['name']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
+        $data['shares'] = $data['shares'] ? $this->convertArray($data['shares']) : '';
         $filter = $this->CollectionEntity->bind($data);
 
         if (!$filter || !isset($filter['readyUpdate']) || !$filter['readyUpdate'])
@@ -147,6 +149,7 @@ class CollectionModel extends Base
         $data['filters'] = $data['filters'] ? $this->convertArray($data['filters'], false) : [];
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator'], false) : [];
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment'], false) : [];
+        $data['shares'] = $data['shares'] ? $this->convertArray($data['shares'], false) : [];
 
         if ($data['shortcut_id'])
         {
