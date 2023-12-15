@@ -54,7 +54,7 @@ class SDM extends Base
         {
             if (!$item->isDot() && $item->isDir())
             {
-                $packages[$item->getPath()] = $this->namespace. '\\plugins\\'. $item->getBasename() .'\\'; 
+                $packages[$item->getPathname() .'/'] = $this->namespace. '\\plugins\\'. $item->getBasename() .'\\'; 
             }
         }
 
