@@ -54,7 +54,7 @@ class Cli extends Base
         {
             if (!$item->isDot() && $item->isDir())
             {
-                $packages[$item->getPathname() .'/'] = $this->namespace. '\\plugins\\'. $item->getBasename() .'\\'; 
+                $packages[$item->getPathname() .'/'] = $this->namespace. '\\'. $item->getBasename() .'\\'; 
             }
         }
         $packages[SPT_VENDOR_PATH.'smpleader/dtm/src/'] = '\\DTM\\';
