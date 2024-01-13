@@ -48,12 +48,22 @@ class Cli extends Base
         }
         
         $this->config = new Configuration(null);
+        
+        $packages = [];
+        foreach(new \DirectoryIterator(SPT_PLUGIN_PATH) as $item) 
+        {
+            if (!$item->isDot() && $item->isDir())
+            {
+                $packages[$item->getPathname() .'/'] = $this->namespace. '\\'. $item->getBasename() .'\\'; 
+            }
+        }
+        $packages[SPT_VENDOR_PATH.'smpleader/dtm/src/'] = '\\DTM\\';
+
         $this->plgManager = new Manager(
             $this,
-            [   SPT_PLUGIN_PATH => $this->namespace. '\\plugins\\',
-                SPT_VENDOR_PATH.'smpleader/dtm/src/' => '\\DTM\\'
-            ]
+            $packages
         );
+
         // setup container
         $this->container->set('app', $this);
         // create request
