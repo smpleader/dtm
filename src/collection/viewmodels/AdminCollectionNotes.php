@@ -21,18 +21,32 @@ class AdminCollectionNotes extends ViewModel
     public function list()
     {
         $filter_id = $this->app->get('filter_id', '');
+        $urlVars = $this->request->get('urlVars');
+        $filter_name = $urlVars && $urlVars['filter_name'] ? $urlVars['filter_name'] : '';
+
+        $where = [];
+        if ($filter_id)
+        {
+            $collection = $this->CollectionModel->getDetail($filter_id);
+        }
+
         $clear_filter = $this->request->post->get('clear_filter', '', 'string');
         if ($clear_filter)
         {
             $this->session->set('filter_'. $filter_id.'.tags', []);
             $this->session->set('filter_'. $filter_id.'.author', []);
             $this->session->set('filter_'. $filter_id.'.note_type', []);
+            if($collection)
+            {
+                $filters = isset($collection['filters']) ? $collection['filters'] : [];
+                foreach($filters as $item)
+                {
+                    $this->session->set('parent_tag_'. $item. '_'. $filter_id.'.search', []);
+                }
+            }
         }
 
-        $urlVars = $this->request->get('urlVars');
-        $filter_name = $urlVars && $urlVars['filter_name'] ? $urlVars['filter_name'] : '';
-
-        $filter = $this->filter()['form'];
+        $filter = $this->filter($collection)['form'];
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
         $tags   = $filter->getField('tags')->value;
@@ -40,21 +54,15 @@ class AdminCollectionNotes extends ViewModel
         $author   = $filter->getField('author')->value;
         $search = trim($filter->getField('search')->value);
 
-        $where = [];
-        if ($filter_id)
+        if ($collection)
         {
-            
-            $filter = $this->CollectionModel->getDetail($filter_id);
-            if ($filter)
-            {
-                $where = array_merge($where, $this->CollectionModel->getFilterWhere($filter));
-            }
+            $where = array_merge($where, $this->CollectionModel->getFilterWhere($collection, $filter));
         }
 
         $page = $this->state('page', 1, 'int', 'get', 'filter_'. $filter_id.'.page');
         if ($page <= 0) $page = 1;
 
-        $title = 'Collection: '. $filter['name'];
+        $title = 'Collection: '. $collection['name'];
         
         $filter_tags = [];
 
@@ -122,14 +130,14 @@ class AdminCollectionNotes extends ViewModel
         foreach ($result as &$item) {
             if (!empty($item['tags'])) {
                 $t1 = $where = [];
-                $where[] = "(`id` IN (" . $item['tags'] . ") )";
-                $t2 = $this->TagEntity->list(0, 0, $where, '', '`name`');
+                $where[] = "(#__tags.id IN (" . $item['tags'] . ") )";
+                $t2 = $this->TagEntity->list(0, 0, $where, '');
                 if ($t2) {
                     foreach ($t2 as $i) {
-                        $t1[] = $i['name'];
+                        $t1[] = $i['parent_name'] ? $i['parent_name'] .':'.$i['name'] : $i['name'];
                     }
                 }
-                $data_tags[$item['id']] = implode(',', $t1);
+                $data_tags[$item['id']] = implode(', ', $t1);
             }
 
             $item['type'] = $item['type'] ? $item['type'] : 'html';
@@ -156,13 +164,14 @@ class AdminCollectionNotes extends ViewModel
             'types' => $types,
             'data_tags' => $data_tags,
             'page' => $page,
-            'filter_id' => $filter['id'],
+            'filter_id' => $collection['id'],
+            'collection' => $collection,
             'start' => $start,
             'filter_tags' => json_encode($filter_tags),
             'sort' => $sort,
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
-            'link_list' =>  $this->router->url('collection/'. strtolower($filter['filter_link'])),
+            'link_list' =>  $this->router->url('collection/'. strtolower($collection['filter_link'])),
             'link_note_trash' => $this->router->url('my-notes/trash'),
             'link_mynote' => $this->router->url('my-notes'),
             'link_tag' => $this->router->url('tag/search'),
@@ -185,7 +194,7 @@ class AdminCollectionNotes extends ViewModel
     }
 
     protected $_filter;
-    public function filter()
+    public function filter($collection = null)
     {
         $filter_id = $this->app->get('filter_id', '');
         if (null === $this->_filter) :
@@ -197,7 +206,17 @@ class AdminCollectionNotes extends ViewModel
                 'limit' => $this->state('limit', 10, 'int', 'post', 'filter_'.$filter_id.'.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'filter_'.$filter_id.'.sort')
             ];
-            $filter = new Form($this->getFilterFields(), $data);
+
+            if($collection)
+            {
+                $filters = isset($collection['filters']) ? $collection['filters'] : [];
+                foreach($filters as $item)
+                {
+                    $data['parent_tag_'. $item] = $this->state('parent_tag_'. $item, '', '', 'post', 'parent_tag_'. $item. '_'.$filter_id.'.search');
+                }
+            }
+
+            $filter = new Form($this->getFilterFields($collection), $data);
 
             $this->_filter = $filter;
         endif;
@@ -205,7 +224,7 @@ class AdminCollectionNotes extends ViewModel
         return ['form' => $this->_filter];
     }
 
-    public function getFilterFields()
+    public function getFilterFields($collection = null)
     {
         $types = $this->NoteModel->getTypes();
         $options = [];
@@ -227,7 +246,7 @@ class AdminCollectionNotes extends ViewModel
             ];
         }
 
-        return [
+        $filter_fields = [
             'search' => [
                 'text',
                 'default' => '',
@@ -295,6 +314,36 @@ class AdminCollectionNotes extends ViewModel
                 'showLabel' => false
             ]
         ];
+
+        // add filter fields
+        if($collection)
+        {
+            $filters = isset($collection['filters']) ? $collection['filters'] : [];
+            foreach($filters as $item)
+            {
+                $parent = $this->TagEntity->findByPK($item);
+                $list_tags = $this->TagEntity->list(0, 0, ['#__tags.parent_id LIKE '. $item]);
+                $options = [];
+                foreach($list_tags as $tag)
+                {
+                    $options[] = [
+                        'text' => $parent['name'] .':'. $tag['name'],
+                        'value' => $tag['id']
+                    ];
+                }
+
+                $filter_fields['parent_tag_'. $item] = [
+                    'option',
+                    'type' => 'multiselect',
+                    'formClass' => 'form-select',
+                    'options' => $options,
+                    'showLabel' => false,
+                    'placeholder' => $parent['name']
+                ];
+            }
+        }
+
+        return $filter_fields;
     }
 
     public function row($layoutData, $viewData)

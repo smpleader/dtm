@@ -27,6 +27,11 @@
             <div class="pe-2 pb-2">
                 <?php $this->ui->field('search');  ?>
             </div>
+            <?php foreach($this->collection['filters'] as $parent_id) : ?>
+                <div class="pe-2 pb-2">
+                    <?php $this->ui->field('parent_tag_'. $parent_id);  ?>
+                </div>
+            <?php endforeach; ?>
             <div class="pe-2 pb-2 select2-w-100">
                 <?php $this->ui->field('tags');  ?>
             </div>

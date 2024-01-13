@@ -95,4 +95,11 @@ class TagEntity extends Entity
 
         return $returnObject ? (object)$row : $row;
     }
+
+    protected function prepareSelect($select='#__tags.*, parent_tag.name as parent_name')
+    {
+        return $this->db->select( $select )
+            ->table( $this->table )
+            ->join('LEFT JOIN #__tags as parent_tag ON #__tags.parent_id=parent_tag.id');
+    }
 }

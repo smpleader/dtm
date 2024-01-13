@@ -26,6 +26,11 @@ class Routing
                 ],
                 'parameters' => ['id'],
             ],
+            'collection/filter' => [
+                'fnc' => [
+                    'get' => 'collection.collection.getFilters'
+                ]
+            ],
             'collection' => [
                 'fnc' => [
                     'get' => 'collection.collection.filter',
