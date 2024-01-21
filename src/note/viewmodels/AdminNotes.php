@@ -23,9 +23,9 @@ class AdminNotes extends ViewModel
         $clear_filter = $this->request->post->get('clear_filter', '', 'string');
         if ($clear_filter)
         {
-            $this->session->set('note.tags', []);
-            $this->session->set('note.author', []);
-            $this->session->set('note.note_type', []);
+            $this->session->set('notes.tags', []);
+            $this->session->set('notes.author', []);
+            $this->session->set('notes.note_type', []);
         }
         $filter = $this->filter()['form'];
         $limit  = $filter->getField('limit')->value;
@@ -34,42 +34,19 @@ class AdminNotes extends ViewModel
         $note_type   = $filter->getField('note_type')->value;
         $author   = $filter->getField('author')->value;
         $search = trim($filter->getField('search')->value);
-        $mode = $this->app->get('filter', '');
 
-        $page = $this->state('page', 1, 'int', 'get', $mode ? $mode.'.page' : 'note.page');
+        $page = $this->state('page', 1, 'int', 'get', 'note.page');
         if ($page <= 0) $page = 1;
         $method = $this->request->getMethod();
         if ($method == 'POST')
         {
             $page = 1;
-            $this->session->set($mode ? $mode.'.page' : 'note.page', 1);
+            $this->session->set('note.page', 1);
         }
 
         $where = [];
         $title = 'Note Manager';
         $asset = $this->PermissionModel->getAccessByUser();
-        
-        if ($mode == 'my-note')
-        {
-            $where[] = 'created_by = '. $this->user->get('id');
-            $author = '';
-            $title = 'My Notes';
-        }
-        elseif($mode == 'share-note')
-        {
-            $where[] = 'created_by Not LIKE '. $this->user->get('id');
-            $where_permission = [];
-            $where_permission[] = "(`assignee` LIKE '%(" . $this->user->get('id') . ")%')";
-
-            $groups = $this->UserEntity->getGroups($this->user->get('id'));
-            foreach($groups as $group)
-            {
-                $where_permission[] = "(`assign_user_group` LIKE '%(" . $group['group_id'] . ")%')";
-            }
-
-            $where[] = '('. implode(" OR ", $where_permission) . ')';
-            $title = 'Shared Notes';
-        }
         
         $filter_tags = [];
 
@@ -174,11 +151,10 @@ class AdminNotes extends ViewModel
             'page' => $page,
             'start' => $start,
             'filter_tags' => json_encode($filter_tags),
-            'mode' => $mode,
             'sort' => $sort,
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
-            'link_list' =>  $this->router->url( $mode == 'my-note' ? 'my-notes' : ($mode == 'share-note' ? 'share-notes' : 'notes')) ,
+            'link_list' =>  $this->router->url('notes'),
             'link_tag' => $this->router->url('tag/search'),
             'title_page' => $title,
             'link_form' => $this->router->url('note/edit'),
@@ -201,16 +177,14 @@ class AdminNotes extends ViewModel
     protected $_filter;
     public function filter()
     {
-        $mode = $this->app->get('filter', '');
-        $mode = $mode ? $mode : 'notes';
         if (null === $this->_filter) :
             $data = [
-                'search' => $this->state('search', '', '', 'post', $mode. '.search'),
-                'tags' => $this->state('tags', [], 'array', 'post', $mode. '.tags'),
-                'note_type' => $this->state('note_type', [], 'array', 'post', $mode. '.note_type'),
-                'author' => $this->state('author', [], 'array', 'post', $mode. '.author'),
-                'limit' => $this->state('limit', 10, 'int', 'post', $mode. '.limit'),
-                'sort' => $this->state('sort', '', '', 'post', $mode. '.sort')
+                'search' => $this->state('search', '', '', 'post', 'notes.search'),
+                'tags' => $this->state('tags', [], 'array', 'post', 'notes.tags'),
+                'note_type' => $this->state('note_type', [], 'array', 'post', 'notes.note_type'),
+                'author' => $this->state('author', [], 'array', 'post', 'notes.author'),
+                'limit' => $this->state('limit', 10, 'int', 'post', 'notes.limit'),
+                'sort' => $this->state('sort', '', '', 'post', 'notes.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);
 
