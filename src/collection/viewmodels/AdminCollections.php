@@ -46,7 +46,7 @@ class AdminCollections extends ViewModel
         $groups = $this->UserEntity->getGroups($this->user->get('id'));
         foreach($groups as $group)
         {
-            $where_shares[] = 'shares LIKE "%(group-'. $group .')%"';
+            $where_shares[] = 'shares LIKE "%(group-'. $group['group_id'] .')%"';
         }
 
         $where_shares[] = 'shares LIKE "%(user-'. $this->user->get('id') .')%"';
