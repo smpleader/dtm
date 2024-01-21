@@ -23,7 +23,7 @@
             
             if (id)
             {
-                ignores=[id];
+                ignores=[parent_id];
                 $('#_method').val('PUT');
             }
             else

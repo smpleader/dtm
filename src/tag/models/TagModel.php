@@ -90,7 +90,7 @@ class TagModel extends Base
 
         if ($ignores && is_array($ignores))
         {
-            $where[] = "id NOT IN (". implode(',', $ignores).")";
+            $where[] = "#__tags.id NOT IN (". implode(',', $ignores).")";
         }
 
         $data = $this->TagEntity->list(0,100, $where);
