@@ -15,7 +15,9 @@ class collection extends ControllerMVVM
 
     public function detail()
     {
-        $id = $this->validateID(); 
+        $urlVars = $this->request->get('urlVars');
+        $id = $urlVars ? (int) $urlVars['id'] : 0;
+
         if($id)
         {
             $collection = $this->CollectionModel->getDetail($id);
