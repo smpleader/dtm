@@ -1,14 +1,5 @@
 <?php
 
-/**
- * SPT software - ViewModel
- * 
- * @project: https://github.com/smpleader/spt
- * @author: Pham Minh - smpleader
- * @description: A simple View Model
- * 
- */
-
 namespace DTM\tag\viewmodels;
 
 use SPT\Web\ViewModel;
@@ -29,22 +20,15 @@ class AdminTag extends ViewModel
     
     public function form()
     {
-        $request = $this->container->get('request');
-        $UserEntity = $this->container->get('UserEntity');
-        $TagEntity = $this->container->get('TagEntity');
-        $router = $this->container->get('router');
-
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $id = $urlVars ? (int) $urlVars['id'] : 0;
 
-        $data = $id ? $TagEntity->findByPK($id) : [];
-        
         $form = new Form($this->getFormFields(), $data);
 
         return [
             'id' => $id,
             'form' => $form,
-            'link_search' => $router->url('tag/search'),
+            'link_search' => $this->router->url('tag/search'),
             'data' => $data,
         ];
         
