@@ -20,6 +20,7 @@ class AdminTag extends ViewModel
     
     public function form()
     {
+        $data=[];
         $urlVars = $this->request->get('urlVars');
         $id = $urlVars ? (int) $urlVars['id'] : 0;
 
