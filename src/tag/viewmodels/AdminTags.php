@@ -1,14 +1,5 @@
 <?php
 
-/**
- * SPT software - ViewModel
- * 
- * @project: https://github.com/smpleader/spt
- * @author: Pham Minh - smpleader
- * @description: A simple View Model
- * 
- */
-
 namespace DTM\tag\viewmodels;
 
 use SPT\Web\Gui\Form;
@@ -30,13 +21,6 @@ class AdminTags extends ViewModel
 
     public function list()
     {
-        $request = $this->container->get('request');
-        $TagEntity = $this->container->get('TagEntity');
-        $session = $this->container->get('session');
-        $router = $this->container->get('router');
-        $token = $this->container->get('token');
-        $user = $this->container->get('user');
-
         $filter = $this->filter()['form'];
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
@@ -57,10 +41,10 @@ class AdminTags extends ViewModel
         }
 
         $start  = ($page - 1) * $limit;
-        $sort = $sort ? $sort : 'name asc';
+        $sort = $sort ? $sort : '#__tags.name asc';
 
-        $result = $TagEntity->list($start, $limit, $where, $sort);
-        $total = $TagEntity->getListTotal();
+        $result = $this->TagEntity->list($start, $limit, $where, $sort);
+        $total = $this->TagEntity->getListTotal();
         
         if (!$result) {
             $result = [];
@@ -72,7 +56,7 @@ class AdminTags extends ViewModel
             $tag_tmp = [];
             if ($item['parent_id'])
             {
-                $tag_tmp = $TagEntity->findByPK($item['parent_id']);
+                $tag_tmp = $this->TagEntity->findByPK($item['parent_id']);
             }
 
             $item['parent_tag'] = $tag_tmp ? $tag_tmp['name'] : '';
@@ -85,13 +69,13 @@ class AdminTags extends ViewModel
             'page' => $page,
             'start' => $start,
             'sort' => $sort,
-            'user_id' => $user->get('id'),
-            'url' => $router->url(),
-            'link_search' => $router->url('tag/search'),
-            'link_list' => $router->url('tags'),
+            'user_id' => $this->user->get('id'),
+            'url' => $this->router->url(),
+            'link_search' => $this->router->url('tag/search'),
+            'link_list' => $this->router->url('tags'),
             'title_page' => 'Tags',
-            'link_form' => $router->url('tag'),
-            'token' => $token->value(),
+            'link_form' => $this->router->url('tag'),
+            'token' => $this->token->value(),
         ];
     }
 
@@ -158,10 +142,10 @@ class AdminTags extends ViewModel
             'sort' => [
                 'option',
                 'formClass' => 'form-select',
-                'default' => 'name asc',
+                'default' => '#__tags.name asc',
                 'options' => [
-                    ['text' => 'name ascending', 'value' => 'name asc'],
-                    ['text' => 'name descending', 'value' => 'name desc'],
+                    ['text' => 'name ascending', 'value' => '#__tags.name asc'],
+                    ['text' => 'name descending', 'value' => '#__tags.name desc'],
                 ],
                 'showLabel' => false
             ]
