@@ -23,10 +23,11 @@ class AdminNotesTrash extends ViewModel
         $clear_filter = $this->request->post->get('clear_filter', '', 'string');
         if ($clear_filter)
         {
-            $this->session->set('note.tags', []);
-            $this->session->set('note.author', []);
-            $this->session->set('note.note_type', []);
+            $this->session->set('notes_trash.tags', []);
+            $this->session->set('notes_trash.author', []);
+            $this->session->set('notes_trash.note_type', []);
         }
+        
         $filter = $this->filter()['form'];
         $limit  = $filter->getField('limit')->value;
         $sort   = $filter->getField('sort')->value;
@@ -34,27 +35,19 @@ class AdminNotesTrash extends ViewModel
         $note_type   = $filter->getField('note_type')->value;
         $author   = $filter->getField('author')->value;
         $search = trim($filter->getField('search')->value);
-        $mode = $this->app->get('filter', '');
 
-        $page = $this->state('page', 1, 'int', 'get', $mode ? $mode.'_trash.page' : 'note_trash.page');
+        $page = $this->state('page', 1, 'int', 'get', 'note_trash.page');
         if ($page <= 0) $page = 1;
         $method = $this->request->getMethod();
         if ($method == 'POST')
         {
             $page = 1;
-            $this->session->set($mode ? $mode.'.page' : 'note.page', 1);
+            $this->session->set('note.page', 1);
         }
 
         $where = [];
         $title = 'Trash Note';
         $asset = $this->PermissionModel->getAccessByUser();
-        
-        if ($mode == 'my-note')
-        {
-            $where[] = 'created_by = '. $this->user->get('id');
-            $author = '';
-            $title = 'Trash My Note';
-        }
         
         $filter_tags = [];
 
@@ -160,12 +153,11 @@ class AdminNotesTrash extends ViewModel
             'page' => $page,
             'start' => $start,
             'filter_tags' => json_encode($filter_tags),
-            'mode' => $mode,
             'sort' => $sort,
             'user_id' => $this->user->get('id'),
             'url' => $this->router->url(),
-            'link_list' =>  $this->router->url( $mode == 'my-note' ? 'my-notes/trash' : 'notes/trash') ,
-            'link_back' =>  $this->router->url( $mode == 'my-note' ? 'my-filter/my-notes' : 'notes') ,
+            'link_list' =>  $this->router->url('notes/trash') ,
+            'link_back' =>  $this->router->url('notes') ,
             'link_tag' => $this->router->url('tag/search'),
             'title_page' => $title,
             'link_form' => $this->router->url('note/edit'),
@@ -188,16 +180,14 @@ class AdminNotesTrash extends ViewModel
     protected $_filter;
     public function filter()
     {
-        $mode = $this->app->get('filter', '');
-        $mode = $mode ? $mode : 'notes';
         if (null === $this->_filter) :
             $data = [
-                'search' => $this->state('search', '', '', 'post', $mode. '_trash.search'),
-                'tags' => $this->state('tags', [], 'array', 'post', $mode. '_trash.tags'),
-                'note_type' => $this->state('note_type', [], 'array', 'post', $mode. '_trash.note_type'),
-                'author' => $this->state('author', [], 'array', 'post', $mode. '_trash.author'),
-                'limit' => $this->state('limit', 10, 'int', 'post', $mode. '_trash.limit'),
-                'sort' => $this->state('sort', '', '', 'post', $mode. '_trash.sort')
+                'search' => $this->state('search', '', '', 'post', 'notes_trash.search'),
+                'tags' => $this->state('tags', [], 'array', 'post', 'notes_trash.tags'),
+                'note_type' => $this->state('note_type', [], 'array', 'post', 'notes_trash.note_type'),
+                'author' => $this->state('author', [], 'array', 'post', 'notes_trash.author'),
+                'limit' => $this->state('limit', 10, 'int', 'post', 'notes_trash.limit'),
+                'sort' => $this->state('sort', '', '', 'post', 'notes_trash.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);
 
