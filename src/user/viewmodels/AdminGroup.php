@@ -1,12 +1,4 @@
 <?php
-/**
- * SPT software - ViewModel
- * 
- * @project: https://github.com/smpleader/spt-boilerplate
- * @author: Pham Minh - smpleader
- * @description: Just a basic viewmodel
- * 
- */
 namespace DTM\user\viewmodels; 
 
 use SPT\Web\Gui\Form;
@@ -24,14 +16,10 @@ class AdminGroup extends ViewModel
 
     public function form()
     {
-        $request = $this->container->get('request');
-        $GroupEntity = $this->container->get('GroupEntity');
-        $router = $this->container->get('router');
-
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $id = (int) $urlVars['id'];
 
-        $data = $id ? $GroupEntity->findByPK($id) : [];
+        $data = $id ? $this->GroupEntity->findByPK($id) : [];
         $data_form = $this->session->getform('usergroup', []);
         $this->session->setform('usergroup', []);
         $data = $data_form ? $data_form : $data;
@@ -47,9 +35,9 @@ class AdminGroup extends ViewModel
             'form' => $form,
             'data' => $data,
             'title_page' => $id ? 'Update User Group' : 'New User Group',
-            'url' => $router->url(),
-            'link_list' => $router->url('user-groups'),
-            'link_form' => $router->url('user-group'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('user-groups'),
+            'link_form' => $this->router->url('user-group'),
         ];
     }
 
@@ -105,7 +93,7 @@ class AdminGroup extends ViewModel
                 ]
             ],
             'token' => ['hidden',
-                'default' => $this->container->get('token')->value(),
+                'default' => $this->token->value(),
             ],
         ];
 
