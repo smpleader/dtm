@@ -1,13 +1,4 @@
 <?php
-/**
- * SPT software - Model
- * 
- * @project: https://github.com/smpleader/spt
- * @author: Pham Minh - smpleader
- * @description: Just a basic model
- * 
- */
-
 namespace DTM\user\models;
 
 use SPT\Container\Client as Base; 
