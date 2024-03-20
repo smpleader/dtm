@@ -1,12 +1,4 @@
 <?php
-/**
- * SPT software - ViewModel
- * 
- * @project: https://github.com/smpleader/spt-boilerplate
- * @author: Pham Minh - smpleader
- * @description: Just a basic viewmodel
- * 
- */
 namespace DTM\user\viewmodels; 
 
 use SPT\Web\Gui\Form;
@@ -28,31 +20,21 @@ class AdminUser extends ViewModel
 
     public function login($layoutData, &$viewData)
     {
-        $app = $this->container->get('app');
         $link_google_auth = '';
-        /*$GoogleModel = $this->container->get('GoogleModel');
-        if (is_object($GoogleModel))
-        {
-            $link_google_auth = $GoogleModel->getUrlLogin();
-        }*/
 
         return [
-            'url' =>  $app->getRouter()->url(),
-            'link_login' =>  $app->getRouter()->url('login'),
+            'url' =>  $this->router->url(),
+            'link_login' =>  $this->router->url('login'),
             'link_google_auth' =>  $link_google_auth,
         ];
     }
 
     public function form()
     {
-        $request = $this->container->get('request');
-        $UserEntity = $this->container->get('UserEntity');
-        $router = $this->container->get('router');
-
-        $urlVars = $request->get('urlVars');
+        $urlVars = $this->request->get('urlVars');
         $id = (int) $urlVars['id'];
 
-        $data = $id ? $UserEntity->findByPK($id) : [];
+        $data = $id ? $this->UserEntity->findByPK($id) : [];
         $data_form = $this->session->getform('user', []);
         $this->session->setform('user', []);
         $data = $data_form ? $data_form : $data;
@@ -60,7 +42,7 @@ class AdminUser extends ViewModel
         if ($data && $id)
         {
             $data['password'] = '';
-            $groups = $UserEntity->getGroups($data['id']);
+            $groups = $this->UserEntity->getGroups($data['id']);
             foreach ($groups as $group)
             {
                 $data['groups'][] = $group['group_id'];
@@ -73,18 +55,15 @@ class AdminUser extends ViewModel
            'form' => $form,
            'data' => $data,
            'title_page' => $id ? 'Update User' : 'New User',
-           'url' => $router->url(),
-           'link_list' => $router->url('users'),
-           'link_form' => $router->url('user'),
+           'url' => $this->router->url(),
+           'link_list' => $this->router->url('users'),
+           'link_form' => $this->router->url('user'),
         ];
     }
 
     public function getFormFields($id)
     {
-        $GroupEntity = $this->container->get('GroupEntity');
-        $token = $this->container->get('token');
-        
-        $groups = $GroupEntity->list(0, 0, [], 'name asc');
+        $groups = $this->GroupEntity->list(0, 0, [], 'name asc');
         $options = [];
         foreach ($groups as $group)
         {
@@ -142,7 +121,7 @@ class AdminUser extends ViewModel
                 'formClass' => 'checkbox-col-3',
             ],
             'token' => ['hidden',
-                'default' => $token->value(),
+                'default' => $this->token->value(),
             ],
         ];
 
@@ -168,11 +147,8 @@ class AdminUser extends ViewModel
 
     public function profile()
     {
-        $user = $this->container->get('user');
-        $UserEntity = $this->container->get('UserEntity');
-        $router = $this->container->get('router');
-        $id = $user->get('id');
-        $data = $id ? $UserEntity->findByPK($id) : [];
+        $id = $this->user->get('id');
+        $data = $id ? $this->UserEntity->findByPK($id) : [];
         $data_form = $this->session->get('data_form', []);
         $this->session->set('data_form', []);
         $data = $data_form ? $data_form : $data;
@@ -181,7 +157,7 @@ class AdminUser extends ViewModel
             $data['password'] = '';
             $data['groups'] = [];
 
-            $groups = $UserEntity->getGroups($data['id']);
+            $groups = $this->UserEntity->getGroups($data['id']);
             foreach ($groups as $group)
             {
                 $data['groups'][] = $group['group_name'];
@@ -195,9 +171,9 @@ class AdminUser extends ViewModel
             'form' => $form,
             'data' => $data,
             'title_page' => 'My Profile',
-            'url' => $router->url(),
-            'link_list' => $router->url('profile'),
-            'link_form' => $router->url('profile'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('profile'),
+            'link_form' => $this->router->url('profile'),
         ];
     }
 
@@ -239,7 +215,7 @@ class AdminUser extends ViewModel
                 'showLabel' => false,
             ],
             'token' => ['hidden',
-                'default' => $this->container->get('token')->value(),
+                'default' => $this->token->value(),
             ],
         ];
 

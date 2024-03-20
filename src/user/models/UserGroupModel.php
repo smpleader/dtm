@@ -1,12 +1,4 @@
 <?php
-/**
- * SPT software - Model
- * 
- * @project: https://github.com/smpleader/spt
- * @author: Pham Minh - smpleader
- * @description: Just a basic model
- * 
- */
 
 namespace DTM\user\models;
 
@@ -53,7 +45,7 @@ class UserGroupModel extends Base
         {
             if (!in_array($group['group_id'], $groups_update))
             {
-                $user_map = $this->UserGroupEntity->findOne(['group_id' => $group['group_id'], 'user_id' => $data['id']]);
+                $user_map = $this->UserGroupEntity->findOne(['group_id' => $group['group_id'], 'user_id' => $id]);
                 $this->UserGroupEntity->remove($user_map['id']);
             }
             else

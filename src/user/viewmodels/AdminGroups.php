@@ -1,12 +1,4 @@
 <?php
-/**
- * SPT software - ViewModel
- * 
- * @project: https://github.com/smpleader/spt-boilerplate
- * @author: Pham Minh - smpleader
- * @description: Just a basic viewmodel
- * 
- */
 namespace DTM\user\viewmodels; 
 
 use SPT\Web\Gui\Form;
@@ -28,14 +20,6 @@ class AdminGroups extends ViewModel
 
     public function list()
     {
-        $request = $this->container->get('request');
-        $token = $this->container->get('token');
-        $UserGroupEntity = $this->container->get('UserGroupEntity');
-        $router = $this->container->get('router');
-        $GroupEntity = $this->container->get('GroupEntity');
-        $UserModel = $this->container->get('UserModel');
-        $session = $this->container->get('session');
-        $user = $this->container->get('user');
         $filter = $this->filter()['form'];
 
         $limit  = $filter->getField('limit')->value;
@@ -65,8 +49,8 @@ class AdminGroups extends ViewModel
 
         $start  = ($page-1) * $limit;
         $sort = $sort ? $sort : 'name ASC';
-        $result = $GroupEntity->list( $start, $limit, $where, $sort);
-        $total = $GroupEntity->getListTotal();
+        $result = $this->GroupEntity->list( $start, $limit, $where, $sort);
+        $total = $this->GroupEntity->getListTotal();
 
         if (!$result)
         {
@@ -74,14 +58,14 @@ class AdminGroups extends ViewModel
             $total = 0;
             if( !empty($search) )
             {
-                $session->set('flashMsg', 'Groups not found');
+                $this->session->set('flashMsg', 'Groups not found');
             }
         }
 
         foreach($result as &$group) {
             //get users in group
-            $userIn = $UserGroupEntity->getUserActive($group['id']);
-            $userInGroup = $UserGroupEntity->getListTotal();
+            $userIn = $this->UserGroupEntity->getUserActive($group['id']);
+            $userInGroup = $this->UserGroupEntity->getListTotal();
             $group['user_in'] = $userInGroup;
 
             //get Right Access
@@ -108,12 +92,12 @@ class AdminGroups extends ViewModel
             'page' => $page,
             'start' => $start,
             'sort' => $sort,
-            'user_id' => $user->get('id'),
-            'url' => $router->url(),
-            'link_list' => $router->url('user-groups'),
+            'user_id' => $this->user->get('id'),
+            'url' => $this->router->url(),
+            'link_list' => $this->router->url('user-groups'),
             'title_page' => 'User Group Manager',
-            'link_form' => $router->url('user-group'),
-            'token' => $token->value(),
+            'link_form' => $this->router->url('user-group'),
+            'token' => $this->token->value(),
         ];
         
     }
