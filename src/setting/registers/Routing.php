@@ -21,4 +21,22 @@ class Routing
             ],
         ];
     }
+
+    public static function afterRouting(IApp $app)
+    {
+        $container = $app->getContainer();
+        if (!$container->exists('OptionModel'))
+        {
+            return false;
+        }
+
+        $OptionModel = $container->get('OptionModel');
+        $time_zone = $OptionModel->get('time_zone', '');
+        if ($time_zone)
+        {
+            date_default_timezone_set($time_zone);
+        }
+        
+        return true;
+    }
 }
