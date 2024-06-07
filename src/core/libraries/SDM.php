@@ -22,7 +22,7 @@ use SPT\Session\PhpSession;
 use DTM\core\libraries\DatabaseSession;
 use SPT\Session\DatabaseSessionEntity;
 use SPT\User\Instance as UserInstance;
-use SPT\User\SPT\User as UserAdapter;
+use DTM\user\libraries\User as UserAdapter;
 use DTM\user\entities\UserEntity;
 
 use SPT\Application\Web as Base;
