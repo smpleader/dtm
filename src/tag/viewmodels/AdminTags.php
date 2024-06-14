@@ -37,7 +37,7 @@ class AdminTags extends ViewModel
         $where = [];
 
         if (!empty($search)) {
-            $where[] = "(`name` LIKE '%" . $search . "%') OR (`description` LIKE '%" . $search . "%')";
+            $where[] = "(#__tags.name LIKE '%" . $search . "%') OR (#__tags.description LIKE '%" . $search . "%')";
         }
 
         $start  = ($page - 1) * $limit;
