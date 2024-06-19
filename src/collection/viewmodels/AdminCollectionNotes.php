@@ -61,6 +61,11 @@ class AdminCollectionNotes extends ViewModel
 
         $page = $this->state('page', 1, 'int', 'get', 'filter_'. $filter_id.'.page');
         if ($page <= 0) $page = 1;
+        if ($this->request->getMethod() == 'POST')
+        {
+            $page = 1;
+            $this->session->set('filter_'. $filter_id.'.page', 1);
+        }
 
         $title = 'Collection: '. $collection['name'];
         
