@@ -87,7 +87,7 @@ class AdminCollectionNotes extends ViewModel
                 }
                 if ($tag)
                 {
-                    $where_tag[] = 'tags LIKE "('. $tag .')"';
+                    $where_tag[] = 'tags LIKE "%('. $tag .')%"';
                 }
                 
             }
