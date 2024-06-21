@@ -111,7 +111,7 @@ class AdminCollections extends ViewModel
         if (null === $this->_filter) :
             $data = [
                 'search' => $this->state('search', '', '', 'post', 'filter.search'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'filter.limit'),
+                'limit' => $this->state('limit', 20, 'int', 'post', 'filter.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'filter.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);

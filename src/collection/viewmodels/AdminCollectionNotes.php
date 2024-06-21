@@ -208,7 +208,7 @@ class AdminCollectionNotes extends ViewModel
                 'tags' => $this->state('tags', [], 'array', 'post', 'filter_'.$filter_id.'.tags'),
                 'note_type' => $this->state('note_type', [], 'array', 'post', 'filter_'.$filter_id.'.note_type'),
                 'author' => $this->state('author', [], 'array', 'post', 'filter_'.$filter_id.'.author'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'filter_'.$filter_id.'.limit'),
+                'limit' => $this->state('limit', 20, 'int', 'post', 'filter_'.$filter_id.'.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'filter_'.$filter_id.'.sort')
             ];
 

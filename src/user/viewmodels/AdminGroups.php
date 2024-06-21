@@ -120,7 +120,7 @@ class AdminGroups extends ViewModel
             $data = [
                 'search' => $this->state('search', '', '', 'post', 'user-groups.search'),
                 'status' => $this->state('status', '','', 'post', 'user-groups.status'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'user-groups.limit'),
+                'limit' => $this->state('limit', 20, 'int', 'post', 'user-groups.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'user-groups.sort')
             ];
 
