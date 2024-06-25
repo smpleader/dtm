@@ -505,9 +505,9 @@ class CollectionModel extends Base
             return false;
         }
 
+        $users = [];
         if ($collection['shares'])
         {
-            $users = [];
             $groups = [];
             foreach($collection['shares'] as $item)
             {
@@ -537,6 +537,24 @@ class CollectionModel extends Base
             foreach($users as $item)
             {
                 $try = $this->updateChildCollection($item, $collection);
+            }
+        }
+
+        // clear not assign collection
+        $where = [];
+        if($users)
+        {
+            $where[] = 'user_id NOT IN('. implode(',', $users).')';
+        }
+        
+        $where[] = 'parent_id LIKE '. $collection['id'];
+        $removes = $this->CollectionEntity->list(0, 0, $where);
+        if($removes)
+        {
+            foreach($removes as $item)
+            {
+                $this->ShortcutEntity->remove($item['shortcut_id']);
+                $this->CollectionEntity->remove($item['id']);
             }
         }
 
