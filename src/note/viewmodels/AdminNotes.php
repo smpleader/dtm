@@ -183,7 +183,7 @@ class AdminNotes extends ViewModel
                 'tags' => $this->state('tags', [], 'array', 'post', 'notes.tags'),
                 'note_type' => $this->state('note_type', [], 'array', 'post', 'notes.note_type'),
                 'author' => $this->state('author', [], 'array', 'post', 'notes.author'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'notes.limit'),
+                'limit' => $this->state('limit', 20, 'int', 'post', 'notes.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'notes.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);

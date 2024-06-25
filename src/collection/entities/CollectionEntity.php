@@ -24,6 +24,10 @@ class CollectionEntity extends Entity
                     'type' => 'int', 
                     'option' => 'unsigned',
                 ],
+                'parent_id' => [
+                    'type' => 'int', 
+                    'null' => 'YES'
+                ],
                 'name' => [
                     'type' => 'varchar',
                     'limit' => 245,

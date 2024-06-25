@@ -28,6 +28,11 @@ class AdminCollectionNotes extends ViewModel
         if ($filter_id)
         {
             $collection = $this->CollectionModel->getDetail($filter_id);
+            if ($collection['parent_id'])
+            {
+                $filter_id = $collection['parent_id'];
+                $collection = $this->CollectionModel->getDetail($filter_id);
+            }
         }
 
         $clear_filter = $this->request->post->get('clear_filter', '', 'string');
@@ -208,7 +213,7 @@ class AdminCollectionNotes extends ViewModel
                 'tags' => $this->state('tags', [], 'array', 'post', 'filter_'.$filter_id.'.tags'),
                 'note_type' => $this->state('note_type', [], 'array', 'post', 'filter_'.$filter_id.'.note_type'),
                 'author' => $this->state('author', [], 'array', 'post', 'filter_'.$filter_id.'.author'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'filter_'.$filter_id.'.limit'),
+                'limit' => $this->state('limit', 20, 'int', 'post', 'filter_'.$filter_id.'.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'filter_'.$filter_id.'.sort')
             ];
 
