@@ -28,6 +28,11 @@ class AdminCollectionNotes extends ViewModel
         if ($filter_id)
         {
             $collection = $this->CollectionModel->getDetail($filter_id);
+            if ($collection['parent_id'])
+            {
+                $filter_id = $collection['parent_id'];
+                $collection = $this->CollectionModel->getDetail($filter_id);
+            }
         }
 
         $clear_filter = $this->request->post->get('clear_filter', '', 'string');

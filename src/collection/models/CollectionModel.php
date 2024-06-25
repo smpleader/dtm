@@ -57,9 +57,23 @@ class CollectionModel extends Base
         return $data;
     }
 
-    public function createSlug($str, $delimiter = '-')
+    public function createSlug($str, $user_id, $collection_id = 0, $delimiter = '-')
     {
+        // check
         $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
+        $index = 1;
+        $find = $this->CollectionEntity->findOne(['user_id' => $user_id, 'filter_link' => $slug, 'id NOT LIKE '. $collection_id]);
+        if($find)
+        {
+            $index = 0;
+            while ($find) 
+            {
+                $index++;
+                $find = $this->CollectionEntity->findOne(['user_id' => $user_id, 'filter_link' => $slug .'-'.$index, 'id NOT LIKE '. $collection_id]);
+            }
+            $slug = $slug . '-' . $index;
+        }
+
         return $slug;
     }
 
@@ -69,10 +83,11 @@ class CollectionModel extends Base
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filters'] = $data['filters'] ? $this->convertTag($data['filters'], false) : [];
         $data['filters'] = $data['filters'] ? $this->convertArray($data['filters']) : '';
-        $data['filter_link'] = $this->createSlug($data['name']);
+        $data['filter_link'] = $this->createSlug($data['name'], $this->user->get('id'));
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
         $data['shares'] = $data['shares'] ? $this->convertArray($data['shares']) : '';
+        $data['parent_id'] = 0;
         $filter = $this->CollectionEntity->bind($data);
 
         if (!$filter || !isset($filter['readyNew']) || !$filter['readyNew'])
@@ -95,6 +110,8 @@ class CollectionModel extends Base
             $this->updateShortcut($data, $newId);
         }
 
+        $this->shareCollection($data['id'], $data);
+
         return $newId;
     }
 
@@ -104,10 +121,11 @@ class CollectionModel extends Base
         $data['tags'] = $data['tags'] ? $this->convertArray($data['tags']) : '';
         $data['filters'] = $data['filters'] ? $this->convertTag($data['filters'], false) : [];
         $data['filters'] = $data['filters'] ? $this->convertArray($data['filters']) : '';
-        $data['filter_link'] = $this->createSlug($data['name']);
+        $data['filter_link'] = $this->createSlug($data['name'], $this->user->get('id'), $data['id']);
         $data['creator'] = $data['creator'] ? $this->convertArray($data['creator']) : '';
         $data['assignment'] = $data['assignment'] ? $this->convertArray($data['assignment']) : '';
         $data['shares'] = $data['shares'] ? $this->convertArray($data['shares']) : '';
+        $data['parent_id'] = 0;
         $filter = $this->CollectionEntity->bind($data);
 
         if (!$filter || !isset($filter['readyUpdate']) || !$filter['readyUpdate'])
@@ -123,12 +141,11 @@ class CollectionModel extends Base
             return false;
         }
 
-        $this->shareCollection($data['id']);
-
         if($shortcut)
         {
             $shortcut = $this->updateShortcut($data, $data['id']);
         }
+        $this->shareCollection($data['id'], $data);
         
         return $try;
     }
@@ -488,14 +505,8 @@ class CollectionModel extends Base
             return false;
         }
 
-        if ($collection['shares'] && $collection['shortcut_id'])
+        if ($collection['shares'])
         {
-            $shortcut = $this->ShortcutEntity->findByPK($collection['shortcut_id']);
-            if(!$shortcut)
-            {
-                return false;
-            }
-
             $users = [];
             $groups = [];
             foreach($collection['shares'] as $item)
@@ -525,23 +536,104 @@ class CollectionModel extends Base
 
             foreach($users as $item)
             {
-                $check = $this->ShortcutEntity->findOne(['user_id' => $item, 'link' => $shortcut['link']]);
-                if (!$check)
-                {
-                    $try = $this->ShortcutEntity->add([
-                        'name' => $shortcut['name'],
-                        'link' => $shortcut['link'],
-                        'group' => $shortcut['group'],
-                        'user_id' => $item,
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'created_by' => $this->user->get('id'),
-                        'modified_at' => date('Y-m-d H:i:s'),
-                        'modified_by' => $this->user->get('id'),
-                    ]);
-                }
+                $try = $this->updateChildCollection($item, $collection);
             }
         }
 
         return true;
+    }
+
+    public function updateChildCollection($user_id, $collection)
+    {
+        $check = $this->CollectionEntity->findOne(['user_id' => $user_id, 'parent_id' => $collection['id']]);
+        
+        $data = [
+            'user_id' => $user_id,
+            'parent_id' => $collection['id'],
+            'name' => $collection['name'],
+            'select_object' => '',
+            'start_date' => '',
+            'end_date' => '',
+            'filters' => '',
+            'tags' => '',
+            'creator' => '',
+            'assignment' => '',
+            'shares' => '',
+            'shortcut_id' => 0,
+            'created_at' => date('Y-m-d H:i:s'),
+            'created_by' => $this->user->get('id'),
+            'modified_at' => date('Y-m-d H:i:s'),
+            'modified_by' => $this->user->get('id'),    
+        ];
+        $data = $this->CollectionEntity->bind($data);
+
+        if($check)
+        {
+            // update share collection
+            $shortcut = $this->ShortcutEntity->findByPK($collection['shortcut_id']);
+            $data['filter_link'] = $this->createSlug($data['name'], $user_id, $collection['id']);
+            $data['id'] = $check['id'];
+            $data['shortcut_id'] = $check['shortcut_id'];
+
+            $find = $this->ShortcutEntity->findByPK($check['shortcut_id']);
+            if ($check['shortcut_id'] && $find)
+            {
+                $shortcut_id = $this->ShortcutEntity->update([
+                    'name' => $shortcut['name'],
+                    'group' => $shortcut['group'],
+                    'link' => $this->router->url('collection/'.$data['filter_link']),
+                    'id' => $find['id'],
+                ]);
+            }
+            else
+            {
+                $shortcut_id = $this->ShortcutEntity->add([
+                    'user_id' => $user_id,
+                    'name' => $shortcut['name'],
+                    'group' => $shortcut['group'],
+                    'link' => $this->router->url('collection/'.$data['filter_link']),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->user->get('id'),
+                    'modified_at' => date('Y-m-d H:i:s'),
+                    'modified_by' => $this->user->get('id'), 
+                ]);
+                
+                if($shortcut_id)
+                {
+                    $data['shortcut_id'] = $shortcut_id;
+                }
+            }
+            $try = $this->CollectionEntity->update($data);
+
+            return $try;
+        }
+        else
+        {
+            //  create share collection
+            $data['filter_link'] = $this->createSlug($data['name'], $user_id, $collection['id']);
+            
+            $shortcut = $this->ShortcutEntity->findByPK($collection['shortcut_id']);
+            if($shortcut)
+            {
+                $shortcut_id = $this->ShortcutEntity->add([
+                    'user_id' => $user_id,
+                    'name' => $shortcut['name'],
+                    'group' => $shortcut['group'],
+                    'link' => $this->router->url('collection/'.$data['filter_link']),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => $this->user->get('id'),
+                    'modified_at' => date('Y-m-d H:i:s'),
+                    'modified_by' => $this->user->get('id'), 
+                ]);
+                
+                if($shortcut_id)
+                {
+                    $data['shortcut_id'] = $shortcut_id;
+                }
+            }
+            $try = $this->CollectionEntity->add($data);
+
+            return $try;
+        }
     }
 }

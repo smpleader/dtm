@@ -28,7 +28,7 @@ class collection extends ControllerMVVM
                 );
             }
 
-            if ($collection['created_by'] != $this->user->get('id'))
+            if ($collection['created_by'] != $this->user->get('id') || $collection['parent_id'])
             {
                 return $this->app->redirect(
                     $this->router->url('collections')

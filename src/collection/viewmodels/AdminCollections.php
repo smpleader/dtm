@@ -42,14 +42,6 @@ class AdminCollections extends ViewModel
             $where[] = 'name  LIKE "%'. $search. '%"';
         }
 
-        $where_shares = [];
-        $groups = $this->UserEntity->getGroups($this->user->get('id'));
-        foreach($groups as $group)
-        {
-            $where_shares[] = 'shares LIKE "%(group-'. $group['group_id'] .')%"';
-        }
-
-        $where_shares[] = 'shares LIKE "%(user-'. $this->user->get('id') .')%"';
         $where_shares[] = 'user_id LIKE '. $this->user->get('id');
 
         $where[] = '('. implode(" OR ", $where_shares). ')';
@@ -69,10 +61,16 @@ class AdminCollections extends ViewModel
 
         foreach($result as &$item)
         {
-            if($item['created_by'] != $this->user->get('id'))
+            $item['shared_by'] = '';
+            if($item['parent_id'])
             {
-                $user = $this->UserEntity->findByPK($item['created_by']);
-                $item['shared_by'] = $user['name'];
+                $parent = $this->CollectionEntity->findByPK($item['parent_id']);
+                if($parent)
+                {
+                    $item = $parent;
+                    $user = $this->UserEntity->findByPK($parent['user_id']);
+                    $item['shared_by'] = $user['name'];
+                }
             }
         }
 
