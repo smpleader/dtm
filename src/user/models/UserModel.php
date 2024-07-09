@@ -46,6 +46,7 @@ class UserModel extends Base
             if($result['status'] != 1) 
             {
                 $this->error = 'User has been block';
+                $this->user->logout();
                 return false;
             }
             else

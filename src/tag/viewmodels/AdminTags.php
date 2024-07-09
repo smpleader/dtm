@@ -96,7 +96,7 @@ class AdminTags extends ViewModel
         if (null === $this->_filter) :
             $data = [
                 'search' => $this->state('search', '', '', 'post', 'tag.search'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'tag.limit'),
+                'limit' => $this->state('limit', 20, 'int', 'post', 'tag.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'tag.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);

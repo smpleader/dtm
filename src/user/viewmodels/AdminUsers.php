@@ -118,7 +118,7 @@ class AdminUsers extends ViewModel
                 'search' => $this->state('search', '', '', 'post', 'users.search'),
                 'status' => $this->state('status', '','', 'post', 'users.status'),
                 'group' => $this->state('group', '','', 'post', 'users.group'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'users.limit'),
+                'limit' => $this->state('limit', 20, 'int', 'post', 'users.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'users.sort')
             ];
 

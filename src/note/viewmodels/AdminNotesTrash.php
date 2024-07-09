@@ -186,7 +186,7 @@ class AdminNotesTrash extends ViewModel
                 'tags' => $this->state('tags', [], 'array', 'post', 'notes_trash.tags'),
                 'note_type' => $this->state('note_type', [], 'array', 'post', 'notes_trash.note_type'),
                 'author' => $this->state('author', [], 'array', 'post', 'notes_trash.author'),
-                'limit' => $this->state('limit', 10, 'int', 'post', 'notes_trash.limit'),
+                'limit' => $this->state('limit', 20, 'int', 'post', 'notes_trash.limit'),
                 'sort' => $this->state('sort', '', '', 'post', 'notes_trash.sort')
             ];
             $filter = new Form($this->getFilterFields(), $data);

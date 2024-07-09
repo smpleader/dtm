@@ -1,6 +1,8 @@
 <tr>
     <td>
-        <input class="checkbox-item" type="checkbox" name="ids[]" value="<?php echo $this->item['id']; ?>">
+        <?php if(!$this->item['shared_by']) : ?> 
+            <input class="checkbox-item" type="checkbox" name="ids[]" value="<?php echo $this->item['id']; ?>">
+        <?php endif; ?>
     </td>
     <td>
         <a href="<?php echo $this->link_view . '/' . strtolower($this->item['filter_link']); ?>">
